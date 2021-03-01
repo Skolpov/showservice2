@@ -784,6 +784,7 @@ button:not(:disabled),
   right: 15px;
   width: 30px;
   height: 30px;
+  overflow: hidden;
   opacity: 0.3;
   cursor: pointer;
   -webkit-transition-duration: 0.3s;
@@ -1251,20 +1252,8 @@ button:not(:disabled),
   width: 160px;
 }
 
-.address img {
-  margin-right: 15px;
-  width: 13px;
-  height: 18px;
-}
-
 .clock {
   width: 190px;
-}
-
-.clock img {
-  margin-right: 15px;
-  width: 17px;
-  width: 17px;
 }
 
 .phone {
@@ -1281,6 +1270,26 @@ button:not(:disabled),
 .phone a:hover {
   color: #8b859d;
   border: none;
+}
+
+.contacts__ic {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
+}
+
+.contacts__ic img {
+  width: 100%;
+  height: auto;
 }
 
 .call-modal__btn {
@@ -2595,6 +2604,14 @@ input[type="tel"] {
 
 .info__phone img {
   height: 24px;
+}
+
+.phone__box p {
+  color: title !important;
+}
+
+.phone__box a {
+  color: title !important;
 }
 
 .info__address img {

@@ -4015,17 +4015,25 @@ function _typeof2(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "funct
   return k.noConflict = function (e) {
     return C.$ === k && (C.$ = Jt), e && C.jQuery === k && (C.jQuery = Qt), k;
   }, e || (C.jQuery = C.$ = k), k;
-});
+}); // function loadStyleSheet(src) {
+//     if (document.createStyleSheet){
+//         document.createStyleSheet(src);
+//     }
+//     else {
+//         $("head").append($("<link rel='stylesheet' href='"+src+" />"));
+//     }
+// };
 
-function loadStyleSheet(src) {
-  if (document.createStyleSheet) {
-    document.createStyleSheet(src);
-  } else {
-    $("head").append($("<link rel='stylesheet' href='" + src + " />"));
-  }
+var head = window.document.getElementsByTagName('head')[0];
+
+function includeCSS(aFile, aRel) {
+  var style = window.document.createElement('link');
+  style.href = aFile;
+  style.rel = aRel || 'stylesheet';
+  head.appendChild(style);
 }
 
-; // let sourceWebp = document.querySelectorAll('source');
+includeCSS('css/style.min.css'); // let sourceWebp = document.querySelectorAll('source');
 // let sourceItem = sourceWebp[i];
 // sourceWebp.forEach(function (sourceItem) {
 // 	sourceItem.classList.add('lazyload');
@@ -8287,12 +8295,15 @@ var header = document.querySelector(".main-header");
 var headerWrap = document.querySelector('.header-wrap');
 var sticky = header.offsetTop;
 var section = document.querySelector('.first-screen');
+var content = document.querySelector('.banner__container');
 
 function myFunction() {
   if (window.pageYOffset > sticky) {
     header.classList.add("header--fixed");
+    content.style.paddingTop = "75px";
   } else {
     header.classList.remove("header--fixed");
+    content.style.paddingTop = "0";
   }
 }
 
