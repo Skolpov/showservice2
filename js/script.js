@@ -4015,15 +4015,7 @@ function _typeof2(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "funct
   return k.noConflict = function (e) {
     return C.$ === k && (C.$ = Jt), e && C.jQuery === k && (C.jQuery = Qt), k;
   }, e || (C.jQuery = C.$ = k), k;
-}); // function loadStyleSheet(src) {
-//     if (document.createStyleSheet){
-//         document.createStyleSheet(src);
-//     }
-//     else {
-//         $("head").append($("<link rel='stylesheet' href='"+src+" />"));
-//     }
-// };
-
+});
 var head = window.document.getElementsByTagName('head')[0];
 
 function includeCSS(aFile, aRel) {
@@ -4120,6 +4112,7 @@ var modals = function modals() {
   bindModal('.burger__call-btn', '.form__modal', '.form-close');
   bindModal('.btn-signup', '.form__modal', '.form-close');
   bindModal('.footer__btn1', '.form__modal', '.form-close');
+  bindModal('.card__box', '.content__modal', '.modal-close');
   var burgerCallBtn = document.querySelector('.burger__call-btn');
   burgerCallBtn.addEventListener('click', function () {
     closeNav();
