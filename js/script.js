@@ -4061,9 +4061,14 @@ function showYaMaps() {
 
 var modals = function modals() {
   function bindModal(triggerSelector, modalSelector, closeSelector) {
-    var trigger = document.querySelector(triggerSelector),
-        modal = document.querySelector(modalSelector),
-        close = document.querySelector(closeSelector);
+    // const triggers = document.querySelectorAll(triggerSelector),
+    var modal = document.querySelector(modalSelector);
+    var close = document.querySelector(closeSelector);
+    var alltable = Array.prototype.slice.call(document.querySelectorAll(triggerSelector)); //Select all elements with the id starting by "table_"
+
+    alltable.forEach(function (item) {
+      item.addEventListener('click', openModal);
+    });
 
     function openModal() {
       modal.classList.add('modal--show');
@@ -4078,7 +4083,13 @@ var modals = function modals() {
     }
 
     ;
-    trigger.addEventListener('click', openModal);
+    var contentBtn = document.querySelector('.content-btn');
+    contentBtn.addEventListener('click', function () {
+      var contentM = document.querySelector('.content__modal');
+      contentM.classList.remove('modal--show');
+      document.body.style.overflow = '';
+      contentM.classList.remove('animate__animated', 'animate__fadeIn');
+    });
     close.addEventListener('click', function () {
       closeModal();
     });
@@ -4112,7 +4123,8 @@ var modals = function modals() {
   bindModal('.burger__call-btn', '.form__modal', '.form-close');
   bindModal('.btn-signup', '.form__modal', '.form-close');
   bindModal('.footer__btn1', '.form__modal', '.form-close');
-  bindModal('.card__box', '.content__modal', '.modal-close');
+  bindModal('.service__card', '.content__modal', '.modal-close');
+  bindModal('.brands__box', '.content__modal', '.modal-close');
   var burgerCallBtn = document.querySelector('.burger__call-btn');
   burgerCallBtn.addEventListener('click', function () {
     closeNav();
@@ -8357,18 +8369,18 @@ $(document).ready(function () {
   $('.services__carousel').slick({
     infinite: true,
     slidesToShow: 3,
-    slidesToScroll: 1,
+    slidesToScroll: 3,
     responsive: [{
       breakpoint: 1200,
       settings: {
         slidesToShow: 3,
-        slidesToScroll: 1
+        slidesToScroll: 3
       }
     }, {
       breakpoint: 660,
       settings: {
         slidesToShow: 2,
-        slidesToScroll: 1
+        slidesToScroll: 2
       }
     }, {
       breakpoint: 480,
