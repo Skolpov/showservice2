@@ -7,14 +7,8 @@
 		<meta name="description" content="description text for your site"/>
 		<meta name="keywords" content="keyword 1, keyword 2, keyword 3"/>
 		<title>Pound Ridge — автосервис с честными ценами и гарантией</title>
-		<link rel="stylesheet"
-			  href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css"/>
-		<!-- <link href="css/style.min.css" rel="stylesheet"> -->
+		<link href="css/style.min.css" rel="stylesheet preload" as="style">
 
-		<link rel="preconnect" href="https://fonts.gstatic.com">
-		<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
-		<link rel="preconnect" href="https://fonts.gstatic.com">
-		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">	
 		
 		<link rel="apple-touch-icon" sizes="180x180" href="img/fav/apple-touch-icon.png">
 		<link rel="icon" type="image/x-png" sizes="32x32" href="img/fav/icon-32x32.png">
@@ -31,63 +25,29 @@
 	<section class="content">
 
 		<div class="first-screen">
-	<div class="burger-menu">
-		<div class="burger__block">
-			<div class="burger__item">
-				<div class="close-burger">
-					<p><img src="./img/interface/close.svg" alt="Закрыть" >Закрыть меню </p>
-				</div>
-				<nav class="burger-menu__items">
-					<a href="#">Главная</a>
-					<a href="#">Каталог</a>
-					<a href="#">Услуги</a>
-					<a href="#">О нас</a>
-					<a href="#">Новости</a>
-					<a href="#">Контакты</a>
-				</nav>
-			</div>
-			<div class="burger__item">
-				<div class="burger__contacts">
-					<div class="call-btn">
-						<button class="burger__call-btn">Заказать звонок</button>
-					</div>
-					<div class="social">
-						<a href="http://www.facebook.com" target="_blank">
-							<img src="./img/social/circle-facebook.svg" width="30" height="30" alt="facebook">
-						</a>
-						<a href="http://www.vk.com" target="_blank">
-							<img src="./img/social/circle-vk.svg" width="30" height="30" alt="vk">
-						</a>
-						<a href="http://www.instagram.com" target="_blank">
-							<img src="./img/social/circle-insta.svg" width="30" height="30" alt="insta">
-						</a>
-						<a href="http://www.ok.com" target="_blank">
-							<img src="./img/social/circle-ok.svg" width="30" height="30" alt="ok">
-						</a>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="overlay"></div>
-	</div>
 	<header class="container main-header">
 		<div class="wrap header__wrap">
 			<div class="main-logo">
-				<a href="#">
-					<img src="./img/logo.png" alt="Логотип компании">
+				<a href="index.html">
+					<img
+					loading="lazy" src="img/logo.png" 
+					width="271" height="60"
+					alt="Логотип компании">
 				</a>
 			</div>
 			<div class="contacts">
 				<div class="address">
 					<div class="contacts__ic">
-						<img src="./img/contacts/map.svg"
-						width="16" height="22" alt="Адрес"></div>
+						<img
+						loading="lazy" src="img/contacts/map.svg"
+						width="16" height="22" alt="map"></div>
 					<p>Минск, <br> ул. Жилуновича, 2</p>
 				</div>
 				<div class="clock">
 					<div class="contacts__ic">
-						<img src="./img/contacts/clock.svg" 
-						width="20" height="20" alt="Время работы">
+						<img
+						loading="lazy" src="img/contacts/clock.svg" 
+						width="20" height="20" alt="time">
 					</div>
 					<p>Пн-Пт: c 9:00 до 19:00 <br>
 						Сб: с 9:00 до 17:00</p>
@@ -112,389 +72,555 @@
 	</header>
 </div>
 
-		<div class="container banner__container">
-	<div class="wrap banner__wrap padding-block">
-		<div class="banner__block">
-			<div class="main__title">
-				<h1>
-					Автосервис с <span>честными ценами</span> и
-					<span>гарантией</span> на всё
-				</h1>
-			</div>
-			<div class="advantages">
-				<div class="advantages__block">
-					<div class="advantages__item advantage--small">
-						<div class="advantage__ic">
-							<img class="lazyload"
-							src="img/interface/check-circle.svg" width="25"
-							height="25" alt="Галочка">
+		<section id="banner" >
+	<div class="container banner__container">
+		<div class="wrap banner__wrap padding-block">
+			<div class="banner__block">
+				<div class="main__title">
+					<h1>
+						Автосервис с <span>честными ценами</span> и
+						<span>гарантией</span> на всё
+					</h1>
+				</div>
+				<div class="advantages">
+					<div class="advantages__block">
+						<div class="advantages__item advantage--small">
+							<div class="advantage__ic">
+								<img  
+								loading="lazy" src="img/interface/check-circle.svg" width="25"
+								height="25" alt="check">
+							</div>
+							<p>Рассчитаем стоимость работ онлайн за 5 минут</p>
 						</div>
-						<p>Рассчитаем стоимость работ онлайн за 5 минут</p>
+						<div class="advantages__item advantage--small">
+							<div class="advantage__ic">
+								<img  
+								loading="lazy"  src="img/interface/check-circle.svg" width="25"
+								height="25" alt="check">
+							</div>
+							<p>Професионально выполним ремонтные работы</p>
+						</div>
 					</div>
-					<div class="advantages__item advantage--small">
-						<div class="advantage__ic">
-							<img class="lazyload"
-							src="img/interface/check-circle.svg" width="25"
-							height="25" alt="Галочка">
+					<div class="advantages__block">
+						<div class="advantages__item advantage--big">
+							<div class="advantage__ic">
+								<img  
+								loading="lazy"  src="img/interface/check-circle.svg" width="25"
+								height="25" alt="check">
+							</div>
+							<p>Предоставим полную гарантию на все виды работ</p>
 						</div>
-						<p>Професионально выполним ремонтные работы</p>
+						<div class="advantages__item advantage--big">
+							<div class="advantage__ic">
+								<img  
+								loading="lazy"  src="img/interface/check-circle.svg" width="25"
+								height="25" alt="check">
+							</div>
+							<p>Предложим дополнительный сервис: подменный автомобиль
+							и страхование</p>
+						</div>
 					</div>
 				</div>
-				<div class="advantages__block">
-					<div class="advantages__item advantage--big">
-						<div class="advantage__ic">
-							<img class="lazyload"
-							src="img/interface/check-circle.svg" width="25"
-							height="25" alt="Галочка">
-						</div>
-						<p>Предоставим полную гарантию на все виды работ</p>
-					</div>
-					<div class="advantages__item advantage--big">
-						<div class="advantage__ic">
-							<img class="lazyload"
-							src="img/interface/check-circle.svg" width="25"
-							height="25" alt="Галочка">
-						</div>
-						<p>Предложим дополнительный сервис: подменный автомобиль
-						и страхование</p>
-					</div>
+				<div class="main__btns banner__btns">
+					<a class="btn-signup">Записаться</a>
+					<!-- <a class="btn-calc">Рассчитать цену</a> -->
 				</div>
 			</div>
-			<div class="main__btns banner__btns">
-				<a class="btn-signup">Записаться</a>
-				<a class="btn-calc">Рассчитать цену</a>
+			<div class="banner__image">
+				<img loading="lazy" src="img/car-1x.png" srcset="img/car-2x.png 2x" 
+				width="650" height="370" alt="Авто">
 			</div>
-		</div>
-		<div class="banner__image">
-			<img src="img/car-1x.png" srcset="img/car-2x.png 2x" alt="Авто">
 		</div>
 	</div>
-</div>
+</section>
 
-		<div class="container">
-	<div class="wrap services__wrap services__padding">
-		<div class="services__container">
-			<div class="big-card__container">
-				<div class="services__carousel">
-					<div class="service__card card--big">
-						<div class="card__box">
-							<a  ></a>
-							<div class="card__img">
-								<img class="lazyload" 
-								src="img/services/oil-engine-1x.png" 
-								srcset="img/services/oil-engine-2x.png 2x" 
-								alt="Масло">
-							</div>
-							<div class="card__info">
-								<div class="card__name">
-									<h4>Замена масле в двигателе</h4>
-									<p><span>+</span>Диагностика подвески бесплатно</p>
+		<section id="services">
+	<div class="container">
+		<div class="wrap services__wrap services__padding">
+			<div class="services__container">
+				<div class="big-card__container">
+					<div class="services__carousel">
+						<div class="service__card card--big">
+							<div class="card__box">
+								<div class="card__img">
+									<img    
+									 loading="lazy" src="img/services/oil-engine-1x.png"
+									srcset="img/services/oil-engine-2x.png 2x" 
+									width="280"
+									height="192"
+									alt="Масло">
 								</div>
-								<div class="card__price">
-									<p>5500 руб</p>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="service__card card--big">
-						<div class="card__box">
-							<a  ></a>
-							<div class="card__img">
-								<img class="lazyload" 
-								src="img/services/filter-1x.png" 
-								srcset="img/services/filter-2x.png 2x" 
-								alt="Фильтры">
-							</div>
-							<div class="card__info">
-								<div class="card__name">
-									<h4>Замена фильтра в двигателе</h4>
-									<p><span>+</span>Диагностика подвески бесплатно </p>
-								</div>
-								<div class="card__price">
-									<p>5500 руб</p>
+								<div class="card__info">
+									<div class="card__name">
+										<h4>Замена масле в двигателе</h4>
+										<p><span>+</span>Диагностика подвески бесплатно</p>
+									</div>
+									<div class="card__price">
+										<p>5500 руб</p>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-					<div class="service__card card--big">
-						<div class="card__box">
-							<a  ></a>
-							<div class="card__img">
-								<img class="lazyload" 
-								src="img/services/brake-pads-1x.png" 
-								srcset="img/services/brake-pads-2x.png 2x" 
-								alt="Тормоза">
-							</div>
-							<div class="card__info">
-								<div class="card__name">
-									<h4>Замена тормозных колодок</h4>
-									<p><span>+</span>Диагностика подвески бесплатно</p>
+						<div class="service__card card--big">
+							<div class="card__box">
+								<a  ></a>
+								<div class="card__img">
+									<img    
+									 loading="lazy" src="img/services/filter-1x.png"
+									srcset="img/services/filter-2x.png 2x" 
+									width="280"
+									height="192"
+									alt="Фильтры">
 								</div>
-								<div class="card__price">
-									<p>5500 руб</p>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="service__card card--big">
-						<div class="card__box">
-							<a  ></a>
-							<div class="card__img">
-								<img class="lazyload" 
-								src="img/services/diagnostics-1x.png" 
-								srcset="img/services/diagnostics-2x.png 2x" 
-								alt="Диагностика">
-							</div>
-							<div class="card__info">
-								<div class="card__name">
-									<h4>Полная диагностика</h4>
-									<p><span>+</span>Диагностика подвески бесплатно</p>
-								</div>
-								<div class="card__price">
-									<p>5500 руб</p>
+								<div class="card__info">
+									<div class="card__name">
+										<h4>Замена фильтра в двигателе</h4>
+										<p><span>+</span>Диагностика подвески бесплатно </p>
+									</div>
+									<div class="card__price">
+										<p>5500 руб</p>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-					<div class="service__card card--big">
-						<div class="card__box">
-							<a  ></a>
-							<div class="card__img">
-								<img class="lazyload" 
-								src="img/services/candles-1x.png" 
-								srcset="img/services/candles-2x.png 2x" 
-								alt="Диагностика">
-							</div>
-							<div class="card__info">
-								<div class="card__name">
-									<h4>Замена свечей</h4>
-									<p><span>+</span>Диагностика подвески бесплатно</p>
+						<div class="service__card card--big">
+							<div class="card__box">
+								<a  ></a>
+								<div class="card__img">
+									<img    
+									 loading="lazy" src="img/services/brake-pads-1x.png" 
+									srcset="img/services/brake-pads-2x.png 2x" 
+									width="280"
+									height="192"
+									alt="Тормоза">
 								</div>
-								<div class="card__price">
-									<p>5500 руб</p>
+								<div class="card__info">
+									<div class="card__name">
+										<h4>Замена тормозных колодок</h4>
+										<p><span>+</span>Диагностика подвески бесплатно</p>
+									</div>
+									<div class="card__price">
+										<p>5500 руб</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="service__card card--big">
+							<div class="card__box">
+								<a  ></a>
+								<div class="card__img">
+									<img    
+									 loading="lazy" src="img/services/diagnostics-1x.png" 
+									srcset="img/services/diagnostics-2x.png 2x" 
+									width="280"
+									height="192"
+									alt="Диагностика">
+								</div>
+								<div class="card__info">
+									<div class="card__name">
+										<h4>Полная диагностика</h4>
+										<p><span>+</span>Диагностика подвески бесплатно</p>
+									</div>
+									<div class="card__price">
+										<p>5500 руб</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="service__card card--big">
+							<div class="card__box">
+								<a  ></a>
+								<div class="card__img">
+									<img    
+									 loading="lazy" src="img/services/candles-1x.png"
+									srcset="img/services/candles-2x.png 2x" 
+									width="280"
+									height="192"
+									alt="Диагностика">
+								</div>
+								<div class="card__info">
+									<div class="card__name">
+										<h4>Замена свечей</h4>
+										<p><span>+</span>Диагностика подвески бесплатно</p>
+									</div>
+									<div class="card__price">
+										<p>5500 руб</p>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-			<div class="small-card__container">
-				<div class="small-card__box">
+				<div class="small-card__container">
+					<div class="small-card__box">
+						<div class="service__card card--small first-card">
+							 
+							<div class="small-card__name">
+								<p>Аренда авто и прицепов</p>
+							</div>
+							<div class="small-card__btn">
+								<img    
+								loading="lazy" src="img/interface/white-arrow.svg" 
+								width="8"
+								height="13"
+								alt="arrow">
+							</div>
+						</div>
+						<div class="service__card card--small">
+							<a ></a>
+							<div class="small-card__name">
+								<p>Продажа Б/У авто</p>
+							</div>
+							<div class="small-card__btn">
+								<img    
+								 loading="lazy" src="img/interface/white-arrow.svg"
+								width="8"
+								height="13" 
+								alt="arrow">
+							</div>
+						</div>
+					</div>
+					<div class="small-card__box">
+						<div class="service__card card--small">
+							<a  ></a>
+							<div class="small-card__name">
+								<p>Страхование</p>
+							</div>
+							<div class="small-card__btn">
+								<img    
+								 loading="lazy" src="img/interface/white-arrow.svg" 
+								width="8"
+								height="13"
+								alt="arrow">
+							</div>
+						</div>
+						<div class="service__card card--small last-card">
+							<a ></a>
+							<div class="small-card__name">
+								<p>Счет-справка</p>
+							</div>
+							<div class="small-card__btn">
+								<img   
+								 loading="lazy" src="img/interface/white-arrow.svg"
+								width="8"
+								height="13"
+								alt="arrow">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="small-card__container more__cards">
 					<div class="service__card card--small first-card">
-						<a  ></a>
+						 
 						<div class="small-card__name">
-							<p>Аренда авто и прицепов</p>
+							<p>Работы с подвеской</p>
 						</div>
 						<div class="small-card__btn">
-							<img class="lazyload" src="img/interface/white-arrow.svg" alt="Стрелка">
+							<img    
+							 loading="lazy" src="img/interface/white-arrow.svg"
+							width="8"
+								height="13"
+							alt="arrow">
 						</div>
 					</div>
 					<div class="service__card card--small">
 						<a ></a>
 						<div class="small-card__name">
-							<p>Продажа Б/У авто</p>
+							<p>Диагностика автомобиля</p>
 						</div>
 						<div class="small-card__btn">
-							<img class="lazyload" src="img/interface/white-arrow.svg" alt="Стрелка">
+							<img    
+							 loading="lazy" src="img/interface/white-arrow.svg" 
+							width="8"
+								height="13"
+							alt="arrow">
 						</div>
 					</div>
-				</div>
-				<div class="small-card__box">
 					<div class="service__card card--small">
-						<a  ></a>
+						 
 						<div class="small-card__name">
-							<p>Страхование</p>
+							<p>Кузовной ремонт</p>
 						</div>
 						<div class="small-card__btn">
-							<img class="lazyload" src="img/interface/white-arrow.svg" alt="Стрелка">
+							<img   
+							 loading="lazy" src="img/interface/white-arrow.svg" 
+							width="8"
+								height="13"
+							alt="arrow">
 						</div>
 					</div>
 					<div class="service__card card--small last-card">
 						<a ></a>
 						<div class="small-card__name">
-							<p>Счет-справка</p>
+							<p>Малярные работы</p>
 						</div>
 						<div class="small-card__btn">
-							<img class="lazyload" src="img/interface/white-arrow.svg" alt="Стрелка">
+							<img    
+							 loading="lazy" src="img/interface/white-arrow.svg" 
+							width="8"
+								height="13" 
+							alt="arrow">
+						</div>
+					</div>
+				</div>
+				<div class="btn__more-services">
+					<a class="btn-services__name" >Показать все услуги</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="container">
+		<div class="wrap brands__wrap">
+			<div class="brands__container">
+				<div class="brands__box landro">
+					<img
+					loading="lazy" src="img/brands/landro-color-1x.png" 
+					srcset="img/brands/landro-color-2x.png"
+					width="75"
+					height="75"
+					alt="landro">
+				</div>
+				<div class="brands__box mazda">
+					<img 
+					loading="lazy" src="img/brands/mazda-color-1x.png" 
+					srcset="img/brands/mazda-color-2x.png"
+					width="75"
+					height="75"
+					alt="mazda">
+				</div>
+				<div class="brands__box peugeot">
+					<img 
+					loading="lazy" src="img/brands/peugeot-color-1x.png" 
+					srcset="img/brands/peugeot-color-2x.png"
+					width="75"
+					height="75"
+					alt="peugeot">
+				</div>
+				<div class="brands__box opel">
+					<img 
+					loading="lazy" src="img/brands/opel-color-1x.png" 
+					srcset="img/brands/opel-color-2x.png"
+					width="75"
+					height="75"
+					alt="opel">
+				</div>
+				<div class="brands__box nissan">
+					<img 
+					loading="lazy" src="img/brands/nissan-color-1x.png" 
+					srcset="img/brands/nissan-color-2x.png"
+					width="75"
+					height="75"
+					alt="nissan">
+				</div>
+				<div class="brands__box volvo">
+					<img 
+					loading="lazy" src="img/brands/volvo-color-1x.png" 
+					srcset="img/brands/volvo-color-2x.png"
+					width="75"
+					height="75"
+					alt="volvo">
+				</div>
+				<div class="brands__box w">
+					<img 
+					loading="lazy" src="img/brands/w-color-1x.png" 
+					srcset=""
+					data-srcset="img/brands/w-color-2x.png"
+					width="75"
+					height="75"
+					alt="w">
+				</div>
+				<div class="brands__box toyota">
+					<img 
+					loading="lazy" src="img/brands/toyota-color-1x.png" 
+					srcset="img/brands/toyota-color-2x.png"
+					width="75"
+					height="75"
+					alt="toyota">
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+		
+		<section id="aboutus" >
+	<div class="container">
+		<div class="wrap aboutus__wrap padding-block">
+			<div class="h2__title">
+				<h2 class="title--white">Вот почему нас выбирают автолюбители, 
+					<br> которые ценят качество
+				</h2>
+			</div>
+			<div class="aboutus__container">
+				<div class="aboutus__block">
+					<div class="year-work">
+						<p><span> > 8 лет </span> в работе</p>
+					</div>
+					<div class="recomendation-work">
+						<p>За это время зарекомендовали себя на рынке как качественный 
+							и честный автосервис с доступными ценами.</p>
+					</div>
+					<div class="our-quote">
+						<span><img   
+							loading="lazy" src="img/ic-quote.png" 
+							width="60" height="51" alt="quote"></span>
+						<p>Главный принцип нашей компании 
+							- делать для вас как для себя. 
+							На совесть. Мы не прячем лиц и готовы отвечать за качество.</p>
+					</div>
+				</div>
+				<div class="aboutus__block">
+					<div class="our-advantages">
+						<div class="advantage">
+							<div class="advantage-ic"><img  
+								loading="lazy" src="img/interface/advantage-1.svg" 
+								width="37" height="43" alt="quality"></div>
+							<p>И именно поэтому мы даем полную гарантию 
+								на все виды работ, которые выполняем. 
+								Сроки гарантии зависят от вида работ 
+								и указаны на соответствующих страницах.</p>
+						</div>
+						<div class="advantage">
+							<div class="advantage-ic"><img   
+								loading="lazy" src="img/interface/advantage-2.svg" 
+								width="42" height="38" alt="quality"></div>
+							<p>Кроме того, мы предоставляем дополнительный
+							сервис: у нас можно взять в аренду автомобиль,
+							прицеп или воспользоваться услугами
+							страхования.</p>
+						</div>
+					</div>
+					<div class="aboutus__btn"><a class="btn-signup">Записаться</a></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+		<section id="team">
+	<div class="container">
+		<div class="wrap team__wrap padding-block">
+			<div class="h2__title">
+				<h2 class="title--white">Наша команда автомехаников</h2>
+				<p>Наши специалисты - настоящие профессионалы, которые действительно 
+					знают и любят автомобили. Мы отвечаем за качество наших услуг 
+					полной гарантией и своей репутацией.
+				</p>
+			</div>
+			<div class="team__container">
+				<div class="team__carousel">
+					<div class="teammate__box">
+						<div class="teammate__pic">
+							<img    
+							loading="lazy" src="img/team__one.jpg" 
+							alt="Сотрудник">
+						</div>
+						<div class="teammate__name">
+							<p>Михаил</p>
+							<span>Главный</span>
+						</div>
+					</div>
+					<div class="teammate__box">
+						<div class="teammate__pic">
+							<img    
+							loading="lazy" src="img/team__two.jpg" 
+							alt="Сотрудник">
+						</div>
+						<div class="teammate__name">
+							<p>Андрей</p>
+							<span>Автомеханник</span>
+						</div>
+					</div>
+					<div class="teammate__box">
+						<div class="teammate__pic">
+							<img    
+							loading="lazy" src="img/team__three.jpg" 
+							alt="Сотрудник">
+						</div>
+						<div class="teammate__name">
+							<p>Дмитрий</p>
+							<span>Автомеханник</span>
+						</div>
+					</div>
+					<div class="teammate__box">
+						<div class="teammate__pic">
+							<img    
+							loading="lazy" src="img/team__four.jpg" 
+							alt="Сотрудник">
+						</div>
+						<div class="teammate__name">
+							<p>Юрий</p>
+							<span>Автомеханник</span>
+						</div>
+					</div>
+					<div class="teammate__box">
+						<div class="teammate__pic">
+							<img    
+							loading="lazy" src="img/team__five.jpg" 
+							alt="Сотрудник">
+						</div>
+						<div class="teammate__name">
+							<p>Святослав</p>
+							<span>Автомеханник</span>
+						</div>
+					</div>
+					<div class="teammate__box">
+						<div class="teammate__pic">
+							<img    
+							loading="lazy" src="img/team__six.jpg" 
+							alt="Сотрудник">
+						</div>
+						<div class="teammate__name">
+							<p>Константин</p>
+							<span>Автомеханник</span>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="small-card__container more__cards">
-				<div class="service__card card--small first-card">
-					<a target="_blank"  ></a>
-					<div class="small-card__name">
-						<p>Работы с подвеской</p>
-					</div>
-					<div class="small-card__btn">
-						<img class="lazyload" src="img/interface/white-arrow.svg" alt="Стрелка">
-					</div>
-				</div>
-				<div class="service__card card--small">
-					<a ></a>
-					<div class="small-card__name">
-						<p>Диагностика автомобиля</p>
-					</div>
-					<div class="small-card__btn">
-						<img class="lazyload" src="img/interface/white-arrow.svg" alt="Стрелка">
-					</div>
-				</div>
-				<div class="service__card card--small">
-					<a></a>
-					<div class="small-card__name">
-						<p>Кузовной ремонт</p>
-					</div>
-					<div class="small-card__btn">
-						<img class="lazyload" src="img/interface/white-arrow.svg" alt="Стрелка">
-					</div>
-				</div>
-				<div class="service__card card--small last-card">
-					<a ></a>
-					<div class="small-card__name">
-						<p>Малярные работы</p>
-					</div>
-					<div class="small-card__btn">
-						<img class="lazyload" src="img/interface/white-arrow.svg" alt="Стрелка">
-					</div>
-				</div>
-			</div>
-			<div class="btn__more-services">
-				<a class="btn-services__name" >Показать все услуги</a>
-			</div>
 		</div>
 	</div>
-</div>
-		
-		<div class="container">
-	<div class="wrap brands__wrap">
-		<div class="brands__container">
-			<div class="brands__box landro"></div>
-			<div class="brands__box mazda"></div>
-			<div class="brands__box peugeot"></div>
-			<div class="brands__box opel"></div>
-			<div class="brands__box nissan"></div>
-			<div class="brands__box volvo"></div>
-			<div class="brands__box w"></div>
-			<div class="brands__box toyota"></div>
-			
-		</div>
-	</div>
-</div>
-		
-		<div class="container">
-	<div class="wrap aboutus__wrap padding-block">
-		<div class="h2__title">
-			<h2 class="title--white">Вот почему нас выбирают автолюбители, 
-				<br> которые ценят качество
-			</h2>
-		</div>
-		<div class="aboutus__container">
-			<div class="aboutus__block">
-				<div class="year-work">
-					<p><span> > 8 лет </span> в работе</p>
-				</div>
-				<div class="recomendation-work">
-					<p>За это время зарекомендовали себя на рынке как качественный 
-						и честный автосервис с доступными ценами.</p>
-				</div>
-				<div class="our-quote">
-					<span><img class="lazyload" src="img/ic-quote.png" width="60" height="51" alt="цитата"></span>
-					<p>Главный принцип нашей компании 
-						- делать для вас как для себя. 
-						На совесть. Мы не прячем лиц и готовы отвечать за качество.</p>
-				</div>
-			</div>
-			<div class="aboutus__block">
-				<div class="our-advantages">
-					<div class="advantage">
-						<div class="advantage-ic"><img class="lazyload" src="img/advantage-1.png" width="37" height="43" alt="качество"></div>
-						<p>И именно поэтому мы даем полную гарантию 
-							на все виды работ, которые выполняем. 
-							Сроки гарантии зависят от вида работ 
-							и указаны на соответствующих страницах.</p>
-					</div>
-					<div class="advantage">
-						<div class="advantage-ic"><img class="lazyload" src="img/advantage-2.png" width="42" height="38" alt="качество"></div>
-						<p>Кроме того, мы предоставляем дополнительный
-						сервис: у нас можно взять в аренду автомобиль,
-						прицеп или воспользоваться услугами
-						страхования.</p>
-					</div>
-				</div>
-				<div class="aboutus__btn"><a class="btn-calc">Рассчитать цену</a></div>
-			</div>
-		</div>
-	</div>
-</div>
+</section>
 
-		<div class="container">
-	<div class="wrap team__wrap padding-block">
-		<div class="h2__title">
-			<h2 class="title--white">Наша команда автомехаников</h2>
-			<p>Наши специалисты - настоящие профессионалы, которые действительно 
-				знают и любят автомобили. Мы отвечаем за качество наших услуг 
-				полной гарантией и своей репутацией.
-			</p>
+		<div class="burger-menu">
+	<div class="burger__block">
+		<div class="burger__item">
+			<div class="close-burger">
+				<p><img src="img/interface/close.svg" 
+					width="10"
+					height="10"
+					alt="Закрыть" >Закрыть меню</p>
+			</div>
+			<nav class="burger-menu__items">
+				<a href="#banner">Главная</a>
+				<a href="#services">Услуги</a>
+				<a href="#aboutus">О нас</a>
+				<a href="#team">Команда</a>
+				<a href="#review">Отзывы</a>
+				<a href="#contacts">Контакты</a>
+			</nav>
 		</div>
-		<div class="team__container">
-			<div class="team__carousel">
-				<div class="teammate__box">
-					<div class="teammate__pic">
-						<img class="lazyload" src="img/team__one.jpg" alt="Сотрудник">
-					</div>
-					<div class="teammate__name">
-						<p>Михаил</p>
-						<span>Главный</span>
-					</div>
+		<div class="burger__item">
+			<div class="burger__contacts">
+				<div class="call-btn">
+					<button class="burger__call-btn">Заказать звонок</button>
 				</div>
-				<div class="teammate__box">
-					<div class="teammate__pic">
-						<img class="lazyload" src="img/team__two.jpg" alt="Сотрудник">
-					</div>
-					<div class="teammate__name">
-						<p>Андрей</p>
-						<span>Автомеханник</span>
-					</div>
-				</div>
-				<div class="teammate__box">
-					<div class="teammate__pic">
-						<img class="lazyload" src="img/team__three.jpg" alt="Сотрудник">
-					</div>
-					<div class="teammate__name">
-						<p>Дмитрий</p>
-						<span>Автомеханник</span>
-					</div>
-				</div>
-				<div class="teammate__box">
-					<div class="teammate__pic">
-						<img class="lazyload" src="img/team__four.jpg" alt="Сотрудник">
-					</div>
-					<div class="teammate__name">
-						<p>Юрий</p>
-						<span>Автомеханник</span>
-					</div>
-				</div>
-				<div class="teammate__box">
-					<div class="teammate__pic">
-						<img class="lazyload" src="img/team__five.jpg" alt="Сотрудник">
-					</div>
-					<div class="teammate__name">
-						<p>Святослав</p>
-						<span>Автомеханник</span>
-					</div>
-				</div>
-				<div class="teammate__box">
-					<div class="teammate__pic">
-						<img class="lazyload" src="img/team__six.jpg" alt="Сотрудник">
-					</div>
-					<div class="teammate__name">
-						<p>Константин</p>
-						<span>Автомеханник</span>
-					</div>
+				<div class="social">
+					<a href="#" target="_blank" rel="noopener noreferrer">
+						<img loading="lazy" src="img/social/circle-facebook.svg" width="30" height="30" alt="facebook">
+					</a>
+					<a href="#" target="_blank" rel="noopener noreferrer">
+						<img loading="lazy" src="img/social/circle-insta.svg" width="30" height="30" alt="instagram">
+					</a>
+					<a href="#" target="_blank" rel="noopener noreferrer">
+						<img loading="lazy" src="img/social/circle-telegram.svg" width="30" height="30" alt="telegram">
+					</a>
+					<a href="#" target="_blank" rel="noopener noreferrer">
+						<img loading="lazy" src="img/social/circle-whats.svg" width="30" height="30" alt="whatsapp">
+					</a>
 				</div>
 			</div>
 		</div>
 	</div>
+	<div class="overlay"></div>
 </div>
 
 	</section>
@@ -504,183 +630,171 @@
 
 	<section>
 
-		<div class="container container__reviews">
-	<div class="wrap review__wrap">
-		<div class="review__block">
-			<div class="review__block2">
-				<div class="review__title">
-					<div class="h2__title">
-						<h2>Отзывы клиентов</h2>
-					</div>
-					<div class="review-arrow"></div>
-				</div>
-				<div class="review__carousel">
-					<div class="review__box">
-						<div class="review__text">
-							<p>Суждение осмысляет дедуктивный метод.
-							Реальная власть, как принято считать,
-							иллюзорна. Надо сказать, что искусство
-							амбивалентно рефлектирует катарсис.
-							Интеллект амбивалентно рассматривается
-							интеллект. Моцзы, Сюнъцзы и другие считали,
-							что дедуктивный метод преобразует гений.</p>
+		<section id="review">
+	<div class="container container__reviews">
+		<div class="wrap review__wrap">
+			<div class="review__block">
+				<div class="review__block2">
+					<div class="review__title">
+						<div class="h2__title">
+							<h2>Отзывы клиентов</h2>
 						</div>
-						<div class="review__human">
-							<div class="human__block">
-								<div class="human__description">
-									<div class="human__avatar">
-										<img class="lazyload" src="img/avatar.png" width="65" height="65" alt="Аватар">
-									</div>
-									<div class="human__text">
-										<div class="human__text-block">
-											<p>Павел Авдоченко</p>
-											<span class="car-name">Kia Ceed</span>
+						<div class="review-arrow"></div>
+					</div>
+					<div class="review__carousel">
+						<div class="review__box">
+							<div class="review__text">
+								<p>Суждение осмысляет дедуктивный метод.
+								Реальная власть, как принято считать,
+								иллюзорна. Надо сказать, что искусство
+								амбивалентно рефлектирует катарсис.
+								Интеллект амбивалентно рассматривается
+								интеллект. Моцзы, Сюнъцзы и другие считали,
+								что дедуктивный метод преобразует гений.</p>
+							</div>
+							<div class="review__human">
+								<div class="human__block">
+									<div class="human__description">
+										<div class="human__avatar">
+											<img    
+											loading="lazy" src="img/avatar.png" 
+											width="65" height="65" alt="Аватар">
 										</div>
-										<div class="human__text-block">
-											<a href="" class="human__text-link">Замена фильтра двигателя</a>
-											<span class="time-work">1 час на работу</span>
+										<div class="human__text">
+											<div class="human__text-block">
+												<p>Павел Авдоченко</p>
+												<span class="car-name">Kia Ceed</span>
+											</div>
+											<div class="human__text-block">
+												<a href="" class="human__text-link">Замена фильтра двигателя</a>
+												<span class="time-work">1 час на работу</span>
+											</div>
 										</div>
 									</div>
-								</div>
-								<div class="human__rating">
-									<img class="lazyload" src="img/ic-star.png" width="25" height="25" alt="оценка"> 
-									<img class="lazyload" src="img/ic-star.png" width="25" height="25" alt="оценка">
-									<img class="lazyload" src="img/ic-star.png" width="25" height="25" alt="оценка">
-									<img class="lazyload" src="img/ic-star.png" width="25" height="25" alt="оценка">
-									<img class="lazyload" src="img/ic-star.png" width="25" height="25" alt="оценка">
+									<div class="human__rating">
+										<img loading="lazy" src="img/ic-star.png" width="25" height="25" alt="star"> 
+										<img loading="lazy" src="img/ic-star.png" width="25" height="25" alt="star">
+										<img loading="lazy" src="img/ic-star.png" width="25" height="25" alt="star">
+										<img loading="lazy" src="img/ic-star.png" width="25" height="25" alt="star">
+										<img loading="lazy" src="img/ic-star.png" width="25" height="25" alt="star">
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-					<div class="review__box">
-						<div class="review__text">
-							<p>Суждение осмысляет дедуктивный метод.
-							Реальная власть, как принято считать,
-							иллюзорна. Надо сказать, что искусство
-							амбивалентно рефлектирует катарсис.
-							Интеллект амбивалентно рассматривается
-							интеллект. Моцзы, Сюнъцзы и другие считали,
-							что дедуктивный метод преобразует гений.</p>
-						</div>
-						<div class="review__human">
-							<div class="human__block">
-								<div class="human__description">
-									<div class="human__avatar">
-										<img class="lazyload" src="img/avatar2.png" width="65" height="65" alt="Аватар">
-									</div>
-									<div class="human__text">
-										<div class="human__text-block">
-											<p>Людмила Арёвина</p>
-											<span class="car-name">Kia Ceed</span>
+						<div class="review__box">
+							<div class="review__text">
+								<p>Суждение осмысляет дедуктивный метод.
+								Реальная власть, как принято считать,
+								иллюзорна. Надо сказать, что искусство
+								амбивалентно рефлектирует катарсис.
+								Интеллект амбивалентно рассматривается
+								интеллект. Моцзы, Сюнъцзы и другие считали,
+								что дедуктивный метод преобразует гений.</p>
+							</div>
+							<div class="review__human">
+								<div class="human__block">
+									<div class="human__description">
+										<div class="human__avatar">
+											<img loading="lazy" src="img/avatar2.png" width="65" height="65" alt="Аватар">
 										</div>
-										<div class="human__text-block">
-											<a href="" class="human__text-link">Диагностика подвески</a>
-											<span class="time-work">1 час на работу</span>
+										<div class="human__text">
+											<div class="human__text-block">
+												<p>Людмила Арёвина</p>
+												<span class="car-name">Kia Ceed</span>
+											</div>
+											<div class="human__text-block">
+												<a href="" class="human__text-link">Диагностика подвески</a>
+												<span class="time-work">1 час на работу</span>
+											</div>
 										</div>
 									</div>
-								</div>
-								<div class="human__rating">
-									<img class="lazyload" src="img/ic-star.png" width="25" height="25" alt="оценка">
-									<img class="lazyload" src="img/ic-star.png" width="25" height="25" alt="оценка">
-									<img class="lazyload" src="img/ic-star.png" width="25" height="25" alt="оценка">
-									<img class="lazyload" src="img/ic-star.png" width="25" height="25" alt="оценка">
-									<img class="lazyload" src="img/ic-star.png" width="25" height="25" alt="оценка">
+									<div class="human__rating">
+										<img loading="lazy" src="img/ic-star.png" width="25" height="25" alt="star">
+										<img loading="lazy" src="img/ic-star.png" width="25" height="25" alt="star">
+										<img loading="lazy" src="img/ic-star.png" width="25" height="25" alt="star">
+										<img loading="lazy" src="img/ic-star.png" width="25" height="25" alt="star">
+										<img loading="lazy" src="img/ic-star.png" width="25" height="25" alt="star">
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
+			<div class="review__bg"></div>
 		</div>
-		<div class="review__bg"></div>
 	</div>
-</div>
+</section>
 
-		<div class="container footer__container">
-	<div class="wrap contacts__wrap padding-footer">
-		<div class="contacts__block">
-			<div class="h2__title">
-				<h2>Ждем вас и Ваше авто</h2>
+		<section id="contacts" >
+	<div class="container footer__container">
+		<div class="wrap contacts__wrap padding-footer">
+			<div class="contacts__block">
+				<div class="h2__title">
+					<h2>Ждем вас и Ваше авто</h2>
+				</div>
+				<div class="contacts__info">
+					<div class="contacts__info-box">
+						<div class="info__block info__1">
+							<div class="info__address">
+								<div class="contacts__ic">
+									<img loading="lazy" src="img/contacts/map.svg" width="16" height="22" alt="map">
+								</div>
+								<p>Минск, ул. Жилуновича, 2</p>
+							</div>
+							<div class="info__phone">
+								<div class="contacts__ic">
+									<img loading="lazy" src="img/contacts/phone.svg" width="14" height="27" alt="phone">
+								</div>
+								<div class="phone__box">
+									<p>+7 (546) 754-74-75</p>
+									<p>+7 (654) 765-78-22</p>
+								</div>
+							</div>
+						</div>
+						<div class="info__block">
+							<div class="info__mail">
+								<div class="contacts__ic">
+									<img loading="lazy" src="img/contacts/mail.svg" width="20" height="16" alt="mail">
+								</div>
+								<a href="#">info@mail.ru</a>
+							</div>
+							<div class="info__time">
+								<div class="contacts__ic"><img loading="lazy" src="img/contacts/clock.svg" width="20" height="20"  alt="time"></div>
+								<div class="time_box">
+									<div class="time-b"><span>ПН-ПТ:</span><p>09:00-19:00</p></div>
+									<div class="time-b"><span>СБ:</span><p>09:00-17:00</p></div>
+									<div class="time-b"><span>ВС:</span><p>Выходной</p></div>
+								</div>	
+							</div>
+						</div>
+					</div>
+					<div class="contacts__btn-social">
+						<div class="main__btns contacts__btns">
+							<a class="btn-signup footer__btn1">Записаться</a>
+						</div>
+					</div>
+				</div>
+				<footer>
+					<div class="footer-line">
+						<div class="f-line"></div>
+					</div>
+					<div class="footer__info">
+						<p>Ремонт, техническое обсуживание, прокат 
+							и страхование автомобилей в Минске</p>
+						<span>©2012–2021 Автосервис RepairCar 
+						Все права защищены</span>
+					</div>
+				</footer>
 			</div>
-			<div class="contacts__info">
-				<div class="contacts__info-box">
-					<div class="info__block info__1">
-						<div class="info__address">
-							<div class="contacts__ic">
-								<img class="lazyload" src="img/contacts/map.svg" width="16" height="22" alt="карта">
-							</div>
-							<p>Минск, ул. Жилуновича, 2</p>
-						</div>
-						<div class="info__phone">
-							<div class="contacts__ic">
-								<img class="lazyload" src="img/contacts/phone.svg" width="14" height="27" alt="телефон">
-							</div>
-							<div class="phone__box">
-								<p>+7 (546) 754-74-75</p>
-								<p>+7 (654) 765-78-22</p>
-							</div>
-						</div>
-					</div>
-					<div class="info__block">
-						<div class="info__mail">
-							<div class="contacts__ic">
-								<img class="lazyload" src="img/contacts/mail.svg" width="20" height="16" alt="почта">
-							</div>
-							<a href="#">info@mail.ru</a>
-						</div>
-						<div class="info__time">
-							<div class="contacts__ic"><img class="lazyload" src="img/contacts/clock.svg" width="20" height="20"  alt="время"></div>
-							<div class="time_box">
-								<div class="time-b"><span>ПН-ПТ:</span><p>09:00-19:00</p></div>
-								<div class="time-b"><span>СБ:</span><p>09:00-17:00</p></div>
-								<div class="time-b"><span>ВС:</span><p>Выходной</p></div>
-							</div>	
-						</div>
-					</div>
+			<div class="contacts__block">
+				<div class="map__container" id="YaMaps">
+				 
 				</div>
-				<div class="contacts__info2">
-					<div class="main__btns contacts__btns">
-						<a class="btn-signup footer__btn1">Записаться</a>
-						<a class="btn-calc footer__btn2">Рассчитать цену</a>
-					</div>
-					<div class="contacts__social">
-						<a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">
-							<img class="lazyload" src="img/social/circle-facebook.svg" width="30" height="30" alt="facebook">
-						</a>
-						<a href="https://www.ok.com" target="_blank" rel="noopener noreferrer">
-							<img class="lazyload" src="img/social/circle-ok.svg" width="30" height="30" alt="ok">
-						</a>
-						<a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">
-							<img class="lazyload" src="img/social/circle-insta.svg" width="30" height="30" alt="instagram">
-						</a>
-						<a href="https://www.telegram.com" target="_blank" rel="noopener noreferrer">
-							<img class="lazyload" src="img/social/circle-telegram.svg" width="30" height="30" alt="telegram">
-						</a>
-						<a href="https://www.whatsapp.com" target="_blank" rel="noopener noreferrer">
-							<img class="lazyload" src="img/social/circle-whats.svg" width="30" height="30" alt="whatsapp">
-						</a>
-					</div>
-				</div>
-			</div>
-			<footer>
-				<div class="footer-line">
-					<div class="f-line"></div>
-				</div>
-				<div class="footer__info">
-					<p>Ремонт, техническое обсуживание, прокат 
-						и страхование автомобилей в Минске</p>
-					<span>©2012–2021 Автосервис RepairCar 
-					Все права защищены</span>
-				</div>
-			</footer>
-		</div>
-		<div class="contacts__block">
-			<div class="map__container" id="YaMaps">
-			 
 			</div>
 		</div>
 	</div>
-</div>
+</section>
 
 	</section>
 
@@ -700,12 +814,12 @@
 	<div class="modal__block content__modal">
 	<div class="modal-content">
 		<div class="modal-close">
-			<img class="lazyload" src="img/interface/close.svg" width="30" height="30" alt="Закрыть">
+			<img loading="lazy" src="img/interface/close.svg" width="30" height="30" alt="Закрыть">
 		</div>
 		<div class="modal-info">
 			<div class="modal-img">
-				<img class="lazyload" 
-				src="img/car-diagnostic-1x.jpg" 
+				<img 
+				loading="lazy" src="img/car-diagnostic-1x.jpg" 
 				srcset="img/car-diagnostic-2x.jpg 2x" 
 				alt="Диагностика">
 			</div>
@@ -737,7 +851,7 @@
 <div class="modal__block form__modal">
 	<div class="modal-content call-form">
 		<div class="modal-close form-close">
-			<img class="lazyload" src="img/interface/close.svg" width="30" height="30" alt="Закрыть">
+			<img loading="lazy" src="img/interface/close.svg" width="30" height="30" alt="Закрыть">
 		</div>
 		<div class="modal-title">
 			<h2>Заявка на звонок</h2>
