@@ -4018,7 +4018,8 @@ window.addEventListener('DOMContentLoaded', function () {
     return k.noConflict = function (e) {
       return C.$ === k && (C.$ = Jt), e && C.jQuery === k && (C.jQuery = Qt), k;
     }, e || (C.jQuery = C.$ = k), k;
-  });
+  }); // Загрузка шрифтов
+
   var head = window.document.getElementsByTagName('head')[0];
 
   function includeCSS(aFile, aRel, as) {
@@ -4034,128 +4035,3419 @@ window.addEventListener('DOMContentLoaded', function () {
   }
 
   includeCSS('https://fonts.gstatic.com');
-  includeCSS('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap');
+  includeCSS('https://fonts.googleapis.com/css2?family=Rubik:wght@500;700&display=swap');
   includeCSS('https://fonts.gstatic.com');
-  includeCSS('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,700;1,400&display=swap'); // Задержка загрузки yaMaps
+  includeCSS('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,700;1,400&display=swap'); // ==========
+  // // Ленивая загрузка
+  // const images = document.querySelectorAll('img');
+  // const options = {
+  // 	root : null,
+  // 	rootMargin : '0px',
+  // 	threshold : 0.1
+  // }
+  // function handleImg(myImg, observer) {
+  // 	myImg.forEach(myImgSingle => {
+  // 		// console.log(myImgSingle.intersectionRatio);
+  // 		if (myImgSingle.intersectionRatio > 0) {
+  // 			loadImage(myImgSingle.target);
+  // 		}
+  // 	})
+  // }
+  // function loadImage(image) {
+  // 	image.src = image.getAttribute('data-src');
+  // }
+  // const observer = new IntersectionObserver(handleImg, options);
+  // images.forEach(img => {
+  // 	observer.observe(img);
+  // });
+  // ==========
 
-  var YaMapsShown = false;
-  document.addEventListener('scroll', function () {
-    var scrollTop = document.documentElement.scrollTop;
+  var animItems = Array.prototype.slice.call(document.querySelectorAll('._anim-items'));
 
-    if (scrollTop >= 2000) {
-      showYaMaps();
-      YaMapsShown = true;
-    }
-  });
+  if (animItems.length > 0) {
+    var animOnScroll = function animOnScroll() {
+      for (var index = 0; index < animItems.length; index++) {
+        var animItem = animItems[index];
+        var animItemHeight = animItem.offsetHeight;
+        var animItemOffset = offset(animItem).top;
+        var animStart = 4;
+        var animItemPoint = window.innerHeight - animItemHeight / animStart;
 
-  function showYaMaps() {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src = "https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3A9b6066007d2a10adcbdac165fce87a97b3b6229e2ce4402bf66155f39a195930&amp;width=100%25&amp;height=588&amp;lang=ru_RU&amp;scroll=true";
-    document.getElementById("YaMaps").appendChild(script);
-  } // ==========
-  // модальные окна
-
-
-  var modals = function modals() {
-    function bindModal(triggerSelector, modalSelector, closeSelector) {
-      // const triggers = document.querySelectorAll(triggerSelector),
-      var modal = document.querySelector(modalSelector);
-      var close = document.querySelector(closeSelector);
-      var alltable = Array.prototype.slice.call(document.querySelectorAll(triggerSelector)); //Select all elements with the id starting by "table_"
-
-      alltable.forEach(function (item) {
-        item.addEventListener('click', openModal);
-      });
-
-      function openModal() {
-        modal.classList.add('modal--show');
-        document.body.style.overflow = 'hidden';
-        modal.classList.add('animate__animated', 'animate__fadeIn'); // clearInterval(openTimer);
-      }
-
-      function closeModal() {
-        modal.classList.remove('modal--show');
-        document.body.style.overflow = '';
-        modal.classList.remove('animate__animated', 'animate__fadeIn');
-      }
-
-      ;
-      var contentBtn = document.querySelector('.content-btn');
-      contentBtn.addEventListener('click', function () {
-        var contentM = document.querySelector('.content__modal');
-        contentM.classList.remove('modal--show');
-        document.body.style.overflow = ''; // contentM.classList.remove('animate__animated', 'animate__fadeIn');
-      });
-      close.addEventListener('click', function () {
-        closeModal();
-      });
-      modal.addEventListener('click', function (e) {
-        if (e.target === modal) {
-          closeModal();
+        if (animItemHeight > window.innerHeight) {
+          animItemPoint = window.innerHeight - window.innerHeight / animStart;
         }
-      });
-      document.addEventListener('keydown', function (e) {
-        if (e.code === 'Escape' && modal.classList.contains('show')) {
-          closeModal();
+
+        if (pageYOffset > animItemOffset - animItemPoint && pageYOffset < animItemOffset + animItemHeight) {
+          animItem.classList.add('_active');
+        } else {
+          if (!animItem.classList.contains('_anim-no-hide')) {
+            animItem.classList.remove('_active');
+          }
         }
-      }); // function showModalByScroll() {
-      // 	if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
-      // 		if (modal.classList.contains('form__modal')) {
-      // 			openModal();
-      // 			window.removeEventListener('scroll', showModalByScroll);
-      // 		}
-      // 	}
-      // }
-      // window.addEventListener('scroll', showModalByScroll);
-      // function openTimer() {
-      // 	setTimeout(openModal, 2000);
-      // }
-      // if (modal.classList.contains('form__modal')) {
-      // 	openTimer();
-      // }
-    }
+      }
+    };
 
-    bindModal('.call-modal__btn', '.form__modal', '.form-close');
-    bindModal('.burger__call-btn', '.form__modal', '.form-close');
-    bindModal('.btn-signup', '.form__modal', '.form-close');
-    bindModal('.footer__btn1', '.form__modal', '.form-close');
-    bindModal('.service__card', '.content__modal', '.modal-close');
-    bindModal('.brands__box', '.content__modal', '.modal-close');
-    var burgerCallBtn = document.querySelector('.burger__call-btn');
-    burgerCallBtn.addEventListener('click', function () {
-      closeNav();
-    });
-  }; // ==========
-  // Бургер меню
+    var offset = function offset(el) {
+      var rect = el.getBoundingClientRect();
+      var scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+      var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      return {
+        top: rect.top + scrollTop,
+        left: rect.left + scrollLeft
+      };
+    };
 
-
-  var body = document.querySelector('body');
-  var overlay = document.querySelector('.overlay');
-  var navIcon = document.querySelector('.menu-btn');
-  var burgerNav = document.querySelector('.burger__block');
-  var burgerItems = Array.prototype.slice.call(document.querySelectorAll('.burger-menu__items a'));
-  var closeBurger = document.querySelector('.close-burger');
-  navIcon.addEventListener('click', function () {
-    this.classList.add('open');
-    overlay.classList.add('show');
-    burgerNav.classList.add('show');
-    body.classList.add('overflow-hidden');
-  });
-
-  function closeNav() {
-    navIcon.classList.remove('open');
-    overlay.classList.remove('show');
-    burgerNav.classList.remove('show');
-    body.classList.remove('overflow-hidden');
+    window.addEventListener('scroll', animOnScroll);
+    setTimeout(function () {
+      animOnScroll();
+    }, 300);
   }
 
-  overlay.addEventListener('click', closeNav);
-  closeBurger.addEventListener('click', closeNav);
-  burgerItems.forEach(function (item) {
-    item.addEventListener('click', closeNav);
-  }); // ==========
-  // CUSTOM SELECT
+  !function (t, e) {
+    "object" == (typeof exports === "undefined" ? "undefined" : _typeof(exports)) && "undefined" != typeof module ? e(exports) : "function" == typeof define && define.amd ? define(["exports"], e) : e((t = "undefined" != typeof globalThis ? globalThis : t || self).IMask = {});
+  }(_this, function (t) {
+    "use strict";
+
+    var e = "undefined" != typeof globalThis ? globalThis : "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof self ? self : {};
+
+    function n(t) {
+      var e = {
+        exports: {}
+      };
+      return t(e, e.exports), e.exports;
+    }
+
+    var u = function u(t) {
+      return t && t.Math == Math && t;
+    },
+        r = u("object" == (typeof globalThis === "undefined" ? "undefined" : _typeof(globalThis)) && globalThis) || u("object" == (typeof window === "undefined" ? "undefined" : _typeof(window)) && window) || u("object" == (typeof self === "undefined" ? "undefined" : _typeof(self)) && self) || u("object" == _typeof(e) && e) || function () {
+      return this;
+    }() || Function("return this")(),
+        i = function i(t) {
+      try {
+        return !!t();
+      } catch (t) {
+        return !0;
+      }
+    },
+        a = !i(function () {
+      return 7 != Object.defineProperty({}, 1, {
+        get: function get() {
+          return 7;
+        }
+      })[1];
+    }),
+        s = {}.propertyIsEnumerable,
+        o = Object.getOwnPropertyDescriptor,
+        l = {
+      f: o && !s.call({
+        1: 2
+      }, 1) ? function (t) {
+        var e = o(this, t);
+        return !!e && e.enumerable;
+      } : s
+    },
+        h = function h(t, e) {
+      return {
+        enumerable: !(1 & t),
+        configurable: !(2 & t),
+        writable: !(4 & t),
+        value: e
+      };
+    },
+        c = {}.toString,
+        f = "".split,
+        p = i(function () {
+      return !Object("z").propertyIsEnumerable(0);
+    }) ? function (t) {
+      return "String" == function (t) {
+        return c.call(t).slice(8, -1);
+      }(t) ? f.call(t, "") : Object(t);
+    } : Object,
+        d = function d(t) {
+      if (null == t) throw TypeError("Can't call method on " + t);
+      return t;
+    },
+        v = function v(t) {
+      return p(d(t));
+    },
+        k = function k(t) {
+      return "object" == _typeof(t) ? null !== t : "function" == typeof t;
+    },
+        g = function g(t, e) {
+      if (!k(t)) return t;
+      var n, u;
+      if (e && "function" == typeof (n = t.toString) && !k(u = n.call(t))) return u;
+      if ("function" == typeof (n = t.valueOf) && !k(u = n.call(t))) return u;
+      if (!e && "function" == typeof (n = t.toString) && !k(u = n.call(t))) return u;
+      throw TypeError("Can't convert object to primitive value");
+    },
+        y = {}.hasOwnProperty,
+        m = function m(t, e) {
+      return y.call(t, e);
+    },
+        _ = r.document,
+        A = k(_) && k(_.createElement),
+        b = !a && !i(function () {
+      return 7 != Object.defineProperty((t = "div", A ? _.createElement(t) : {}), "a", {
+        get: function get() {
+          return 7;
+        }
+      }).a;
+      var t;
+    }),
+        E = Object.getOwnPropertyDescriptor,
+        C = {
+      f: a ? E : function (t, e) {
+        if (t = v(t), e = g(e, !0), b) try {
+          return E(t, e);
+        } catch (t) {}
+        if (m(t, e)) return h(!l.f.call(t, e), t[e]);
+      }
+    },
+        F = function F(t) {
+      if (!k(t)) throw TypeError(String(t) + " is not an object");
+      return t;
+    },
+        S = Object.defineProperty,
+        D = {
+      f: a ? S : function (t, e, n) {
+        if (F(t), e = g(e, !0), F(n), b) try {
+          return S(t, e, n);
+        } catch (t) {}
+        if ("get" in n || "set" in n) throw TypeError("Accessors not supported");
+        return "value" in n && (t[e] = n.value), t;
+      }
+    },
+        B = a ? function (t, e, n) {
+      return D.f(t, e, h(1, n));
+    } : function (t, e, n) {
+      return t[e] = n, t;
+    },
+        w = function w(t, e) {
+      try {
+        B(r, t, e);
+      } catch (n) {
+        r[t] = e;
+      }
+
+      return e;
+    },
+        O = r["__core-js_shared__"] || w("__core-js_shared__", {}),
+        M = Function.toString;
+
+    "function" != typeof O.inspectSource && (O.inspectSource = function (t) {
+      return M.call(t);
+    });
+    var T,
+        x,
+        P,
+        I,
+        R = O.inspectSource,
+        j = r.WeakMap,
+        V = "function" == typeof j && /native code/.test(R(j)),
+        N = n(function (t) {
+      (t.exports = function (t, e) {
+        return O[t] || (O[t] = void 0 !== e ? e : {});
+      })("versions", []).push({
+        version: "3.8.3",
+        mode: "global",
+        copyright: "© 2021 Denis Pushkarev (zloirock.ru)"
+      });
+    }),
+        L = 0,
+        H = Math.random(),
+        U = N("keys"),
+        G = {},
+        z = r.WeakMap;
+
+    if (V) {
+      var Y = O.state || (O.state = new z()),
+          Z = Y.get,
+          K = Y.has,
+          q = Y.set;
+      T = function T(t, e) {
+        return e.facade = t, q.call(Y, t, e), e;
+      }, x = function x(t) {
+        return Z.call(Y, t) || {};
+      }, P = function P(t) {
+        return K.call(Y, t);
+      };
+    } else {
+      var W = U[I = "state"] || (U[I] = function (t) {
+        return "Symbol(" + String(void 0 === t ? "" : t) + ")_" + (++L + H).toString(36);
+      }(I));
+
+      G[W] = !0, T = function T(t, e) {
+        return e.facade = t, B(t, W, e), e;
+      }, x = function x(t) {
+        return m(t, W) ? t[W] : {};
+      }, P = function P(t) {
+        return m(t, W);
+      };
+    }
+
+    var $ = {
+      set: T,
+      get: x,
+      has: P,
+      enforce: function enforce(t) {
+        return P(t) ? x(t) : T(t, {});
+      },
+      getterFor: function getterFor(t) {
+        return function (e) {
+          var n;
+          if (!k(e) || (n = x(e)).type !== t) throw TypeError("Incompatible receiver, " + t + " required");
+          return n;
+        };
+      }
+    },
+        X = n(function (t) {
+      var e = $.get,
+          n = $.enforce,
+          u = String(String).split("String");
+      (t.exports = function (t, e, i, a) {
+        var s,
+            o = !!a && !!a.unsafe,
+            l = !!a && !!a.enumerable,
+            h = !!a && !!a.noTargetGet;
+        "function" == typeof i && ("string" != typeof e || m(i, "name") || B(i, "name", e), (s = n(i)).source || (s.source = u.join("string" == typeof e ? e : ""))), t !== r ? (o ? !h && t[e] && (l = !0) : delete t[e], l ? t[e] = i : B(t, e, i)) : l ? t[e] = i : w(e, i);
+      })(Function.prototype, "toString", function () {
+        return "function" == typeof this && e(this).source || R(this);
+      });
+    }),
+        J = r,
+        Q = function Q(t) {
+      return "function" == typeof t ? t : void 0;
+    },
+        tt = function tt(t, e) {
+      return arguments.length < 2 ? Q(J[t]) || Q(r[t]) : J[t] && J[t][e] || r[t] && r[t][e];
+    },
+        et = Math.ceil,
+        nt = Math.floor,
+        ut = function ut(t) {
+      return isNaN(t = +t) ? 0 : (t > 0 ? nt : et)(t);
+    },
+        rt = Math.min,
+        it = function it(t) {
+      return t > 0 ? rt(ut(t), 9007199254740991) : 0;
+    },
+        at = Math.max,
+        st = Math.min,
+        ot = function ot(t) {
+      return function (e, n, u) {
+        var r,
+            i = v(e),
+            a = it(i.length),
+            s = function (t, e) {
+          var n = ut(t);
+          return n < 0 ? at(n + e, 0) : st(n, e);
+        }(u, a);
+
+        if (t && n != n) {
+          for (; a > s;) {
+            if ((r = i[s++]) != r) return !0;
+          }
+        } else for (; a > s; s++) {
+          if ((t || s in i) && i[s] === n) return t || s || 0;
+        }
+
+        return !t && -1;
+      };
+    },
+        lt = {
+      includes: ot(!0),
+      indexOf: ot(!1)
+    }.indexOf,
+        ht = function ht(t, e) {
+      var n,
+          u = v(t),
+          r = 0,
+          i = [];
+
+      for (n in u) {
+        !m(G, n) && m(u, n) && i.push(n);
+      }
+
+      for (; e.length > r;) {
+        m(u, n = e[r++]) && (~lt(i, n) || i.push(n));
+      }
+
+      return i;
+    },
+        ct = ["constructor", "hasOwnProperty", "isPrototypeOf", "propertyIsEnumerable", "toLocaleString", "toString", "valueOf"],
+        ft = ct.concat("length", "prototype"),
+        pt = {
+      f: Object.getOwnPropertyNames || function (t) {
+        return ht(t, ft);
+      }
+    },
+        dt = {
+      f: Object.getOwnPropertySymbols
+    },
+        vt = tt("Reflect", "ownKeys") || function (t) {
+      var e = pt.f(F(t)),
+          n = dt.f;
+      return n ? e.concat(n(t)) : e;
+    },
+        kt = function kt(t, e) {
+      for (var n = vt(e), u = D.f, r = C.f, i = 0; i < n.length; i++) {
+        var a = n[i];
+        m(t, a) || u(t, a, r(e, a));
+      }
+    },
+        gt = /#|\.prototype\./,
+        yt = function yt(t, e) {
+      var n = _t[mt(t)];
+
+      return n == bt || n != At && ("function" == typeof e ? i(e) : !!e);
+    },
+        mt = yt.normalize = function (t) {
+      return String(t).replace(gt, ".").toLowerCase();
+    },
+        _t = yt.data = {},
+        At = yt.NATIVE = "N",
+        bt = yt.POLYFILL = "P",
+        Et = yt,
+        Ct = C.f,
+        Ft = function Ft(t, e) {
+      var n,
+          u,
+          i,
+          a,
+          s,
+          o = t.target,
+          l = t.global,
+          h = t.stat;
+      if (n = l ? r : h ? r[o] || w(o, {}) : (r[o] || {}).prototype) for (u in e) {
+        if (a = e[u], i = t.noTargetGet ? (s = Ct(n, u)) && s.value : n[u], !Et(l ? u : o + (h ? "." : "#") + u, t.forced) && void 0 !== i) {
+          if (_typeof(a) == _typeof(i)) continue;
+          kt(a, i);
+        }
+
+        (t.sham || i && i.sham) && B(a, "sham", !0), X(n, u, a, t);
+      }
+    },
+        St = Object.keys || function (t) {
+      return ht(t, ct);
+    },
+        Dt = Object.assign,
+        Bt = Object.defineProperty,
+        wt = !Dt || i(function () {
+      if (a && 1 !== Dt({
+        b: 1
+      }, Dt(Bt({}, "a", {
+        enumerable: !0,
+        get: function get() {
+          Bt(this, "b", {
+            value: 3,
+            enumerable: !1
+          });
+        }
+      }), {
+        b: 2
+      })).b) return !0;
+      var t = {},
+          e = {},
+          n = Symbol();
+      return t[n] = 7, "abcdefghijklmnopqrst".split("").forEach(function (t) {
+        e[t] = t;
+      }), 7 != Dt({}, t)[n] || "abcdefghijklmnopqrst" != St(Dt({}, e)).join("");
+    }) ? function (t, e) {
+      for (var n = Object(d(t)), u = arguments.length, r = 1, i = dt.f, s = l.f; u > r;) {
+        for (var o, h = p(arguments[r++]), c = i ? St(h).concat(i(h)) : St(h), f = c.length, v = 0; f > v;) {
+          o = c[v++], a && !s.call(h, o) || (n[o] = h[o]);
+        }
+      }
+
+      return n;
+    } : Dt;
+
+    Ft({
+      target: "Object",
+      stat: !0,
+      forced: Object.assign !== wt
+    }, {
+      assign: wt
+    });
+
+    var Ot = "".repeat || function (t) {
+      var e = String(d(this)),
+          n = "",
+          u = ut(t);
+      if (u < 0 || u == 1 / 0) throw RangeError("Wrong number of repetitions");
+
+      for (; u > 0; (u >>>= 1) && (e += e)) {
+        1 & u && (n += e);
+      }
+
+      return n;
+    },
+        Mt = Math.ceil,
+        Tt = function Tt(t) {
+      return function (e, n, u) {
+        var r,
+            i,
+            a = String(d(e)),
+            s = a.length,
+            o = void 0 === u ? " " : String(u),
+            l = it(n);
+        return l <= s || "" == o ? a : (r = l - s, (i = Ot.call(o, Mt(r / o.length))).length > r && (i = i.slice(0, r)), t ? a + i : i + a);
+      };
+    },
+        xt = {
+      start: Tt(!1),
+      end: Tt(!0)
+    },
+        Pt = tt("navigator", "userAgent") || "",
+        It = /Version\/10\.\d+(\.\d+)?( Mobile\/\w+)? Safari\//.test(Pt),
+        Rt = xt.end;
+
+    Ft({
+      target: "String",
+      proto: !0,
+      forced: It
+    }, {
+      padEnd: function padEnd(t) {
+        return Rt(this, t, arguments.length > 1 ? arguments[1] : void 0);
+      }
+    });
+    var jt = xt.start;
+
+    function Vt(t) {
+      return (Vt = "function" == typeof Symbol && "symbol" == _typeof(Symbol.iterator) ? function (t) {
+        return _typeof(t);
+      } : function (t) {
+        return t && "function" == typeof Symbol && t.constructor === Symbol && t !== Symbol.prototype ? "symbol" : _typeof(t);
+      })(t);
+    }
+
+    function Nt(t, e) {
+      if (!(t instanceof e)) throw new TypeError("Cannot call a class as a function");
+    }
+
+    function Lt(t, e) {
+      for (var n = 0; n < e.length; n++) {
+        var u = e[n];
+        u.enumerable = u.enumerable || !1, u.configurable = !0, "value" in u && (u.writable = !0), Object.defineProperty(t, u.key, u);
+      }
+    }
+
+    function Ht(t, e, n) {
+      return e && Lt(t.prototype, e), n && Lt(t, n), t;
+    }
+
+    function Ut(t, e) {
+      if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function");
+      t.prototype = Object.create(e && e.prototype, {
+        constructor: {
+          value: t,
+          writable: !0,
+          configurable: !0
+        }
+      }), e && zt(t, e);
+    }
+
+    function Gt(t) {
+      return (Gt = Object.setPrototypeOf ? Object.getPrototypeOf : function (t) {
+        return t.__proto__ || Object.getPrototypeOf(t);
+      })(t);
+    }
+
+    function zt(t, e) {
+      return (zt = Object.setPrototypeOf || function (t, e) {
+        return t.__proto__ = e, t;
+      })(t, e);
+    }
+
+    function Yt(t, e) {
+      if (null == t) return {};
+
+      var n,
+          u,
+          r = function (t, e) {
+        if (null == t) return {};
+        var n,
+            u,
+            r = {},
+            i = Object.keys(t);
+
+        for (u = 0; u < i.length; u++) {
+          n = i[u], e.indexOf(n) >= 0 || (r[n] = t[n]);
+        }
+
+        return r;
+      }(t, e);
+
+      if (Object.getOwnPropertySymbols) {
+        var i = Object.getOwnPropertySymbols(t);
+
+        for (u = 0; u < i.length; u++) {
+          n = i[u], e.indexOf(n) >= 0 || Object.prototype.propertyIsEnumerable.call(t, n) && (r[n] = t[n]);
+        }
+      }
+
+      return r;
+    }
+
+    function Zt(t, e) {
+      return !e || "object" != _typeof(e) && "function" != typeof e ? function (t) {
+        if (void 0 === t) throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+        return t;
+      }(t) : e;
+    }
+
+    function Kt(t) {
+      var e = function () {
+        if ("undefined" == typeof Reflect || !Reflect.construct) return !1;
+        if (Reflect.construct.sham) return !1;
+        if ("function" == typeof Proxy) return !0;
+
+        try {
+          return Date.prototype.toString.call(Reflect.construct(Date, [], function () {})), !0;
+        } catch (t) {
+          return !1;
+        }
+      }();
+
+      return function () {
+        var n,
+            u = Gt(t);
+
+        if (e) {
+          var r = Gt(this).constructor;
+          n = Reflect.construct(u, arguments, r);
+        } else n = u.apply(this, arguments);
+
+        return Zt(this, n);
+      };
+    }
+
+    function qt(t, e) {
+      for (; !Object.prototype.hasOwnProperty.call(t, e) && null !== (t = Gt(t));) {
+        ;
+      }
+
+      return t;
+    }
+
+    function Wt(t, e, n) {
+      return (Wt = "undefined" != typeof Reflect && Reflect.get ? Reflect.get : function (t, e, n) {
+        var u = qt(t, e);
+
+        if (u) {
+          var r = Object.getOwnPropertyDescriptor(u, e);
+          return r.get ? r.get.call(n) : r.value;
+        }
+      })(t, e, n || t);
+    }
+
+    function $t(t, e, n, u) {
+      return ($t = "undefined" != typeof Reflect && Reflect.set ? Reflect.set : function (t, e, n, u) {
+        var r,
+            i = qt(t, e);
+
+        if (i) {
+          if ((r = Object.getOwnPropertyDescriptor(i, e)).set) return r.set.call(u, n), !0;
+          if (!r.writable) return !1;
+        }
+
+        if (r = Object.getOwnPropertyDescriptor(u, e)) {
+          if (!r.writable) return !1;
+          r.value = n, Object.defineProperty(u, e, r);
+        } else !function (t, e, n) {
+          e in t ? Object.defineProperty(t, e, {
+            value: n,
+            enumerable: !0,
+            configurable: !0,
+            writable: !0
+          }) : t[e] = n;
+        }(u, e, n);
+
+        return !0;
+      })(t, e, n, u);
+    }
+
+    function Xt(t, e, n, u, r) {
+      if (!$t(t, e, n, u || t) && r) throw new Error("failed to set property");
+      return n;
+    }
+
+    function Jt(t, e) {
+      return function (t) {
+        if (Array.isArray(t)) return t;
+      }(t) || function (t, e) {
+        if ("undefined" == typeof Symbol || !(Symbol.iterator in Object(t))) return;
+        var n = [],
+            u = !0,
+            r = !1,
+            i = void 0;
+
+        try {
+          for (var a, s = t[Symbol.iterator](); !(u = (a = s.next()).done) && (n.push(a.value), !e || n.length !== e); u = !0) {
+            ;
+          }
+        } catch (t) {
+          r = !0, i = t;
+        } finally {
+          try {
+            u || null == s["return"] || s["return"]();
+          } finally {
+            if (r) throw i;
+          }
+        }
+
+        return n;
+      }(t, e) || function (t, e) {
+        if (!t) return;
+        if ("string" == typeof t) return Qt(t, e);
+        var n = Object.prototype.toString.call(t).slice(8, -1);
+        "Object" === n && t.constructor && (n = t.constructor.name);
+        if ("Map" === n || "Set" === n) return Array.from(t);
+        if ("Arguments" === n || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return Qt(t, e);
+      }(t, e) || function () {
+        throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+      }();
+    }
+
+    function Qt(t, e) {
+      (null == e || e > t.length) && (e = t.length);
+
+      for (var n = 0, u = new Array(e); n < e; n++) {
+        u[n] = t[n];
+      }
+
+      return u;
+    }
+
+    function te(t) {
+      return "string" == typeof t || t instanceof String;
+    }
+
+    Ft({
+      target: "String",
+      proto: !0,
+      forced: It
+    }, {
+      padStart: function padStart(t) {
+        return jt(this, t, arguments.length > 1 ? arguments[1] : void 0);
+      }
+    }), Ft({
+      target: "String",
+      proto: !0
+    }, {
+      repeat: Ot
+    }), Ft({
+      global: !0
+    }, {
+      globalThis: r
+    });
+    var ee = {
+      NONE: "NONE",
+      LEFT: "LEFT",
+      FORCE_LEFT: "FORCE_LEFT",
+      RIGHT: "RIGHT",
+      FORCE_RIGHT: "FORCE_RIGHT"
+    };
+
+    function ne(t) {
+      return t.replace(/([.*+?^=!:${}()|[\]\/\\])/g, "\\$1");
+    }
+
+    var ue = function () {
+      function t(e, n, u, r) {
+        for (Nt(this, t), this.value = e, this.cursorPos = n, this.oldValue = u, this.oldSelection = r; this.value.slice(0, this.startChangePos) !== this.oldValue.slice(0, this.startChangePos);) {
+          --this.oldSelection.start;
+        }
+      }
+
+      return Ht(t, [{
+        key: "startChangePos",
+        get: function get() {
+          return Math.min(this.cursorPos, this.oldSelection.start);
+        }
+      }, {
+        key: "insertedCount",
+        get: function get() {
+          return this.cursorPos - this.startChangePos;
+        }
+      }, {
+        key: "inserted",
+        get: function get() {
+          return this.value.substr(this.startChangePos, this.insertedCount);
+        }
+      }, {
+        key: "removedCount",
+        get: function get() {
+          return Math.max(this.oldSelection.end - this.startChangePos || this.oldValue.length - this.value.length, 0);
+        }
+      }, {
+        key: "removed",
+        get: function get() {
+          return this.oldValue.substr(this.startChangePos, this.removedCount);
+        }
+      }, {
+        key: "head",
+        get: function get() {
+          return this.value.substring(0, this.startChangePos);
+        }
+      }, {
+        key: "tail",
+        get: function get() {
+          return this.value.substring(this.startChangePos + this.insertedCount);
+        }
+      }, {
+        key: "removeDirection",
+        get: function get() {
+          return !this.removedCount || this.insertedCount ? ee.NONE : this.oldSelection.end === this.cursorPos || this.oldSelection.start === this.cursorPos ? ee.RIGHT : ee.LEFT;
+        }
+      }]), t;
+    }(),
+        re = function () {
+      function t(e) {
+        Nt(this, t), Object.assign(this, {
+          inserted: "",
+          rawInserted: "",
+          skip: !1,
+          tailShift: 0
+        }, e);
+      }
+
+      return Ht(t, [{
+        key: "aggregate",
+        value: function value(t) {
+          return this.rawInserted += t.rawInserted, this.skip = this.skip || t.skip, this.inserted += t.inserted, this.tailShift += t.tailShift, this;
+        }
+      }, {
+        key: "offset",
+        get: function get() {
+          return this.tailShift + this.inserted.length;
+        }
+      }]), t;
+    }(),
+        ie = function () {
+      function t() {
+        var e = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : "",
+            n = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : 0,
+            u = arguments.length > 2 ? arguments[2] : void 0;
+        Nt(this, t), this.value = e, this.from = n, this.stop = u;
+      }
+
+      return Ht(t, [{
+        key: "toString",
+        value: function value() {
+          return this.value;
+        }
+      }, {
+        key: "extend",
+        value: function value(t) {
+          this.value += String(t);
+        }
+      }, {
+        key: "appendTo",
+        value: function value(t) {
+          return t.append(this.toString(), {
+            tail: !0
+          }).aggregate(t._appendPlaceholder());
+        }
+      }, {
+        key: "state",
+        get: function get() {
+          return {
+            value: this.value,
+            from: this.from,
+            stop: this.stop
+          };
+        },
+        set: function set(t) {
+          Object.assign(this, t);
+        }
+      }, {
+        key: "shiftBefore",
+        value: function value(t) {
+          if (this.from >= t || !this.value.length) return "";
+          var e = this.value[0];
+          return this.value = this.value.slice(1), e;
+        }
+      }]), t;
+    }();
+
+    function ae(t) {
+      var e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {};
+      return new ae.InputMask(t, e);
+    }
+
+    var se = function () {
+      function t(e) {
+        Nt(this, t), this._value = "", this._update(Object.assign({}, t.DEFAULTS, e)), this.isInitialized = !0;
+      }
+
+      return Ht(t, [{
+        key: "updateOptions",
+        value: function value(t) {
+          Object.keys(t).length && this.withValueRefresh(this._update.bind(this, t));
+        }
+      }, {
+        key: "_update",
+        value: function value(t) {
+          Object.assign(this, t);
+        }
+      }, {
+        key: "state",
+        get: function get() {
+          return {
+            _value: this.value
+          };
+        },
+        set: function set(t) {
+          this._value = t._value;
+        }
+      }, {
+        key: "reset",
+        value: function value() {
+          this._value = "";
+        }
+      }, {
+        key: "value",
+        get: function get() {
+          return this._value;
+        },
+        set: function set(t) {
+          this.resolve(t);
+        }
+      }, {
+        key: "resolve",
+        value: function value(t) {
+          return this.reset(), this.append(t, {
+            input: !0
+          }, ""), this.doCommit(), this.value;
+        }
+      }, {
+        key: "unmaskedValue",
+        get: function get() {
+          return this.value;
+        },
+        set: function set(t) {
+          this.reset(), this.append(t, {}, ""), this.doCommit();
+        }
+      }, {
+        key: "typedValue",
+        get: function get() {
+          return this.doParse(this.value);
+        },
+        set: function set(t) {
+          this.value = this.doFormat(t);
+        }
+      }, {
+        key: "rawInputValue",
+        get: function get() {
+          return this.extractInput(0, this.value.length, {
+            raw: !0
+          });
+        },
+        set: function set(t) {
+          this.reset(), this.append(t, {
+            raw: !0
+          }, ""), this.doCommit();
+        }
+      }, {
+        key: "isComplete",
+        get: function get() {
+          return !0;
+        }
+      }, {
+        key: "nearestInputPos",
+        value: function value(t, e) {
+          return t;
+        }
+      }, {
+        key: "extractInput",
+        value: function value() {
+          var t = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : 0,
+              e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : this.value.length;
+          return this.value.slice(t, e);
+        }
+      }, {
+        key: "extractTail",
+        value: function value() {
+          var t = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : 0,
+              e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : this.value.length;
+          return new ie(this.extractInput(t, e), t);
+        }
+      }, {
+        key: "appendTail",
+        value: function value(t) {
+          return te(t) && (t = new ie(String(t))), t.appendTo(this);
+        }
+      }, {
+        key: "_appendCharRaw",
+        value: function value(t) {
+          return t ? (this._value += t, new re({
+            inserted: t,
+            rawInserted: t
+          })) : new re();
+        }
+      }, {
+        key: "_appendChar",
+        value: function value(t) {
+          var e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {},
+              n = arguments.length > 2 ? arguments[2] : void 0,
+              u = this.state,
+              r = this._appendCharRaw(this.doPrepare(t, e), e);
+
+          if (r.inserted) {
+            var i,
+                a = !1 !== this.doValidate(e);
+
+            if (a && null != n) {
+              var s = this.state;
+              this.overwrite && (i = n.state, n.shiftBefore(this.value.length));
+              var o = this.appendTail(n);
+              (a = o.rawInserted === n.toString()) && o.inserted && (this.state = s);
+            }
+
+            a || (r = new re(), this.state = u, n && i && (n.state = i));
+          }
+
+          return r;
+        }
+      }, {
+        key: "_appendPlaceholder",
+        value: function value() {
+          return new re();
+        }
+      }, {
+        key: "append",
+        value: function value(t, e, n) {
+          if (!te(t)) throw new Error("value should be string");
+          var u = new re(),
+              r = te(n) ? new ie(String(n)) : n;
+          e && e.tail && (e._beforeTailState = this.state);
+
+          for (var i = 0; i < t.length; ++i) {
+            u.aggregate(this._appendChar(t[i], e, r));
+          }
+
+          return null != r && (u.tailShift += this.appendTail(r).tailShift), u;
+        }
+      }, {
+        key: "remove",
+        value: function value() {
+          var t = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : 0,
+              e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : this.value.length;
+          return this._value = this.value.slice(0, t) + this.value.slice(e), new re();
+        }
+      }, {
+        key: "withValueRefresh",
+        value: function value(t) {
+          if (this._refreshing || !this.isInitialized) return t();
+          this._refreshing = !0;
+          var e = this.rawInputValue,
+              n = this.value,
+              u = t();
+          return this.rawInputValue = e, this.value && this.value !== n && 0 === n.indexOf(this.value) && this.append(n.slice(this.value.length), {}, ""), delete this._refreshing, u;
+        }
+      }, {
+        key: "runIsolated",
+        value: function value(t) {
+          if (this._isolated || !this.isInitialized) return t(this);
+          this._isolated = !0;
+          var e = this.state,
+              n = t(this);
+          return this.state = e, delete this._isolated, n;
+        }
+      }, {
+        key: "doPrepare",
+        value: function value(t) {
+          var e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {};
+          return this.prepare ? this.prepare(t, this, e) : t;
+        }
+      }, {
+        key: "doValidate",
+        value: function value(t) {
+          return (!this.validate || this.validate(this.value, this, t)) && (!this.parent || this.parent.doValidate(t));
+        }
+      }, {
+        key: "doCommit",
+        value: function value() {
+          this.commit && this.commit(this.value, this);
+        }
+      }, {
+        key: "doFormat",
+        value: function value(t) {
+          return this.format ? this.format(t, this) : t;
+        }
+      }, {
+        key: "doParse",
+        value: function value(t) {
+          return this.parse ? this.parse(t, this) : t;
+        }
+      }, {
+        key: "splice",
+        value: function value(t, e, n, u) {
+          var r = t + e,
+              i = this.extractTail(r),
+              a = this.nearestInputPos(t, u);
+          return new re({
+            tailShift: a - t
+          }).aggregate(this.remove(a)).aggregate(this.append(n, {
+            input: !0
+          }, i));
+        }
+      }]), t;
+    }();
+
+    function oe(t) {
+      if (null == t) throw new Error("mask property should be defined");
+      return t instanceof RegExp ? ae.MaskedRegExp : te(t) ? ae.MaskedPattern : t instanceof Date || t === Date ? ae.MaskedDate : t instanceof Number || "number" == typeof t || t === Number ? ae.MaskedNumber : Array.isArray(t) || t === Array ? ae.MaskedDynamic : ae.Masked && t.prototype instanceof ae.Masked ? t : t instanceof Function ? ae.MaskedFunction : t instanceof ae.Masked ? t.constructor : (console.warn("Mask not found for mask", t), ae.Masked);
+    }
+
+    function le(t) {
+      if (ae.Masked && t instanceof ae.Masked) return t;
+      var e = (t = Object.assign({}, t)).mask;
+      if (ae.Masked && e instanceof ae.Masked) return e;
+      var n = oe(e);
+      if (!n) throw new Error("Masked class is not found for provided mask, appropriate module needs to be import manually before creating mask.");
+      return new n(t);
+    }
+
+    se.DEFAULTS = {
+      format: function format(t) {
+        return t;
+      },
+      parse: function parse(t) {
+        return t;
+      }
+    }, ae.Masked = se, ae.createMask = le;
+
+    var he = {
+      0: /\d/,
+      a: /[\u0041-\u005A\u0061-\u007A\u00AA\u00B5\u00BA\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02C1\u02C6-\u02D1\u02E0-\u02E4\u02EC\u02EE\u0370-\u0374\u0376\u0377\u037A-\u037D\u0386\u0388-\u038A\u038C\u038E-\u03A1\u03A3-\u03F5\u03F7-\u0481\u048A-\u0527\u0531-\u0556\u0559\u0561-\u0587\u05D0-\u05EA\u05F0-\u05F2\u0620-\u064A\u066E\u066F\u0671-\u06D3\u06D5\u06E5\u06E6\u06EE\u06EF\u06FA-\u06FC\u06FF\u0710\u0712-\u072F\u074D-\u07A5\u07B1\u07CA-\u07EA\u07F4\u07F5\u07FA\u0800-\u0815\u081A\u0824\u0828\u0840-\u0858\u08A0\u08A2-\u08AC\u0904-\u0939\u093D\u0950\u0958-\u0961\u0971-\u0977\u0979-\u097F\u0985-\u098C\u098F\u0990\u0993-\u09A8\u09AA-\u09B0\u09B2\u09B6-\u09B9\u09BD\u09CE\u09DC\u09DD\u09DF-\u09E1\u09F0\u09F1\u0A05-\u0A0A\u0A0F\u0A10\u0A13-\u0A28\u0A2A-\u0A30\u0A32\u0A33\u0A35\u0A36\u0A38\u0A39\u0A59-\u0A5C\u0A5E\u0A72-\u0A74\u0A85-\u0A8D\u0A8F-\u0A91\u0A93-\u0AA8\u0AAA-\u0AB0\u0AB2\u0AB3\u0AB5-\u0AB9\u0ABD\u0AD0\u0AE0\u0AE1\u0B05-\u0B0C\u0B0F\u0B10\u0B13-\u0B28\u0B2A-\u0B30\u0B32\u0B33\u0B35-\u0B39\u0B3D\u0B5C\u0B5D\u0B5F-\u0B61\u0B71\u0B83\u0B85-\u0B8A\u0B8E-\u0B90\u0B92-\u0B95\u0B99\u0B9A\u0B9C\u0B9E\u0B9F\u0BA3\u0BA4\u0BA8-\u0BAA\u0BAE-\u0BB9\u0BD0\u0C05-\u0C0C\u0C0E-\u0C10\u0C12-\u0C28\u0C2A-\u0C33\u0C35-\u0C39\u0C3D\u0C58\u0C59\u0C60\u0C61\u0C85-\u0C8C\u0C8E-\u0C90\u0C92-\u0CA8\u0CAA-\u0CB3\u0CB5-\u0CB9\u0CBD\u0CDE\u0CE0\u0CE1\u0CF1\u0CF2\u0D05-\u0D0C\u0D0E-\u0D10\u0D12-\u0D3A\u0D3D\u0D4E\u0D60\u0D61\u0D7A-\u0D7F\u0D85-\u0D96\u0D9A-\u0DB1\u0DB3-\u0DBB\u0DBD\u0DC0-\u0DC6\u0E01-\u0E30\u0E32\u0E33\u0E40-\u0E46\u0E81\u0E82\u0E84\u0E87\u0E88\u0E8A\u0E8D\u0E94-\u0E97\u0E99-\u0E9F\u0EA1-\u0EA3\u0EA5\u0EA7\u0EAA\u0EAB\u0EAD-\u0EB0\u0EB2\u0EB3\u0EBD\u0EC0-\u0EC4\u0EC6\u0EDC-\u0EDF\u0F00\u0F40-\u0F47\u0F49-\u0F6C\u0F88-\u0F8C\u1000-\u102A\u103F\u1050-\u1055\u105A-\u105D\u1061\u1065\u1066\u106E-\u1070\u1075-\u1081\u108E\u10A0-\u10C5\u10C7\u10CD\u10D0-\u10FA\u10FC-\u1248\u124A-\u124D\u1250-\u1256\u1258\u125A-\u125D\u1260-\u1288\u128A-\u128D\u1290-\u12B0\u12B2-\u12B5\u12B8-\u12BE\u12C0\u12C2-\u12C5\u12C8-\u12D6\u12D8-\u1310\u1312-\u1315\u1318-\u135A\u1380-\u138F\u13A0-\u13F4\u1401-\u166C\u166F-\u167F\u1681-\u169A\u16A0-\u16EA\u1700-\u170C\u170E-\u1711\u1720-\u1731\u1740-\u1751\u1760-\u176C\u176E-\u1770\u1780-\u17B3\u17D7\u17DC\u1820-\u1877\u1880-\u18A8\u18AA\u18B0-\u18F5\u1900-\u191C\u1950-\u196D\u1970-\u1974\u1980-\u19AB\u19C1-\u19C7\u1A00-\u1A16\u1A20-\u1A54\u1AA7\u1B05-\u1B33\u1B45-\u1B4B\u1B83-\u1BA0\u1BAE\u1BAF\u1BBA-\u1BE5\u1C00-\u1C23\u1C4D-\u1C4F\u1C5A-\u1C7D\u1CE9-\u1CEC\u1CEE-\u1CF1\u1CF5\u1CF6\u1D00-\u1DBF\u1E00-\u1F15\u1F18-\u1F1D\u1F20-\u1F45\u1F48-\u1F4D\u1F50-\u1F57\u1F59\u1F5B\u1F5D\u1F5F-\u1F7D\u1F80-\u1FB4\u1FB6-\u1FBC\u1FBE\u1FC2-\u1FC4\u1FC6-\u1FCC\u1FD0-\u1FD3\u1FD6-\u1FDB\u1FE0-\u1FEC\u1FF2-\u1FF4\u1FF6-\u1FFC\u2071\u207F\u2090-\u209C\u2102\u2107\u210A-\u2113\u2115\u2119-\u211D\u2124\u2126\u2128\u212A-\u212D\u212F-\u2139\u213C-\u213F\u2145-\u2149\u214E\u2183\u2184\u2C00-\u2C2E\u2C30-\u2C5E\u2C60-\u2CE4\u2CEB-\u2CEE\u2CF2\u2CF3\u2D00-\u2D25\u2D27\u2D2D\u2D30-\u2D67\u2D6F\u2D80-\u2D96\u2DA0-\u2DA6\u2DA8-\u2DAE\u2DB0-\u2DB6\u2DB8-\u2DBE\u2DC0-\u2DC6\u2DC8-\u2DCE\u2DD0-\u2DD6\u2DD8-\u2DDE\u2E2F\u3005\u3006\u3031-\u3035\u303B\u303C\u3041-\u3096\u309D-\u309F\u30A1-\u30FA\u30FC-\u30FF\u3105-\u312D\u3131-\u318E\u31A0-\u31BA\u31F0-\u31FF\u3400-\u4DB5\u4E00-\u9FCC\uA000-\uA48C\uA4D0-\uA4FD\uA500-\uA60C\uA610-\uA61F\uA62A\uA62B\uA640-\uA66E\uA67F-\uA697\uA6A0-\uA6E5\uA717-\uA71F\uA722-\uA788\uA78B-\uA78E\uA790-\uA793\uA7A0-\uA7AA\uA7F8-\uA801\uA803-\uA805\uA807-\uA80A\uA80C-\uA822\uA840-\uA873\uA882-\uA8B3\uA8F2-\uA8F7\uA8FB\uA90A-\uA925\uA930-\uA946\uA960-\uA97C\uA984-\uA9B2\uA9CF\uAA00-\uAA28\uAA40-\uAA42\uAA44-\uAA4B\uAA60-\uAA76\uAA7A\uAA80-\uAAAF\uAAB1\uAAB5\uAAB6\uAAB9-\uAABD\uAAC0\uAAC2\uAADB-\uAADD\uAAE0-\uAAEA\uAAF2-\uAAF4\uAB01-\uAB06\uAB09-\uAB0E\uAB11-\uAB16\uAB20-\uAB26\uAB28-\uAB2E\uABC0-\uABE2\uAC00-\uD7A3\uD7B0-\uD7C6\uD7CB-\uD7FB\uF900-\uFA6D\uFA70-\uFAD9\uFB00-\uFB06\uFB13-\uFB17\uFB1D\uFB1F-\uFB28\uFB2A-\uFB36\uFB38-\uFB3C\uFB3E\uFB40\uFB41\uFB43\uFB44\uFB46-\uFBB1\uFBD3-\uFD3D\uFD50-\uFD8F\uFD92-\uFDC7\uFDF0-\uFDFB\uFE70-\uFE74\uFE76-\uFEFC\uFF21-\uFF3A\uFF41-\uFF5A\uFF66-\uFFBE\uFFC2-\uFFC7\uFFCA-\uFFCF\uFFD2-\uFFD7\uFFDA-\uFFDC]/,
+      "*": /./
+    },
+        ce = function () {
+      function t(e) {
+        Nt(this, t);
+        var n = e.mask,
+            u = Yt(e, ["mask"]);
+        this.masked = le({
+          mask: n
+        }), Object.assign(this, u);
+      }
+
+      return Ht(t, [{
+        key: "reset",
+        value: function value() {
+          this._isFilled = !1, this.masked.reset();
+        }
+      }, {
+        key: "remove",
+        value: function value() {
+          var t = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : 0,
+              e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : this.value.length;
+          return 0 === t && e >= 1 ? (this._isFilled = !1, this.masked.remove(t, e)) : new re();
+        }
+      }, {
+        key: "value",
+        get: function get() {
+          return this.masked.value || (this._isFilled && !this.isOptional ? this.placeholderChar : "");
+        }
+      }, {
+        key: "unmaskedValue",
+        get: function get() {
+          return this.masked.unmaskedValue;
+        }
+      }, {
+        key: "isComplete",
+        get: function get() {
+          return Boolean(this.masked.value) || this.isOptional;
+        }
+      }, {
+        key: "_appendChar",
+        value: function value(t) {
+          var e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {};
+          if (this._isFilled) return new re();
+
+          var n = this.masked.state,
+              u = this.masked._appendChar(t, e);
+
+          return u.inserted && !1 === this.doValidate(e) && (u.inserted = u.rawInserted = "", this.masked.state = n), u.inserted || this.isOptional || this.lazy || e.input || (u.inserted = this.placeholderChar), u.skip = !u.inserted && !this.isOptional, this._isFilled = Boolean(u.inserted), u;
+        }
+      }, {
+        key: "append",
+        value: function value() {
+          var t;
+          return (t = this.masked).append.apply(t, arguments);
+        }
+      }, {
+        key: "_appendPlaceholder",
+        value: function value() {
+          var t = new re();
+          return this._isFilled || this.isOptional ? t : (this._isFilled = !0, t.inserted = this.placeholderChar, t);
+        }
+      }, {
+        key: "extractTail",
+        value: function value() {
+          var t;
+          return (t = this.masked).extractTail.apply(t, arguments);
+        }
+      }, {
+        key: "appendTail",
+        value: function value() {
+          var t;
+          return (t = this.masked).appendTail.apply(t, arguments);
+        }
+      }, {
+        key: "extractInput",
+        value: function value() {
+          var t = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : 0,
+              e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : this.value.length,
+              n = arguments.length > 2 ? arguments[2] : void 0;
+          return this.masked.extractInput(t, e, n);
+        }
+      }, {
+        key: "nearestInputPos",
+        value: function value(t) {
+          var e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : ee.NONE,
+              n = this.value.length,
+              u = Math.min(Math.max(t, 0), n);
+
+          switch (e) {
+            case ee.LEFT:
+            case ee.FORCE_LEFT:
+              return this.isComplete ? u : 0;
+
+            case ee.RIGHT:
+            case ee.FORCE_RIGHT:
+              return this.isComplete ? u : n;
+
+            case ee.NONE:
+            default:
+              return u;
+          }
+        }
+      }, {
+        key: "doValidate",
+        value: function value() {
+          var t, e;
+          return (t = this.masked).doValidate.apply(t, arguments) && (!this.parent || (e = this.parent).doValidate.apply(e, arguments));
+        }
+      }, {
+        key: "doCommit",
+        value: function value() {
+          this.masked.doCommit();
+        }
+      }, {
+        key: "state",
+        get: function get() {
+          return {
+            masked: this.masked.state,
+            _isFilled: this._isFilled
+          };
+        },
+        set: function set(t) {
+          this.masked.state = t.masked, this._isFilled = t._isFilled;
+        }
+      }]), t;
+    }(),
+        fe = function () {
+      function t(e) {
+        Nt(this, t), Object.assign(this, e), this._value = "";
+      }
+
+      return Ht(t, [{
+        key: "value",
+        get: function get() {
+          return this._value;
+        }
+      }, {
+        key: "unmaskedValue",
+        get: function get() {
+          return this.isUnmasking ? this.value : "";
+        }
+      }, {
+        key: "reset",
+        value: function value() {
+          this._isRawInput = !1, this._value = "";
+        }
+      }, {
+        key: "remove",
+        value: function value() {
+          var t = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : 0,
+              e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : this._value.length;
+          return this._value = this._value.slice(0, t) + this._value.slice(e), this._value || (this._isRawInput = !1), new re();
+        }
+      }, {
+        key: "nearestInputPos",
+        value: function value(t) {
+          var e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : ee.NONE,
+              n = this._value.length;
+
+          switch (e) {
+            case ee.LEFT:
+            case ee.FORCE_LEFT:
+              return 0;
+
+            case ee.NONE:
+            case ee.RIGHT:
+            case ee.FORCE_RIGHT:
+            default:
+              return n;
+          }
+        }
+      }, {
+        key: "extractInput",
+        value: function value() {
+          var t = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : 0,
+              e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : this._value.length;
+          return (arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : {}).raw && this._isRawInput && this._value.slice(t, e) || "";
+        }
+      }, {
+        key: "isComplete",
+        get: function get() {
+          return !0;
+        }
+      }, {
+        key: "_appendChar",
+        value: function value(t) {
+          var e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {},
+              n = new re();
+          if (this._value) return n;
+          var u = this["char"] === t[0] && (this.isUnmasking || e.input || e.raw) && !e.tail;
+          return u && (n.rawInserted = this["char"]), this._value = n.inserted = this["char"], this._isRawInput = u && (e.raw || e.input), n;
+        }
+      }, {
+        key: "_appendPlaceholder",
+        value: function value() {
+          var t = new re();
+          return this._value ? t : (this._value = t.inserted = this["char"], t);
+        }
+      }, {
+        key: "extractTail",
+        value: function value() {
+          return arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : this.value.length, new ie("");
+        }
+      }, {
+        key: "appendTail",
+        value: function value(t) {
+          return te(t) && (t = new ie(String(t))), t.appendTo(this);
+        }
+      }, {
+        key: "append",
+        value: function value(t, e, n) {
+          var u = this._appendChar(t, e);
+
+          return null != n && (u.tailShift += this.appendTail(n).tailShift), u;
+        }
+      }, {
+        key: "doCommit",
+        value: function value() {}
+      }, {
+        key: "state",
+        get: function get() {
+          return {
+            _value: this._value,
+            _isRawInput: this._isRawInput
+          };
+        },
+        set: function set(t) {
+          Object.assign(this, t);
+        }
+      }]), t;
+    }(),
+        pe = function () {
+      function t() {
+        var e = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : [],
+            n = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : 0;
+        Nt(this, t), this.chunks = e, this.from = n;
+      }
+
+      return Ht(t, [{
+        key: "toString",
+        value: function value() {
+          return this.chunks.map(String).join("");
+        }
+      }, {
+        key: "extend",
+        value: function value(e) {
+          if (String(e)) {
+            te(e) && (e = new ie(String(e)));
+            var n = this.chunks[this.chunks.length - 1],
+                u = n && (n.stop === e.stop || null == e.stop) && e.from === n.from + n.toString().length;
+            if (e instanceof ie) u ? n.extend(e.toString()) : this.chunks.push(e);else if (e instanceof t) {
+              if (null == e.stop) for (var r; e.chunks.length && null == e.chunks[0].stop;) {
+                (r = e.chunks.shift()).from += e.from, this.extend(r);
+              }
+              e.toString() && (e.stop = e.blockIndex, this.chunks.push(e));
+            }
+          }
+        }
+      }, {
+        key: "appendTo",
+        value: function value(e) {
+          if (!(e instanceof ae.MaskedPattern)) return new ie(this.toString()).appendTo(e);
+
+          for (var n = new re(), u = 0; u < this.chunks.length && !n.skip; ++u) {
+            var r = this.chunks[u],
+                i = e._mapPosToBlock(e.value.length),
+                a = r.stop,
+                s = void 0;
+
+            if (null != a && (!i || i.index <= a) && ((r instanceof t || e._stops.indexOf(a) >= 0) && n.aggregate(e._appendPlaceholder(a)), s = r instanceof t && e._blocks[a]), s) {
+              var o = s.appendTail(r);
+              o.skip = !1, n.aggregate(o), e._value += o.inserted;
+              var l = r.toString().slice(o.rawInserted.length);
+              l && n.aggregate(e.append(l, {
+                tail: !0
+              }));
+            } else n.aggregate(e.append(r.toString(), {
+              tail: !0
+            }));
+          }
+
+          return n;
+        }
+      }, {
+        key: "state",
+        get: function get() {
+          return {
+            chunks: this.chunks.map(function (t) {
+              return t.state;
+            }),
+            from: this.from,
+            stop: this.stop,
+            blockIndex: this.blockIndex
+          };
+        },
+        set: function set(e) {
+          var n = e.chunks,
+              u = Yt(e, ["chunks"]);
+          Object.assign(this, u), this.chunks = n.map(function (e) {
+            var n = "chunks" in e ? new t() : new ie();
+            return n.state = e, n;
+          });
+        }
+      }, {
+        key: "shiftBefore",
+        value: function value(t) {
+          if (this.from >= t || !this.chunks.length) return "";
+
+          for (var e = t - this.from, n = 0; n < this.chunks.length;) {
+            var u = this.chunks[n],
+                r = u.shiftBefore(e);
+
+            if (u.toString()) {
+              if (!r) break;
+              ++n;
+            } else this.chunks.splice(n, 1);
+
+            if (r) return r;
+          }
+
+          return "";
+        }
+      }]), t;
+    }(),
+        de = function (t) {
+      Ut(n, se);
+      var e = Kt(n);
+
+      function n() {
+        return Nt(this, n), e.apply(this, arguments);
+      }
+
+      return Ht(n, [{
+        key: "_update",
+        value: function value(t) {
+          t.mask && (t.validate = function (e) {
+            return e.search(t.mask) >= 0;
+          }), Wt(Gt(n.prototype), "_update", this).call(this, t);
+        }
+      }]), n;
+    }();
+
+    ae.MaskedRegExp = de;
+
+    var ve = function (t) {
+      Ut(n, se);
+      var e = Kt(n);
+
+      function n() {
+        var t = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : {};
+        return Nt(this, n), t.definitions = Object.assign({}, he, t.definitions), e.call(this, Object.assign({}, n.DEFAULTS, t));
+      }
+
+      return Ht(n, [{
+        key: "_update",
+        value: function value() {
+          var t = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : {};
+          t.definitions = Object.assign({}, this.definitions, t.definitions), Wt(Gt(n.prototype), "_update", this).call(this, t), this._rebuildMask();
+        }
+      }, {
+        key: "_rebuildMask",
+        value: function value() {
+          var t = this,
+              e = this.definitions;
+          this._blocks = [], this._stops = [], this._maskedBlocks = {};
+          var u = this.mask;
+          if (u && e) for (var r = !1, i = !1, a = 0; a < u.length; ++a) {
+            if (this.blocks) if ("continue" === function () {
+              var e = u.slice(a),
+                  n = Object.keys(t.blocks).filter(function (t) {
+                return 0 === e.indexOf(t);
+              });
+              n.sort(function (t, e) {
+                return e.length - t.length;
+              });
+              var r = n[0];
+
+              if (r) {
+                var i = le(Object.assign({
+                  parent: t,
+                  lazy: t.lazy,
+                  placeholderChar: t.placeholderChar,
+                  overwrite: t.overwrite
+                }, t.blocks[r]));
+                return i && (t._blocks.push(i), t._maskedBlocks[r] || (t._maskedBlocks[r] = []), t._maskedBlocks[r].push(t._blocks.length - 1)), a += r.length - 1, "continue";
+              }
+            }()) continue;
+            var s = u[a],
+                o = (s in e);
+            if (s !== n.STOP_CHAR) {
+              if ("{" !== s && "}" !== s) {
+                if ("[" !== s && "]" !== s) {
+                  if (s === n.ESCAPE_CHAR) {
+                    if (!(s = u[++a])) break;
+                    o = !1;
+                  }
+
+                  var l = o ? new ce({
+                    parent: this,
+                    lazy: this.lazy,
+                    placeholderChar: this.placeholderChar,
+                    mask: e[s],
+                    isOptional: i
+                  }) : new fe({
+                    "char": s,
+                    isUnmasking: r
+                  });
+
+                  this._blocks.push(l);
+                } else i = !i;
+              } else r = !r;
+            } else this._stops.push(this._blocks.length);
+          }
+        }
+      }, {
+        key: "state",
+        get: function get() {
+          return Object.assign({}, Wt(Gt(n.prototype), "state", this), {
+            _blocks: this._blocks.map(function (t) {
+              return t.state;
+            })
+          });
+        },
+        set: function set(t) {
+          var e = t._blocks,
+              u = Yt(t, ["_blocks"]);
+          this._blocks.forEach(function (t, n) {
+            return t.state = e[n];
+          }), Xt(Gt(n.prototype), "state", u, this, !0);
+        }
+      }, {
+        key: "reset",
+        value: function value() {
+          Wt(Gt(n.prototype), "reset", this).call(this), this._blocks.forEach(function (t) {
+            return t.reset();
+          });
+        }
+      }, {
+        key: "isComplete",
+        get: function get() {
+          return this._blocks.every(function (t) {
+            return t.isComplete;
+          });
+        }
+      }, {
+        key: "doCommit",
+        value: function value() {
+          this._blocks.forEach(function (t) {
+            return t.doCommit();
+          }), Wt(Gt(n.prototype), "doCommit", this).call(this);
+        }
+      }, {
+        key: "unmaskedValue",
+        get: function get() {
+          return this._blocks.reduce(function (t, e) {
+            return t + e.unmaskedValue;
+          }, "");
+        },
+        set: function set(t) {
+          Xt(Gt(n.prototype), "unmaskedValue", t, this, !0);
+        }
+      }, {
+        key: "value",
+        get: function get() {
+          return this._blocks.reduce(function (t, e) {
+            return t + e.value;
+          }, "");
+        },
+        set: function set(t) {
+          Xt(Gt(n.prototype), "value", t, this, !0);
+        }
+      }, {
+        key: "appendTail",
+        value: function value(t) {
+          return Wt(Gt(n.prototype), "appendTail", this).call(this, t).aggregate(this._appendPlaceholder());
+        }
+      }, {
+        key: "_appendCharRaw",
+        value: function value(t) {
+          var e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {},
+              n = this._mapPosToBlock(this.value.length),
+              u = new re();
+
+          if (!n) return u;
+
+          for (var r = n.index;; ++r) {
+            var i = this._blocks[r];
+            if (!i) break;
+
+            var a = i._appendChar(t, e),
+                s = a.skip;
+
+            if (u.aggregate(a), s || a.rawInserted) break;
+          }
+
+          return u;
+        }
+      }, {
+        key: "extractTail",
+        value: function value() {
+          var t = this,
+              e = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : 0,
+              n = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : this.value.length,
+              u = new pe();
+          return e === n ? u : (this._forEachBlocksInRange(e, n, function (e, n, r, i) {
+            var a = e.extractTail(r, i);
+            a.stop = t._findStopBefore(n), a.from = t._blockStartPos(n), a instanceof pe && (a.blockIndex = n), u.extend(a);
+          }), u);
+        }
+      }, {
+        key: "extractInput",
+        value: function value() {
+          var t = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : 0,
+              e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : this.value.length,
+              n = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : {};
+          if (t === e) return "";
+          var u = "";
+          return this._forEachBlocksInRange(t, e, function (t, e, r, i) {
+            u += t.extractInput(r, i, n);
+          }), u;
+        }
+      }, {
+        key: "_findStopBefore",
+        value: function value(t) {
+          for (var e, n = 0; n < this._stops.length; ++n) {
+            var u = this._stops[n];
+            if (!(u <= t)) break;
+            e = u;
+          }
+
+          return e;
+        }
+      }, {
+        key: "_appendPlaceholder",
+        value: function value(t) {
+          var e = this,
+              n = new re();
+          if (this.lazy && null == t) return n;
+
+          var u = this._mapPosToBlock(this.value.length);
+
+          if (!u) return n;
+          var r = u.index,
+              i = null != t ? t : this._blocks.length;
+          return this._blocks.slice(r, i).forEach(function (u) {
+            if (!u.lazy || null != t) {
+              var r = null != u._blocks ? [u._blocks.length] : [],
+                  i = u._appendPlaceholder.apply(u, r);
+
+              e._value += i.inserted, n.aggregate(i);
+            }
+          }), n;
+        }
+      }, {
+        key: "_mapPosToBlock",
+        value: function value(t) {
+          for (var e = "", n = 0; n < this._blocks.length; ++n) {
+            var u = this._blocks[n],
+                r = e.length;
+            if (t <= (e += u.value).length) return {
+              index: n,
+              offset: t - r
+            };
+          }
+        }
+      }, {
+        key: "_blockStartPos",
+        value: function value(t) {
+          return this._blocks.slice(0, t).reduce(function (t, e) {
+            return t + e.value.length;
+          }, 0);
+        }
+      }, {
+        key: "_forEachBlocksInRange",
+        value: function value(t) {
+          var e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : this.value.length,
+              n = arguments.length > 2 ? arguments[2] : void 0,
+              u = this._mapPosToBlock(t);
+
+          if (u) {
+            var r = this._mapPosToBlock(e),
+                i = r && u.index === r.index,
+                a = u.offset,
+                s = r && i ? r.offset : this._blocks[u.index].value.length;
+
+            if (n(this._blocks[u.index], u.index, a, s), r && !i) {
+              for (var o = u.index + 1; o < r.index; ++o) {
+                n(this._blocks[o], o, 0, this._blocks[o].value.length);
+              }
+
+              n(this._blocks[r.index], r.index, 0, r.offset);
+            }
+          }
+        }
+      }, {
+        key: "remove",
+        value: function value() {
+          var t = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : 0,
+              e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : this.value.length,
+              u = Wt(Gt(n.prototype), "remove", this).call(this, t, e);
+          return this._forEachBlocksInRange(t, e, function (t, e, n, r) {
+            u.aggregate(t.remove(n, r));
+          }), u;
+        }
+      }, {
+        key: "nearestInputPos",
+        value: function value(t) {
+          var e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : ee.NONE,
+              n = this._mapPosToBlock(t) || {
+            index: 0,
+            offset: 0
+          },
+              u = n.offset,
+              r = n.index,
+              i = this._blocks[r];
+          if (!i) return t;
+          var a = u;
+          0 !== a && a < i.value.length && (a = i.nearestInputPos(u, function (t) {
+            switch (t) {
+              case ee.LEFT:
+                return ee.FORCE_LEFT;
+
+              case ee.RIGHT:
+                return ee.FORCE_RIGHT;
+
+              default:
+                return t;
+            }
+          }(e)));
+          var s = a === i.value.length;
+          if (!(0 === a) && !s) return this._blockStartPos(r) + a;
+          var o = s ? r + 1 : r;
+
+          if (e === ee.NONE) {
+            if (o > 0) {
+              var l = o - 1,
+                  h = this._blocks[l],
+                  c = h.nearestInputPos(0, ee.NONE);
+              if (!h.value.length || c !== h.value.length) return this._blockStartPos(o);
+            }
+
+            for (var f = o; f < this._blocks.length; ++f) {
+              var p = this._blocks[f],
+                  d = p.nearestInputPos(0, ee.NONE);
+              if (!p.value.length || d !== p.value.length) return this._blockStartPos(f) + d;
+            }
+
+            for (var v = o - 1; v >= 0; --v) {
+              var k = this._blocks[v],
+                  g = k.nearestInputPos(0, ee.NONE);
+              if (!k.value.length || g !== k.value.length) return this._blockStartPos(v) + k.value.length;
+            }
+
+            return t;
+          }
+
+          if (e === ee.LEFT || e === ee.FORCE_LEFT) {
+            for (var y, m = o; m < this._blocks.length; ++m) {
+              if (this._blocks[m].value) {
+                y = m;
+                break;
+              }
+            }
+
+            if (null != y) {
+              var _ = this._blocks[y],
+                  A = _.nearestInputPos(0, ee.RIGHT);
+
+              if (0 === A && _.unmaskedValue.length) return this._blockStartPos(y) + A;
+            }
+
+            for (var b, E = -1, C = o - 1; C >= 0; --C) {
+              var F = this._blocks[C],
+                  S = F.nearestInputPos(F.value.length, ee.FORCE_LEFT);
+
+              if (F.value && 0 === S || (b = C), 0 !== S) {
+                if (S !== F.value.length) return this._blockStartPos(C) + S;
+                E = C;
+                break;
+              }
+            }
+
+            if (e === ee.LEFT) for (var D = E + 1; D <= Math.min(o, this._blocks.length - 1); ++D) {
+              var B = this._blocks[D],
+                  w = B.nearestInputPos(0, ee.NONE),
+                  O = this._blockStartPos(D) + w;
+              if (O > t) break;
+              if (w !== B.value.length) return O;
+            }
+            if (E >= 0) return this._blockStartPos(E) + this._blocks[E].value.length;
+            if (e === ee.FORCE_LEFT || this.lazy && !this.extractInput() && !function (t) {
+              if (!t) return !1;
+              var e = t.value;
+              return !e || t.nearestInputPos(0, ee.NONE) !== e.length;
+            }(this._blocks[o])) return 0;
+            if (null != b) return this._blockStartPos(b);
+
+            for (var M = o; M < this._blocks.length; ++M) {
+              var T = this._blocks[M],
+                  x = T.nearestInputPos(0, ee.NONE);
+              if (!T.value.length || x !== T.value.length) return this._blockStartPos(M) + x;
+            }
+
+            return 0;
+          }
+
+          if (e === ee.RIGHT || e === ee.FORCE_RIGHT) {
+            for (var P, I, R = o; R < this._blocks.length; ++R) {
+              var j = this._blocks[R],
+                  V = j.nearestInputPos(0, ee.NONE);
+
+              if (V !== j.value.length) {
+                I = this._blockStartPos(R) + V, P = R;
+                break;
+              }
+            }
+
+            if (null != P && null != I) {
+              for (var N = P; N < this._blocks.length; ++N) {
+                var L = this._blocks[N],
+                    H = L.nearestInputPos(0, ee.FORCE_RIGHT);
+                if (H !== L.value.length) return this._blockStartPos(N) + H;
+              }
+
+              return e === ee.FORCE_RIGHT ? this.value.length : I;
+            }
+
+            for (var U = Math.min(o, this._blocks.length - 1); U >= 0; --U) {
+              var G = this._blocks[U],
+                  z = G.nearestInputPos(G.value.length, ee.LEFT);
+
+              if (0 !== z) {
+                var Y = this._blockStartPos(U) + z;
+                if (Y >= t) return Y;
+                break;
+              }
+            }
+          }
+
+          return t;
+        }
+      }, {
+        key: "maskedBlock",
+        value: function value(t) {
+          return this.maskedBlocks(t)[0];
+        }
+      }, {
+        key: "maskedBlocks",
+        value: function value(t) {
+          var e = this,
+              n = this._maskedBlocks[t];
+          return n ? n.map(function (t) {
+            return e._blocks[t];
+          }) : [];
+        }
+      }]), n;
+    }();
+
+    ve.DEFAULTS = {
+      lazy: !0,
+      placeholderChar: "_"
+    }, ve.STOP_CHAR = "`", ve.ESCAPE_CHAR = "\\", ve.InputDefinition = ce, ve.FixedDefinition = fe, ae.MaskedPattern = ve;
+
+    var ke = function (t) {
+      Ut(n, ve);
+      var e = Kt(n);
+
+      function n() {
+        return Nt(this, n), e.apply(this, arguments);
+      }
+
+      return Ht(n, [{
+        key: "_matchFrom",
+        get: function get() {
+          return this.maxLength - String(this.from).length;
+        }
+      }, {
+        key: "_update",
+        value: function value(t) {
+          t = Object.assign({
+            to: this.to || 0,
+            from: this.from || 0
+          }, t);
+          var e = String(t.to).length;
+          null != t.maxLength && (e = Math.max(e, t.maxLength)), t.maxLength = e;
+
+          for (var u = String(t.from).padStart(e, "0"), r = String(t.to).padStart(e, "0"), i = 0; i < r.length && r[i] === u[i];) {
+            ++i;
+          }
+
+          t.mask = r.slice(0, i).replace(/0/g, "\\0") + "0".repeat(e - i), Wt(Gt(n.prototype), "_update", this).call(this, t);
+        }
+      }, {
+        key: "isComplete",
+        get: function get() {
+          return Wt(Gt(n.prototype), "isComplete", this) && Boolean(this.value);
+        }
+      }, {
+        key: "boundaries",
+        value: function value(t) {
+          var e = "",
+              n = "",
+              u = Jt(t.match(/^(\D*)(\d*)(\D*)/) || [], 3),
+              r = u[1],
+              i = u[2];
+          return i && (e = "0".repeat(r.length) + i, n = "9".repeat(r.length) + i), [e = e.padEnd(this.maxLength, "0"), n = n.padEnd(this.maxLength, "9")];
+        }
+      }, {
+        key: "doPrepare",
+        value: function value(t) {
+          var e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {};
+          if (t = Wt(Gt(n.prototype), "doPrepare", this).call(this, t, e).replace(/\D/g, ""), !this.autofix) return t;
+
+          for (var u = String(this.from).padStart(this.maxLength, "0"), r = String(this.to).padStart(this.maxLength, "0"), i = this.value, a = "", s = 0; s < t.length; ++s) {
+            var o = i + a + t[s],
+                l = Jt(this.boundaries(o), 2),
+                h = l[0],
+                c = l[1];
+            Number(c) < this.from ? a += u[o.length - 1] : Number(h) > this.to ? a += r[o.length - 1] : a += t[s];
+          }
+
+          return a;
+        }
+      }, {
+        key: "doValidate",
+        value: function value() {
+          var t,
+              e = this.value;
+          if (-1 === e.search(/[^0]/) && e.length <= this._matchFrom) return !0;
+
+          for (var u = Jt(this.boundaries(e), 2), r = u[0], i = u[1], a = arguments.length, s = new Array(a), o = 0; o < a; o++) {
+            s[o] = arguments[o];
+          }
+
+          return this.from <= Number(i) && Number(r) <= this.to && (t = Wt(Gt(n.prototype), "doValidate", this)).call.apply(t, [this].concat(s));
+        }
+      }]), n;
+    }();
+
+    ae.MaskedRange = ke;
+
+    var ge = function (t) {
+      Ut(n, ve);
+      var e = Kt(n);
+
+      function n(t) {
+        return Nt(this, n), e.call(this, Object.assign({}, n.DEFAULTS, t));
+      }
+
+      return Ht(n, [{
+        key: "_update",
+        value: function value(t) {
+          t.mask === Date && delete t.mask, t.pattern && (t.mask = t.pattern);
+          var e = t.blocks;
+          t.blocks = Object.assign({}, n.GET_DEFAULT_BLOCKS()), t.min && (t.blocks.Y.from = t.min.getFullYear()), t.max && (t.blocks.Y.to = t.max.getFullYear()), t.min && t.max && t.blocks.Y.from === t.blocks.Y.to && (t.blocks.m.from = t.min.getMonth() + 1, t.blocks.m.to = t.max.getMonth() + 1, t.blocks.m.from === t.blocks.m.to && (t.blocks.d.from = t.min.getDate(), t.blocks.d.to = t.max.getDate())), Object.assign(t.blocks, e), Object.keys(t.blocks).forEach(function (e) {
+            var n = t.blocks[e];
+            "autofix" in n || (n.autofix = t.autofix);
+          }), Wt(Gt(n.prototype), "_update", this).call(this, t);
+        }
+      }, {
+        key: "doValidate",
+        value: function value() {
+          for (var t, e = this.date, u = arguments.length, r = new Array(u), i = 0; i < u; i++) {
+            r[i] = arguments[i];
+          }
+
+          return (t = Wt(Gt(n.prototype), "doValidate", this)).call.apply(t, [this].concat(r)) && (!this.isComplete || this.isDateExist(this.value) && null != e && (null == this.min || this.min <= e) && (null == this.max || e <= this.max));
+        }
+      }, {
+        key: "isDateExist",
+        value: function value(t) {
+          return this.format(this.parse(t, this), this).indexOf(t) >= 0;
+        }
+      }, {
+        key: "date",
+        get: function get() {
+          return this.typedValue;
+        },
+        set: function set(t) {
+          this.typedValue = t;
+        }
+      }, {
+        key: "typedValue",
+        get: function get() {
+          return this.isComplete ? Wt(Gt(n.prototype), "typedValue", this) : null;
+        },
+        set: function set(t) {
+          Xt(Gt(n.prototype), "typedValue", t, this, !0);
+        }
+      }]), n;
+    }();
+
+    ge.DEFAULTS = {
+      pattern: "d{.}`m{.}`Y",
+      format: function format(t) {
+        return [String(t.getDate()).padStart(2, "0"), String(t.getMonth() + 1).padStart(2, "0"), t.getFullYear()].join(".");
+      },
+      parse: function parse(t) {
+        var e = Jt(t.split("."), 3),
+            n = e[0],
+            u = e[1],
+            r = e[2];
+        return new Date(r, u - 1, n);
+      }
+    }, ge.GET_DEFAULT_BLOCKS = function () {
+      return {
+        d: {
+          mask: ke,
+          from: 1,
+          to: 31,
+          maxLength: 2
+        },
+        m: {
+          mask: ke,
+          from: 1,
+          to: 12,
+          maxLength: 2
+        },
+        Y: {
+          mask: ke,
+          from: 1900,
+          to: 9999
+        }
+      };
+    }, ae.MaskedDate = ge;
+
+    var ye = function () {
+      function t() {
+        Nt(this, t);
+      }
+
+      return Ht(t, [{
+        key: "selectionStart",
+        get: function get() {
+          var t;
+
+          try {
+            t = this._unsafeSelectionStart;
+          } catch (t) {}
+
+          return null != t ? t : this.value.length;
+        }
+      }, {
+        key: "selectionEnd",
+        get: function get() {
+          var t;
+
+          try {
+            t = this._unsafeSelectionEnd;
+          } catch (t) {}
+
+          return null != t ? t : this.value.length;
+        }
+      }, {
+        key: "select",
+        value: function value(t, e) {
+          if (null != t && null != e && (t !== this.selectionStart || e !== this.selectionEnd)) try {
+            this._unsafeSelect(t, e);
+          } catch (t) {}
+        }
+      }, {
+        key: "_unsafeSelect",
+        value: function value(t, e) {}
+      }, {
+        key: "isActive",
+        get: function get() {
+          return !1;
+        }
+      }, {
+        key: "bindEvents",
+        value: function value(t) {}
+      }, {
+        key: "unbindEvents",
+        value: function value() {}
+      }]), t;
+    }();
+
+    ae.MaskElement = ye;
+
+    var me = function (t) {
+      Ut(n, ye);
+      var e = Kt(n);
+
+      function n(t) {
+        var u;
+        return Nt(this, n), (u = e.call(this)).input = t, u._handlers = {}, u;
+      }
+
+      return Ht(n, [{
+        key: "rootElement",
+        get: function get() {
+          return this.input.getRootNode ? this.input.getRootNode() : document;
+        }
+      }, {
+        key: "isActive",
+        get: function get() {
+          return this.input === this.rootElement.activeElement;
+        }
+      }, {
+        key: "_unsafeSelectionStart",
+        get: function get() {
+          return this.input.selectionStart;
+        }
+      }, {
+        key: "_unsafeSelectionEnd",
+        get: function get() {
+          return this.input.selectionEnd;
+        }
+      }, {
+        key: "_unsafeSelect",
+        value: function value(t, e) {
+          this.input.setSelectionRange(t, e);
+        }
+      }, {
+        key: "value",
+        get: function get() {
+          return this.input.value;
+        },
+        set: function set(t) {
+          this.input.value = t;
+        }
+      }, {
+        key: "bindEvents",
+        value: function value(t) {
+          var e = this;
+          Object.keys(t).forEach(function (u) {
+            return e._toggleEventHandler(n.EVENTS_MAP[u], t[u]);
+          });
+        }
+      }, {
+        key: "unbindEvents",
+        value: function value() {
+          var t = this;
+          Object.keys(this._handlers).forEach(function (e) {
+            return t._toggleEventHandler(e);
+          });
+        }
+      }, {
+        key: "_toggleEventHandler",
+        value: function value(t, e) {
+          this._handlers[t] && (this.input.removeEventListener(t, this._handlers[t]), delete this._handlers[t]), e && (this.input.addEventListener(t, e), this._handlers[t] = e);
+        }
+      }]), n;
+    }();
+
+    me.EVENTS_MAP = {
+      selectionChange: "keydown",
+      input: "input",
+      drop: "drop",
+      click: "click",
+      focus: "focus",
+      commit: "blur"
+    }, ae.HTMLMaskElement = me;
+
+    var _e = function (t) {
+      Ut(n, me);
+      var e = Kt(n);
+
+      function n() {
+        return Nt(this, n), e.apply(this, arguments);
+      }
+
+      return Ht(n, [{
+        key: "_unsafeSelectionStart",
+        get: function get() {
+          var t = this.rootElement,
+              e = t.getSelection && t.getSelection();
+          return e && e.anchorOffset;
+        }
+      }, {
+        key: "_unsafeSelectionEnd",
+        get: function get() {
+          var t = this.rootElement,
+              e = t.getSelection && t.getSelection();
+          return e && this._unsafeSelectionStart + String(e).length;
+        }
+      }, {
+        key: "_unsafeSelect",
+        value: function value(t, e) {
+          if (this.rootElement.createRange) {
+            var n = this.rootElement.createRange();
+            n.setStart(this.input.firstChild || this.input, t), n.setEnd(this.input.lastChild || this.input, e);
+            var u = this.rootElement,
+                r = u.getSelection && u.getSelection();
+            r && (r.removeAllRanges(), r.addRange(n));
+          }
+        }
+      }, {
+        key: "value",
+        get: function get() {
+          return this.input.textContent;
+        },
+        set: function set(t) {
+          this.input.textContent = t;
+        }
+      }]), n;
+    }();
+
+    ae.HTMLContenteditableMaskElement = _e;
+
+    var Ae = function () {
+      function t(e, n) {
+        Nt(this, t), this.el = e instanceof ye ? e : e.isContentEditable && "INPUT" !== e.tagName && "TEXTAREA" !== e.tagName ? new _e(e) : new me(e), this.masked = le(n), this._listeners = {}, this._value = "", this._unmaskedValue = "", this._saveSelection = this._saveSelection.bind(this), this._onInput = this._onInput.bind(this), this._onChange = this._onChange.bind(this), this._onDrop = this._onDrop.bind(this), this._onFocus = this._onFocus.bind(this), this._onClick = this._onClick.bind(this), this.alignCursor = this.alignCursor.bind(this), this.alignCursorFriendly = this.alignCursorFriendly.bind(this), this._bindEvents(), this.updateValue(), this._onChange();
+      }
+
+      return Ht(t, [{
+        key: "mask",
+        get: function get() {
+          return this.masked.mask;
+        },
+        set: function set(t) {
+          if (!this.maskEquals(t)) if (t instanceof ae.Masked || this.masked.constructor !== oe(t)) {
+            var e = le({
+              mask: t
+            });
+            e.unmaskedValue = this.masked.unmaskedValue, this.masked = e;
+          } else this.masked.updateOptions({
+            mask: t
+          });
+        }
+      }, {
+        key: "maskEquals",
+        value: function value(t) {
+          return null == t || t === this.masked.mask || t === Date && this.masked instanceof ge;
+        }
+      }, {
+        key: "value",
+        get: function get() {
+          return this._value;
+        },
+        set: function set(t) {
+          this.masked.value = t, this.updateControl(), this.alignCursor();
+        }
+      }, {
+        key: "unmaskedValue",
+        get: function get() {
+          return this._unmaskedValue;
+        },
+        set: function set(t) {
+          this.masked.unmaskedValue = t, this.updateControl(), this.alignCursor();
+        }
+      }, {
+        key: "typedValue",
+        get: function get() {
+          return this.masked.typedValue;
+        },
+        set: function set(t) {
+          this.masked.typedValue = t, this.updateControl(), this.alignCursor();
+        }
+      }, {
+        key: "_bindEvents",
+        value: function value() {
+          this.el.bindEvents({
+            selectionChange: this._saveSelection,
+            input: this._onInput,
+            drop: this._onDrop,
+            click: this._onClick,
+            focus: this._onFocus,
+            commit: this._onChange
+          });
+        }
+      }, {
+        key: "_unbindEvents",
+        value: function value() {
+          this.el && this.el.unbindEvents();
+        }
+      }, {
+        key: "_fireEvent",
+        value: function value(t) {
+          for (var e = arguments.length, n = new Array(e > 1 ? e - 1 : 0), u = 1; u < e; u++) {
+            n[u - 1] = arguments[u];
+          }
+
+          var r = this._listeners[t];
+          r && r.forEach(function (t) {
+            return t.apply(void 0, n);
+          });
+        }
+      }, {
+        key: "selectionStart",
+        get: function get() {
+          return this._cursorChanging ? this._changingCursorPos : this.el.selectionStart;
+        }
+      }, {
+        key: "cursorPos",
+        get: function get() {
+          return this._cursorChanging ? this._changingCursorPos : this.el.selectionEnd;
+        },
+        set: function set(t) {
+          this.el && this.el.isActive && (this.el.select(t, t), this._saveSelection());
+        }
+      }, {
+        key: "_saveSelection",
+        value: function value() {
+          this.value !== this.el.value && console.warn("Element value was changed outside of mask. Syncronize mask using `mask.updateValue()` to work properly."), this._selection = {
+            start: this.selectionStart,
+            end: this.cursorPos
+          };
+        }
+      }, {
+        key: "updateValue",
+        value: function value() {
+          this.masked.value = this.el.value, this._value = this.masked.value;
+        }
+      }, {
+        key: "updateControl",
+        value: function value() {
+          var t = this.masked.unmaskedValue,
+              e = this.masked.value,
+              n = this.unmaskedValue !== t || this.value !== e;
+          this._unmaskedValue = t, this._value = e, this.el.value !== e && (this.el.value = e), n && this._fireChangeEvents();
+        }
+      }, {
+        key: "updateOptions",
+        value: function value(t) {
+          var e = t.mask,
+              n = Yt(t, ["mask"]),
+              u = !this.maskEquals(e),
+              r = !function t(e, n) {
+            if (n === e) return !0;
+            var u,
+                r = Array.isArray(n),
+                i = Array.isArray(e);
+
+            if (r && i) {
+              if (n.length != e.length) return !1;
+
+              for (u = 0; u < n.length; u++) {
+                if (!t(n[u], e[u])) return !1;
+              }
+
+              return !0;
+            }
+
+            if (r != i) return !1;
+
+            if (n && e && "object" === Vt(n) && "object" === Vt(e)) {
+              var a = n instanceof Date,
+                  s = e instanceof Date;
+              if (a && s) return n.getTime() == e.getTime();
+              if (a != s) return !1;
+              var o = n instanceof RegExp,
+                  l = e instanceof RegExp;
+              if (o && l) return n.toString() == e.toString();
+              if (o != l) return !1;
+              var h = Object.keys(n);
+
+              for (u = 0; u < h.length; u++) {
+                if (!Object.prototype.hasOwnProperty.call(e, h[u])) return !1;
+              }
+
+              for (u = 0; u < h.length; u++) {
+                if (!t(e[h[u]], n[h[u]])) return !1;
+              }
+
+              return !0;
+            }
+
+            return !(!n || !e || "function" != typeof n || "function" != typeof e) && n.toString() === e.toString();
+          }(this.masked, n);
+          u && (this.mask = e), r && this.masked.updateOptions(n), (u || r) && this.updateControl();
+        }
+      }, {
+        key: "updateCursor",
+        value: function value(t) {
+          null != t && (this.cursorPos = t, this._delayUpdateCursor(t));
+        }
+      }, {
+        key: "_delayUpdateCursor",
+        value: function value(t) {
+          var e = this;
+          this._abortUpdateCursor(), this._changingCursorPos = t, this._cursorChanging = setTimeout(function () {
+            e.el && (e.cursorPos = e._changingCursorPos, e._abortUpdateCursor());
+          }, 10);
+        }
+      }, {
+        key: "_fireChangeEvents",
+        value: function value() {
+          this._fireEvent("accept", this._inputEvent), this.masked.isComplete && this._fireEvent("complete", this._inputEvent);
+        }
+      }, {
+        key: "_abortUpdateCursor",
+        value: function value() {
+          this._cursorChanging && (clearTimeout(this._cursorChanging), delete this._cursorChanging);
+        }
+      }, {
+        key: "alignCursor",
+        value: function value() {
+          this.cursorPos = this.masked.nearestInputPos(this.cursorPos, ee.LEFT);
+        }
+      }, {
+        key: "alignCursorFriendly",
+        value: function value() {
+          this.selectionStart === this.cursorPos && this.alignCursor();
+        }
+      }, {
+        key: "on",
+        value: function value(t, e) {
+          return this._listeners[t] || (this._listeners[t] = []), this._listeners[t].push(e), this;
+        }
+      }, {
+        key: "off",
+        value: function value(t, e) {
+          if (!this._listeners[t]) return this;
+          if (!e) return delete this._listeners[t], this;
+
+          var n = this._listeners[t].indexOf(e);
+
+          return n >= 0 && this._listeners[t].splice(n, 1), this;
+        }
+      }, {
+        key: "_onInput",
+        value: function value(t) {
+          if (this._inputEvent = t, this._abortUpdateCursor(), !this._selection) return this.updateValue();
+          var e = new ue(this.el.value, this.cursorPos, this.value, this._selection),
+              n = this.masked.rawInputValue,
+              u = this.masked.splice(e.startChangePos, e.removed.length, e.inserted, e.removeDirection).offset,
+              r = n === this.masked.rawInputValue ? e.removeDirection : ee.NONE,
+              i = this.masked.nearestInputPos(e.startChangePos + u, r);
+          this.updateControl(), this.updateCursor(i), delete this._inputEvent;
+        }
+      }, {
+        key: "_onChange",
+        value: function value() {
+          this.value !== this.el.value && this.updateValue(), this.masked.doCommit(), this.updateControl(), this._saveSelection();
+        }
+      }, {
+        key: "_onDrop",
+        value: function value(t) {
+          t.preventDefault(), t.stopPropagation();
+        }
+      }, {
+        key: "_onFocus",
+        value: function value(t) {
+          this.alignCursorFriendly();
+        }
+      }, {
+        key: "_onClick",
+        value: function value(t) {
+          this.alignCursorFriendly();
+        }
+      }, {
+        key: "destroy",
+        value: function value() {
+          this._unbindEvents(), this._listeners.length = 0, delete this.el;
+        }
+      }]), t;
+    }();
+
+    ae.InputMask = Ae;
+
+    var be = function (t) {
+      Ut(n, ve);
+      var e = Kt(n);
+
+      function n() {
+        return Nt(this, n), e.apply(this, arguments);
+      }
+
+      return Ht(n, [{
+        key: "_update",
+        value: function value(t) {
+          t["enum"] && (t.mask = "*".repeat(t["enum"][0].length)), Wt(Gt(n.prototype), "_update", this).call(this, t);
+        }
+      }, {
+        key: "doValidate",
+        value: function value() {
+          for (var t, e = this, u = arguments.length, r = new Array(u), i = 0; i < u; i++) {
+            r[i] = arguments[i];
+          }
+
+          return this["enum"].some(function (t) {
+            return t.indexOf(e.unmaskedValue) >= 0;
+          }) && (t = Wt(Gt(n.prototype), "doValidate", this)).call.apply(t, [this].concat(r));
+        }
+      }]), n;
+    }();
+
+    ae.MaskedEnum = be;
+
+    var Ee = function (t) {
+      Ut(n, se);
+      var e = Kt(n);
+
+      function n(t) {
+        return Nt(this, n), e.call(this, Object.assign({}, n.DEFAULTS, t));
+      }
+
+      return Ht(n, [{
+        key: "_update",
+        value: function value(t) {
+          Wt(Gt(n.prototype), "_update", this).call(this, t), this._updateRegExps();
+        }
+      }, {
+        key: "_updateRegExps",
+        value: function value() {
+          var t = "^" + (this.allowNegative ? "[+|\\-]?" : ""),
+              e = (this.scale ? "(" + ne(this.radix) + "\\d{0," + this.scale + "})?" : "") + "$";
+          this._numberRegExpInput = new RegExp(t + "(0|([1-9]+\\d*))?" + e), this._numberRegExp = new RegExp(t + "\\d*" + e), this._mapToRadixRegExp = new RegExp("[" + this.mapToRadix.map(ne).join("") + "]", "g"), this._thousandsSeparatorRegExp = new RegExp(ne(this.thousandsSeparator), "g");
+        }
+      }, {
+        key: "_removeThousandsSeparators",
+        value: function value(t) {
+          return t.replace(this._thousandsSeparatorRegExp, "");
+        }
+      }, {
+        key: "_insertThousandsSeparators",
+        value: function value(t) {
+          var e = t.split(this.radix);
+          return e[0] = e[0].replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandsSeparator), e.join(this.radix);
+        }
+      }, {
+        key: "doPrepare",
+        value: function value(t) {
+          for (var e, u = arguments.length, r = new Array(u > 1 ? u - 1 : 0), i = 1; i < u; i++) {
+            r[i - 1] = arguments[i];
+          }
+
+          return (e = Wt(Gt(n.prototype), "doPrepare", this)).call.apply(e, [this, this._removeThousandsSeparators(t.replace(this._mapToRadixRegExp, this.radix))].concat(r));
+        }
+      }, {
+        key: "_separatorsCount",
+        value: function value(t) {
+          for (var e = arguments.length > 1 && void 0 !== arguments[1] && arguments[1], n = 0, u = 0; u < t; ++u) {
+            this._value.indexOf(this.thousandsSeparator, u) === u && (++n, e && (t += this.thousandsSeparator.length));
+          }
+
+          return n;
+        }
+      }, {
+        key: "_separatorsCountFromSlice",
+        value: function value() {
+          var t = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : this._value;
+          return this._separatorsCount(this._removeThousandsSeparators(t).length, !0);
+        }
+      }, {
+        key: "extractInput",
+        value: function value() {
+          var t = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : 0,
+              e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : this.value.length,
+              u = arguments.length > 2 ? arguments[2] : void 0,
+              r = Jt(this._adjustRangeWithSeparators(t, e), 2);
+          return t = r[0], e = r[1], this._removeThousandsSeparators(Wt(Gt(n.prototype), "extractInput", this).call(this, t, e, u));
+        }
+      }, {
+        key: "_appendCharRaw",
+        value: function value(t) {
+          var e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {};
+          if (!this.thousandsSeparator) return Wt(Gt(n.prototype), "_appendCharRaw", this).call(this, t, e);
+
+          var u = e.tail && e._beforeTailState ? e._beforeTailState._value : this._value,
+              r = this._separatorsCountFromSlice(u);
+
+          this._value = this._removeThousandsSeparators(this.value);
+          var i = Wt(Gt(n.prototype), "_appendCharRaw", this).call(this, t, e);
+          this._value = this._insertThousandsSeparators(this._value);
+
+          var a = e.tail && e._beforeTailState ? e._beforeTailState._value : this._value,
+              s = this._separatorsCountFromSlice(a);
+
+          return i.tailShift += (s - r) * this.thousandsSeparator.length, i.skip = !i.rawInserted && t === this.thousandsSeparator, i;
+        }
+      }, {
+        key: "_findSeparatorAround",
+        value: function value(t) {
+          if (this.thousandsSeparator) {
+            var e = t - this.thousandsSeparator.length + 1,
+                n = this.value.indexOf(this.thousandsSeparator, e);
+            if (n <= t) return n;
+          }
+
+          return -1;
+        }
+      }, {
+        key: "_adjustRangeWithSeparators",
+        value: function value(t, e) {
+          var n = this._findSeparatorAround(t);
+
+          n >= 0 && (t = n);
+
+          var u = this._findSeparatorAround(e);
+
+          return u >= 0 && (e = u + this.thousandsSeparator.length), [t, e];
+        }
+      }, {
+        key: "remove",
+        value: function value() {
+          var t = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : 0,
+              e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : this.value.length,
+              n = Jt(this._adjustRangeWithSeparators(t, e), 2);
+          t = n[0], e = n[1];
+
+          var u = this.value.slice(0, t),
+              r = this.value.slice(e),
+              i = this._separatorsCount(u.length);
+
+          this._value = this._insertThousandsSeparators(this._removeThousandsSeparators(u + r));
+
+          var a = this._separatorsCountFromSlice(u);
+
+          return new re({
+            tailShift: (a - i) * this.thousandsSeparator.length
+          });
+        }
+      }, {
+        key: "nearestInputPos",
+        value: function value(t, e) {
+          if (!this.thousandsSeparator) return t;
+
+          switch (e) {
+            case ee.NONE:
+            case ee.LEFT:
+            case ee.FORCE_LEFT:
+              var n = this._findSeparatorAround(t - 1);
+
+              if (n >= 0) {
+                var u = n + this.thousandsSeparator.length;
+                if (t < u || this.value.length <= u || e === ee.FORCE_LEFT) return n;
+              }
+
+              break;
+
+            case ee.RIGHT:
+            case ee.FORCE_RIGHT:
+              var r = this._findSeparatorAround(t);
+
+              if (r >= 0) return r + this.thousandsSeparator.length;
+          }
+
+          return t;
+        }
+      }, {
+        key: "doValidate",
+        value: function value(t) {
+          var e = (t.input ? this._numberRegExpInput : this._numberRegExp).test(this._removeThousandsSeparators(this.value));
+
+          if (e) {
+            var u = this.number;
+            e = e && !isNaN(u) && (null == this.min || this.min >= 0 || this.min <= this.number) && (null == this.max || this.max <= 0 || this.number <= this.max);
+          }
+
+          return e && Wt(Gt(n.prototype), "doValidate", this).call(this, t);
+        }
+      }, {
+        key: "doCommit",
+        value: function value() {
+          if (this.value) {
+            var t = this.number,
+                e = t;
+            null != this.min && (e = Math.max(e, this.min)), null != this.max && (e = Math.min(e, this.max)), e !== t && (this.unmaskedValue = String(e));
+            var u = this.value;
+            this.normalizeZeros && (u = this._normalizeZeros(u)), this.padFractionalZeros && (u = this._padFractionalZeros(u)), this._value = u;
+          }
+
+          Wt(Gt(n.prototype), "doCommit", this).call(this);
+        }
+      }, {
+        key: "_normalizeZeros",
+        value: function value(t) {
+          var e = this._removeThousandsSeparators(t).split(this.radix);
+
+          return e[0] = e[0].replace(/^(\D*)(0*)(\d*)/, function (t, e, n, u) {
+            return e + u;
+          }), t.length && !/\d$/.test(e[0]) && (e[0] = e[0] + "0"), e.length > 1 && (e[1] = e[1].replace(/0*$/, ""), e[1].length || (e.length = 1)), this._insertThousandsSeparators(e.join(this.radix));
+        }
+      }, {
+        key: "_padFractionalZeros",
+        value: function value(t) {
+          if (!t) return t;
+          var e = t.split(this.radix);
+          return e.length < 2 && e.push(""), e[1] = e[1].padEnd(this.scale, "0"), e.join(this.radix);
+        }
+      }, {
+        key: "unmaskedValue",
+        get: function get() {
+          return this._removeThousandsSeparators(this._normalizeZeros(this.value)).replace(this.radix, ".");
+        },
+        set: function set(t) {
+          Xt(Gt(n.prototype), "unmaskedValue", t.replace(".", this.radix), this, !0);
+        }
+      }, {
+        key: "typedValue",
+        get: function get() {
+          return Number(this.unmaskedValue);
+        },
+        set: function set(t) {
+          Xt(Gt(n.prototype), "unmaskedValue", String(t), this, !0);
+        }
+      }, {
+        key: "number",
+        get: function get() {
+          return this.typedValue;
+        },
+        set: function set(t) {
+          this.typedValue = t;
+        }
+      }, {
+        key: "allowNegative",
+        get: function get() {
+          return this.signed || null != this.min && this.min < 0 || null != this.max && this.max < 0;
+        }
+      }]), n;
+    }();
+
+    Ee.DEFAULTS = {
+      radix: ",",
+      thousandsSeparator: "",
+      mapToRadix: ["."],
+      scale: 2,
+      signed: !1,
+      normalizeZeros: !0,
+      padFractionalZeros: !1
+    }, ae.MaskedNumber = Ee;
+
+    var Ce = function (t) {
+      Ut(n, se);
+      var e = Kt(n);
+
+      function n() {
+        return Nt(this, n), e.apply(this, arguments);
+      }
+
+      return Ht(n, [{
+        key: "_update",
+        value: function value(t) {
+          t.mask && (t.validate = t.mask), Wt(Gt(n.prototype), "_update", this).call(this, t);
+        }
+      }]), n;
+    }();
+
+    ae.MaskedFunction = Ce;
+
+    var Fe = function (t) {
+      Ut(n, se);
+      var e = Kt(n);
+
+      function n(t) {
+        var u;
+        return Nt(this, n), (u = e.call(this, Object.assign({}, n.DEFAULTS, t))).currentMask = null, u;
+      }
+
+      return Ht(n, [{
+        key: "_update",
+        value: function value(t) {
+          Wt(Gt(n.prototype), "_update", this).call(this, t), "mask" in t && (this.compiledMasks = Array.isArray(t.mask) ? t.mask.map(function (t) {
+            return le(t);
+          }) : []);
+        }
+      }, {
+        key: "_appendCharRaw",
+        value: function value(t) {
+          var e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {},
+              n = this._applyDispatch(t, e);
+
+          return this.currentMask && n.aggregate(this.currentMask._appendChar(t, e)), n;
+        }
+      }, {
+        key: "_applyDispatch",
+        value: function value() {
+          var t = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : "",
+              e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {},
+              n = e.tail && null != e._beforeTailState ? e._beforeTailState._value : this.value,
+              u = this.rawInputValue,
+              r = e.tail && null != e._beforeTailState ? e._beforeTailState._rawInputValue : u,
+              i = u.slice(r.length),
+              a = this.currentMask,
+              s = new re(),
+              o = a && a.state;
+          if (this.currentMask = this.doDispatch(t, Object.assign({}, e)), this.currentMask) if (this.currentMask !== a) {
+            if (this.currentMask.reset(), r) {
+              var l = this.currentMask.append(r, {
+                raw: !0
+              });
+              s.tailShift = l.inserted.length - n.length;
+            }
+
+            i && (s.tailShift += this.currentMask.append(i, {
+              raw: !0,
+              tail: !0
+            }).tailShift);
+          } else this.currentMask.state = o;
+          return s;
+        }
+      }, {
+        key: "_appendPlaceholder",
+        value: function value() {
+          var t = this._applyDispatch.apply(this, arguments);
+
+          return this.currentMask && t.aggregate(this.currentMask._appendPlaceholder()), t;
+        }
+      }, {
+        key: "doDispatch",
+        value: function value(t) {
+          var e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {};
+          return this.dispatch(t, this, e);
+        }
+      }, {
+        key: "doValidate",
+        value: function value() {
+          for (var t, e, u = arguments.length, r = new Array(u), i = 0; i < u; i++) {
+            r[i] = arguments[i];
+          }
+
+          return (t = Wt(Gt(n.prototype), "doValidate", this)).call.apply(t, [this].concat(r)) && (!this.currentMask || (e = this.currentMask).doValidate.apply(e, r));
+        }
+      }, {
+        key: "reset",
+        value: function value() {
+          this.currentMask && this.currentMask.reset(), this.compiledMasks.forEach(function (t) {
+            return t.reset();
+          });
+        }
+      }, {
+        key: "value",
+        get: function get() {
+          return this.currentMask ? this.currentMask.value : "";
+        },
+        set: function set(t) {
+          Xt(Gt(n.prototype), "value", t, this, !0);
+        }
+      }, {
+        key: "unmaskedValue",
+        get: function get() {
+          return this.currentMask ? this.currentMask.unmaskedValue : "";
+        },
+        set: function set(t) {
+          Xt(Gt(n.prototype), "unmaskedValue", t, this, !0);
+        }
+      }, {
+        key: "typedValue",
+        get: function get() {
+          return this.currentMask ? this.currentMask.typedValue : "";
+        },
+        set: function set(t) {
+          var e = String(t);
+          this.currentMask && (this.currentMask.typedValue = t, e = this.currentMask.unmaskedValue), this.unmaskedValue = e;
+        }
+      }, {
+        key: "isComplete",
+        get: function get() {
+          return !!this.currentMask && this.currentMask.isComplete;
+        }
+      }, {
+        key: "remove",
+        value: function value() {
+          var t,
+              e = new re();
+          this.currentMask && e.aggregate((t = this.currentMask).remove.apply(t, arguments)).aggregate(this._applyDispatch());
+          return e;
+        }
+      }, {
+        key: "state",
+        get: function get() {
+          return Object.assign({}, Wt(Gt(n.prototype), "state", this), {
+            _rawInputValue: this.rawInputValue,
+            compiledMasks: this.compiledMasks.map(function (t) {
+              return t.state;
+            }),
+            currentMaskRef: this.currentMask,
+            currentMask: this.currentMask && this.currentMask.state
+          });
+        },
+        set: function set(t) {
+          var e = t.compiledMasks,
+              u = t.currentMaskRef,
+              r = t.currentMask,
+              i = Yt(t, ["compiledMasks", "currentMaskRef", "currentMask"]);
+          this.compiledMasks.forEach(function (t, n) {
+            return t.state = e[n];
+          }), null != u && (this.currentMask = u, this.currentMask.state = r), Xt(Gt(n.prototype), "state", i, this, !0);
+        }
+      }, {
+        key: "extractInput",
+        value: function value() {
+          var t;
+          return this.currentMask ? (t = this.currentMask).extractInput.apply(t, arguments) : "";
+        }
+      }, {
+        key: "extractTail",
+        value: function value() {
+          for (var t, e, u = arguments.length, r = new Array(u), i = 0; i < u; i++) {
+            r[i] = arguments[i];
+          }
+
+          return this.currentMask ? (t = this.currentMask).extractTail.apply(t, r) : (e = Wt(Gt(n.prototype), "extractTail", this)).call.apply(e, [this].concat(r));
+        }
+      }, {
+        key: "doCommit",
+        value: function value() {
+          this.currentMask && this.currentMask.doCommit(), Wt(Gt(n.prototype), "doCommit", this).call(this);
+        }
+      }, {
+        key: "nearestInputPos",
+        value: function value() {
+          for (var t, e, u = arguments.length, r = new Array(u), i = 0; i < u; i++) {
+            r[i] = arguments[i];
+          }
+
+          return this.currentMask ? (t = this.currentMask).nearestInputPos.apply(t, r) : (e = Wt(Gt(n.prototype), "nearestInputPos", this)).call.apply(e, [this].concat(r));
+        }
+      }, {
+        key: "overwrite",
+        get: function get() {
+          return this.currentMask ? this.currentMask.overwrite : Wt(Gt(n.prototype), "overwrite", this);
+        },
+        set: function set(t) {
+          console.warn('"overwrite" option is not available in dynamic mask, use this option in siblings');
+        }
+      }]), n;
+    }();
+
+    Fe.DEFAULTS = {
+      dispatch: function dispatch(t, e, n) {
+        if (e.compiledMasks.length) {
+          var u = e.rawInputValue,
+              r = e.compiledMasks.map(function (e, r) {
+            return e.reset(), e.append(u, {
+              raw: !0
+            }), e.append(t, n), {
+              weight: e.rawInputValue.length,
+              index: r
+            };
+          });
+          return r.sort(function (t, e) {
+            return e.weight - t.weight;
+          }), e.compiledMasks[r[0].index];
+        }
+      }
+    }, ae.MaskedDynamic = Fe;
+    var Se = {
+      MASKED: "value",
+      UNMASKED: "unmaskedValue",
+      TYPED: "typedValue"
+    };
+
+    function De(t) {
+      var e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : Se.MASKED,
+          n = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : Se.MASKED,
+          u = le(t);
+      return function (t) {
+        return u.runIsolated(function (u) {
+          return u[e] = t, u[n];
+        });
+      };
+    }
+
+    function Be(t) {
+      for (var e = arguments.length, n = new Array(e > 1 ? e - 1 : 0), u = 1; u < e; u++) {
+        n[u - 1] = arguments[u];
+      }
+
+      return De.apply(void 0, n)(t);
+    }
+
+    ae.PIPE_TYPE = Se, ae.createPipe = De, ae.pipe = Be;
+
+    try {
+      globalThis.IMask = ae;
+    } catch (t) {}
+
+    t.HTMLContenteditableMaskElement = _e, t.HTMLMaskElement = me, t.InputMask = Ae, t.MaskElement = ye, t.Masked = se, t.MaskedDate = ge, t.MaskedDynamic = Fe, t.MaskedEnum = be, t.MaskedFunction = Ce, t.MaskedNumber = Ee, t.MaskedPattern = ve, t.MaskedRange = ke, t.MaskedRegExp = de, t.PIPE_TYPE = Se, t.createMask = le, t.createPipe = De, t["default"] = ae, t.pipe = Be, Object.defineProperty(t, "__esModule", {
+      value: !0
+    });
+  });
+  var mainForm1 = document.querySelector('.main-form1');
+  var inputName1 = document.querySelector('.inp-name1');
+  var inputPhone1 = document.querySelector('.inp-phone1');
+  var mainForm2 = document.querySelector('.main-form2');
+  var inputName2 = document.querySelector('.inp-name2');
+  var inputPhone2 = document.querySelector('.inp-phone2');
+  var mainForm3 = document.querySelector('.main-form3');
+  var inputName3 = document.querySelector('.inp-name3');
+  var inputPhone3 = document.querySelector('.inp-phone3'); // const inputMail = document.querySelector('#input-mail');
+  // const inputPassword1 = document.querySelector('#input-password1');
+  // const inputPassword2 = document.querySelector('#input-password2');
+  // Проверка поля
+
+  function checkRequired(inputArr) {
+    inputArr.forEach(function (input) {
+      if (input.value.trim() === '') {
+        showError(input, 'Ошибка');
+      } else {
+        showSuccess(input);
+      }
+    });
+  } // Проверка длины
+
+
+  function checkLength(input, min, max) {
+    if (input.value.length < min) {
+      showError(input, 'Коротко');
+    } else if (input.value.length > max) {
+      showError(input, 'Много');
+    } else {
+      showSuccess(input);
+    }
+  } // Показать ошибку
+
+
+  function showError(input, message) {
+    var formControl = input.parentElement.parentElement;
+    formControl.className = 'input-container error';
+    var small = formControl.querySelector('small');
+    small.innerText = message;
+  } // Показать успех
+
+
+  function showSuccess(input) {
+    var formControl = input.parentElement.parentElement;
+    formControl.className = 'input-container success';
+  } // Проверка почты
+  // function checkEmail(input) {
+  // 	const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  // 	if (re.test(input.value)) {
+  // 		showSuccess(input);
+  // 	} else {
+  // 		showError(input, 'Недопустимо')
+  // 	}
+  // }
+  // Проверка пароля
+  // function checkPasswordsMatch(input1, input2) {
+  // 	if (input1.value !== input2.value) {
+  // 		showError(input2, 'Не совпадает')
+  // 	}
+  // }
+
+
+  mainForm1.addEventListener('submit', function (e) {
+    e.preventDefault();
+    checkRequired([inputName1, inputPhone1]);
+    checkLength(inputName1, 2, 20);
+    checkLength(inputPhone1, 16, 20); // checkEmail(inputMail);
+    // checkPasswordsMatch(inputPassword1, inputPassword2);
+  });
+  mainForm2.addEventListener('submit', function (e) {
+    e.preventDefault();
+    checkRequired([inputName2, inputPhone2]);
+    checkLength(inputName2, 2, 20);
+    checkLength(inputPhone2, 16, 20);
+  });
+  mainForm3.addEventListener('submit', function (e) {
+    e.preventDefault();
+    checkRequired([inputName3, inputPhone3]);
+    checkLength(inputName3, 2, 20);
+    checkLength(inputPhone3, 16, 20);
+  });
+  !function (e, t) {
+    "object" == (typeof exports === "undefined" ? "undefined" : _typeof(exports)) && "object" == (typeof module === "undefined" ? "undefined" : _typeof(module)) ? module.exports = t() : "function" == typeof define && define.amd ? define("Siema", [], t) : "object" == (typeof exports === "undefined" ? "undefined" : _typeof(exports)) ? exports.Siema = t() : e.Siema = t();
+  }("undefined" != typeof self ? self : _this, function () {
+    return function (e) {
+      function t(r) {
+        if (i[r]) return i[r].exports;
+        var n = i[r] = {
+          i: r,
+          l: !1,
+          exports: {}
+        };
+        return e[r].call(n.exports, n, n.exports, t), n.l = !0, n.exports;
+      }
+
+      var i = {};
+      return t.m = e, t.c = i, t.d = function (e, i, r) {
+        t.o(e, i) || Object.defineProperty(e, i, {
+          configurable: !1,
+          enumerable: !0,
+          get: r
+        });
+      }, t.n = function (e) {
+        var i = e && e.__esModule ? function () {
+          return e["default"];
+        } : function () {
+          return e;
+        };
+        return t.d(i, "a", i), i;
+      }, t.o = function (e, t) {
+        return Object.prototype.hasOwnProperty.call(e, t);
+      }, t.p = "", t(t.s = 0);
+    }([function (e, t, i) {
+      "use strict";
+
+      function r(e, t) {
+        if (!(e instanceof t)) throw new TypeError("Cannot call a class as a function");
+      }
+
+      Object.defineProperty(t, "__esModule", {
+        value: !0
+      });
+
+      var n = "function" == typeof Symbol && "symbol" == _typeof(Symbol.iterator) ? function (e) {
+        return _typeof(e);
+      } : function (e) {
+        return e && "function" == typeof Symbol && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : _typeof(e);
+      },
+          s = function () {
+        function e(e, t) {
+          for (var i = 0; i < t.length; i++) {
+            var r = t[i];
+            r.enumerable = r.enumerable || !1, r.configurable = !0, "value" in r && (r.writable = !0), Object.defineProperty(e, r.key, r);
+          }
+        }
+
+        return function (t, i, r) {
+          return i && e(t.prototype, i), r && e(t, r), t;
+        };
+      }(),
+          l = function () {
+        function e(t) {
+          var i = this;
+          if (r(this, e), this.config = e.mergeSettings(t), this.selector = "string" == typeof this.config.selector ? document.querySelector(this.config.selector) : this.config.selector, null === this.selector) throw new Error("Something wrong with your selector 😭");
+          this.resolveSlidesNumber(), this.selectorWidth = this.selector.offsetWidth, this.innerElements = [].slice.call(this.selector.children), this.currentSlide = this.config.loop ? this.config.startIndex % this.innerElements.length : Math.max(0, Math.min(this.config.startIndex, this.innerElements.length - this.perPage)), this.transformProperty = e.webkitOrNot(), ["resizeHandler", "touchstartHandler", "touchendHandler", "touchmoveHandler", "mousedownHandler", "mouseupHandler", "mouseleaveHandler", "mousemoveHandler", "clickHandler"].forEach(function (e) {
+            i[e] = i[e].bind(i);
+          }), this.init();
+        }
+
+        return s(e, [{
+          key: "attachEvents",
+          value: function value() {
+            window.addEventListener("resize", this.resizeHandler), this.config.draggable && (this.pointerDown = !1, this.drag = {
+              startX: 0,
+              endX: 0,
+              startY: 0,
+              letItGo: null,
+              preventClick: !1
+            }, this.selector.addEventListener("touchstart", this.touchstartHandler), this.selector.addEventListener("touchend", this.touchendHandler), this.selector.addEventListener("touchmove", this.touchmoveHandler), this.selector.addEventListener("mousedown", this.mousedownHandler), this.selector.addEventListener("mouseup", this.mouseupHandler), this.selector.addEventListener("mouseleave", this.mouseleaveHandler), this.selector.addEventListener("mousemove", this.mousemoveHandler), this.selector.addEventListener("click", this.clickHandler));
+          }
+        }, {
+          key: "detachEvents",
+          value: function value() {
+            window.removeEventListener("resize", this.resizeHandler), this.selector.removeEventListener("touchstart", this.touchstartHandler), this.selector.removeEventListener("touchend", this.touchendHandler), this.selector.removeEventListener("touchmove", this.touchmoveHandler), this.selector.removeEventListener("mousedown", this.mousedownHandler), this.selector.removeEventListener("mouseup", this.mouseupHandler), this.selector.removeEventListener("mouseleave", this.mouseleaveHandler), this.selector.removeEventListener("mousemove", this.mousemoveHandler), this.selector.removeEventListener("click", this.clickHandler);
+          }
+        }, {
+          key: "init",
+          value: function value() {
+            this.attachEvents(), this.selector.style.overflow = "hidden", this.selector.style.direction = this.config.rtl ? "rtl" : "ltr", this.buildSliderFrame(), this.config.onInit.call(this);
+          }
+        }, {
+          key: "buildSliderFrame",
+          value: function value() {
+            var e = this.selectorWidth / this.perPage,
+                t = this.config.loop ? this.innerElements.length + 2 * this.perPage : this.innerElements.length;
+            this.sliderFrame = document.createElement("div"), this.sliderFrame.style.width = e * t + "px", this.enableTransition(), this.config.draggable && (this.selector.style.cursor = "-webkit-grab");
+            var i = document.createDocumentFragment();
+            if (this.config.loop) for (var r = this.innerElements.length - this.perPage; r < this.innerElements.length; r++) {
+              var n = this.buildSliderFrameItem(this.innerElements[r].cloneNode(!0));
+              i.appendChild(n);
+            }
+
+            for (var s = 0; s < this.innerElements.length; s++) {
+              var l = this.buildSliderFrameItem(this.innerElements[s]);
+              i.appendChild(l);
+            }
+
+            if (this.config.loop) for (var o = 0; o < this.perPage; o++) {
+              var a = this.buildSliderFrameItem(this.innerElements[o].cloneNode(!0));
+              i.appendChild(a);
+            }
+            this.sliderFrame.appendChild(i), this.selector.innerHTML = "", this.selector.appendChild(this.sliderFrame), this.slideToCurrent();
+          }
+        }, {
+          key: "buildSliderFrameItem",
+          value: function value(e) {
+            var t = document.createElement("div");
+            return t.style.cssFloat = this.config.rtl ? "right" : "left", t.style["float"] = this.config.rtl ? "right" : "left", t.style.width = (this.config.loop ? 100 / (this.innerElements.length + 2 * this.perPage) : 100 / this.innerElements.length) + "%", t.appendChild(e), t;
+          }
+        }, {
+          key: "resolveSlidesNumber",
+          value: function value() {
+            if ("number" == typeof this.config.perPage) this.perPage = this.config.perPage;else if ("object" === n(this.config.perPage)) {
+              this.perPage = 1;
+
+              for (var e in this.config.perPage) {
+                window.innerWidth >= e && (this.perPage = this.config.perPage[e]);
+              }
+            }
+          }
+        }, {
+          key: "prev",
+          value: function value() {
+            var e = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : 1,
+                t = arguments[1];
+
+            if (!(this.innerElements.length <= this.perPage)) {
+              var i = this.currentSlide;
+
+              if (this.config.loop) {
+                if (this.currentSlide - e < 0) {
+                  this.disableTransition();
+                  var r = this.currentSlide + this.innerElements.length,
+                      n = this.perPage,
+                      s = r + n,
+                      l = (this.config.rtl ? 1 : -1) * s * (this.selectorWidth / this.perPage),
+                      o = this.config.draggable ? this.drag.endX - this.drag.startX : 0;
+                  this.sliderFrame.style[this.transformProperty] = "translate3d(" + (l + o) + "px, 0, 0)", this.currentSlide = r - e;
+                } else this.currentSlide = this.currentSlide - e;
+              } else this.currentSlide = Math.max(this.currentSlide - e, 0);
+
+              i !== this.currentSlide && (this.slideToCurrent(this.config.loop), this.config.onChange.call(this), t && t.call(this));
+            }
+          }
+        }, {
+          key: "next",
+          value: function value() {
+            var e = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : 1,
+                t = arguments[1];
+
+            if (!(this.innerElements.length <= this.perPage)) {
+              var i = this.currentSlide;
+
+              if (this.config.loop) {
+                if (this.currentSlide + e > this.innerElements.length - this.perPage) {
+                  this.disableTransition();
+                  var r = this.currentSlide - this.innerElements.length,
+                      n = this.perPage,
+                      s = r + n,
+                      l = (this.config.rtl ? 1 : -1) * s * (this.selectorWidth / this.perPage),
+                      o = this.config.draggable ? this.drag.endX - this.drag.startX : 0;
+                  this.sliderFrame.style[this.transformProperty] = "translate3d(" + (l + o) + "px, 0, 0)", this.currentSlide = r + e;
+                } else this.currentSlide = this.currentSlide + e;
+              } else this.currentSlide = Math.min(this.currentSlide + e, this.innerElements.length - this.perPage);
+
+              i !== this.currentSlide && (this.slideToCurrent(this.config.loop), this.config.onChange.call(this), t && t.call(this));
+            }
+          }
+        }, {
+          key: "disableTransition",
+          value: function value() {
+            this.sliderFrame.style.webkitTransition = "all 0ms " + this.config.easing, this.sliderFrame.style.transition = "all 0ms " + this.config.easing;
+          }
+        }, {
+          key: "enableTransition",
+          value: function value() {
+            this.sliderFrame.style.webkitTransition = "all " + this.config.duration + "ms " + this.config.easing, this.sliderFrame.style.transition = "all " + this.config.duration + "ms " + this.config.easing;
+          }
+        }, {
+          key: "goTo",
+          value: function value(e, t) {
+            if (!(this.innerElements.length <= this.perPage)) {
+              var i = this.currentSlide;
+              this.currentSlide = this.config.loop ? e % this.innerElements.length : Math.min(Math.max(e, 0), this.innerElements.length - this.perPage), i !== this.currentSlide && (this.slideToCurrent(), this.config.onChange.call(this), t && t.call(this));
+            }
+          }
+        }, {
+          key: "slideToCurrent",
+          value: function value(e) {
+            var t = this,
+                i = this.config.loop ? this.currentSlide + this.perPage : this.currentSlide,
+                r = (this.config.rtl ? 1 : -1) * i * (this.selectorWidth / this.perPage);
+            e ? requestAnimationFrame(function () {
+              requestAnimationFrame(function () {
+                t.enableTransition(), t.sliderFrame.style[t.transformProperty] = "translate3d(" + r + "px, 0, 0)";
+              });
+            }) : this.sliderFrame.style[this.transformProperty] = "translate3d(" + r + "px, 0, 0)";
+          }
+        }, {
+          key: "updateAfterDrag",
+          value: function value() {
+            var e = (this.config.rtl ? -1 : 1) * (this.drag.endX - this.drag.startX),
+                t = Math.abs(e),
+                i = this.config.multipleDrag ? Math.ceil(t / (this.selectorWidth / this.perPage)) : 1,
+                r = e > 0 && this.currentSlide - i < 0,
+                n = e < 0 && this.currentSlide + i > this.innerElements.length - this.perPage;
+            e > 0 && t > this.config.threshold && this.innerElements.length > this.perPage ? this.prev(i) : e < 0 && t > this.config.threshold && this.innerElements.length > this.perPage && this.next(i), this.slideToCurrent(r || n);
+          }
+        }, {
+          key: "resizeHandler",
+          value: function value() {
+            this.resolveSlidesNumber(), this.currentSlide + this.perPage > this.innerElements.length && (this.currentSlide = this.innerElements.length <= this.perPage ? 0 : this.innerElements.length - this.perPage), this.selectorWidth = this.selector.offsetWidth, this.buildSliderFrame();
+          }
+        }, {
+          key: "clearDrag",
+          value: function value() {
+            this.drag = {
+              startX: 0,
+              endX: 0,
+              startY: 0,
+              letItGo: null,
+              preventClick: this.drag.preventClick
+            };
+          }
+        }, {
+          key: "touchstartHandler",
+          value: function value(e) {
+            -1 !== ["TEXTAREA", "OPTION", "INPUT", "SELECT"].indexOf(e.target.nodeName) || (e.stopPropagation(), this.pointerDown = !0, this.drag.startX = e.touches[0].pageX, this.drag.startY = e.touches[0].pageY);
+          }
+        }, {
+          key: "touchendHandler",
+          value: function value(e) {
+            e.stopPropagation(), this.pointerDown = !1, this.enableTransition(), this.drag.endX && this.updateAfterDrag(), this.clearDrag();
+          }
+        }, {
+          key: "touchmoveHandler",
+          value: function value(e) {
+            if (e.stopPropagation(), null === this.drag.letItGo && (this.drag.letItGo = Math.abs(this.drag.startY - e.touches[0].pageY) < Math.abs(this.drag.startX - e.touches[0].pageX)), this.pointerDown && this.drag.letItGo) {
+              e.preventDefault(), this.drag.endX = e.touches[0].pageX, this.sliderFrame.style.webkitTransition = "all 0ms " + this.config.easing, this.sliderFrame.style.transition = "all 0ms " + this.config.easing;
+              var t = this.config.loop ? this.currentSlide + this.perPage : this.currentSlide,
+                  i = t * (this.selectorWidth / this.perPage),
+                  r = this.drag.endX - this.drag.startX,
+                  n = this.config.rtl ? i + r : i - r;
+              this.sliderFrame.style[this.transformProperty] = "translate3d(" + (this.config.rtl ? 1 : -1) * n + "px, 0, 0)";
+            }
+          }
+        }, {
+          key: "mousedownHandler",
+          value: function value(e) {
+            -1 !== ["TEXTAREA", "OPTION", "INPUT", "SELECT"].indexOf(e.target.nodeName) || (e.preventDefault(), e.stopPropagation(), this.pointerDown = !0, this.drag.startX = e.pageX);
+          }
+        }, {
+          key: "mouseupHandler",
+          value: function value(e) {
+            e.stopPropagation(), this.pointerDown = !1, this.selector.style.cursor = "-webkit-grab", this.enableTransition(), this.drag.endX && this.updateAfterDrag(), this.clearDrag();
+          }
+        }, {
+          key: "mousemoveHandler",
+          value: function value(e) {
+            if (e.preventDefault(), this.pointerDown) {
+              "A" === e.target.nodeName && (this.drag.preventClick = !0), this.drag.endX = e.pageX, this.selector.style.cursor = "-webkit-grabbing", this.sliderFrame.style.webkitTransition = "all 0ms " + this.config.easing, this.sliderFrame.style.transition = "all 0ms " + this.config.easing;
+              var t = this.config.loop ? this.currentSlide + this.perPage : this.currentSlide,
+                  i = t * (this.selectorWidth / this.perPage),
+                  r = this.drag.endX - this.drag.startX,
+                  n = this.config.rtl ? i + r : i - r;
+              this.sliderFrame.style[this.transformProperty] = "translate3d(" + (this.config.rtl ? 1 : -1) * n + "px, 0, 0)";
+            }
+          }
+        }, {
+          key: "mouseleaveHandler",
+          value: function value(e) {
+            this.pointerDown && (this.pointerDown = !1, this.selector.style.cursor = "-webkit-grab", this.drag.endX = e.pageX, this.drag.preventClick = !1, this.enableTransition(), this.updateAfterDrag(), this.clearDrag());
+          }
+        }, {
+          key: "clickHandler",
+          value: function value(e) {
+            this.drag.preventClick && e.preventDefault(), this.drag.preventClick = !1;
+          }
+        }, {
+          key: "remove",
+          value: function value(e, t) {
+            if (e < 0 || e >= this.innerElements.length) throw new Error("Item to remove doesn't exist 😭");
+            var i = e < this.currentSlide,
+                r = this.currentSlide + this.perPage - 1 === e;
+            (i || r) && this.currentSlide--, this.innerElements.splice(e, 1), this.buildSliderFrame(), t && t.call(this);
+          }
+        }, {
+          key: "insert",
+          value: function value(e, t, i) {
+            if (t < 0 || t > this.innerElements.length + 1) throw new Error("Unable to inset it at this index 😭");
+            if (-1 !== this.innerElements.indexOf(e)) throw new Error("The same item in a carousel? Really? Nope 😭");
+            var r = t <= this.currentSlide > 0 && this.innerElements.length;
+            this.currentSlide = r ? this.currentSlide + 1 : this.currentSlide, this.innerElements.splice(t, 0, e), this.buildSliderFrame(), i && i.call(this);
+          }
+        }, {
+          key: "prepend",
+          value: function value(e, t) {
+            this.insert(e, 0), t && t.call(this);
+          }
+        }, {
+          key: "append",
+          value: function value(e, t) {
+            this.insert(e, this.innerElements.length + 1), t && t.call(this);
+          }
+        }, {
+          key: "destroy",
+          value: function value() {
+            var e = arguments.length > 0 && void 0 !== arguments[0] && arguments[0],
+                t = arguments[1];
+
+            if (this.detachEvents(), this.selector.style.cursor = "auto", e) {
+              for (var i = document.createDocumentFragment(), r = 0; r < this.innerElements.length; r++) {
+                i.appendChild(this.innerElements[r]);
+              }
+
+              this.selector.innerHTML = "", this.selector.appendChild(i), this.selector.removeAttribute("style");
+            }
+
+            t && t.call(this);
+          }
+        }], [{
+          key: "mergeSettings",
+          value: function value(e) {
+            var t = {
+              selector: ".siema",
+              duration: 200,
+              easing: "ease-out",
+              perPage: 1,
+              startIndex: 0,
+              draggable: !0,
+              multipleDrag: !0,
+              threshold: 20,
+              loop: !1,
+              rtl: !1,
+              onInit: function onInit() {},
+              onChange: function onChange() {}
+            },
+                i = e;
+
+            for (var r in i) {
+              t[r] = i[r];
+            }
+
+            return t;
+          }
+        }, {
+          key: "webkitOrNot",
+          value: function value() {
+            return "string" == typeof document.documentElement.style.transform ? "transform" : "WebkitTransform";
+          }
+        }]), e;
+      }();
+
+      t["default"] = l, e.exports = t["default"];
+    }]);
+  }); // let inputsPhone = Array.prototype.slice.call(document.querySelectorAll('.inp-phone'));
+  // inputsPhone.forEach((e) => {
+  // 	const phoneMask = IMask( e, { mask: '+{7}(000)000-00-00' })
+  // })
+
+  var phoneMask = IMask(document.querySelector('.inp-phone1'), {
+    mask: '+{7}(000)000-00-00'
+  });
+  var phoneMask2 = IMask(document.querySelector('.inp-phone2'), {
+    mask: '+{7}(000)000-00-00'
+  });
+  var phoneMask3 = IMask(document.querySelector('.inp-phone3'), {
+    mask: '+{7}(000)000-00-00'
+  }); // CUSTOM SELECT
 
   var x, i, j, l, ll, selElmnt, a, b, c;
   /* Look for any elements with the class "custom-select": */
@@ -4255,4293 +7547,111 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
   document.addEventListener("click", closeAllSelect); // ==========
-
-  /*!
-  * inputmask.js
-  * https://github.com/RobinHerbots/Inputmask
-  * Copyright (c) 2010 - 2019 Robin Herbots
-  * Licensed under the MIT license (http://www.opensource.org/licenses/mit-license.php)
-  * Version: 4.0.9
-  */
-
-  (function (factory) {
-    if (typeof define === "function" && define.amd) {
-      define(["./dependencyLibs/inputmask.dependencyLib", "./global/window"], factory);
-    } else if ((typeof exports === "undefined" ? "undefined" : _typeof(exports)) === "object") {
-      module.exports = factory(require("./dependencyLibs/inputmask.dependencyLib"), require("./global/window"));
-    } else {
-      window.Inputmask = factory(window.dependencyLib || jQuery, window);
-    }
-  })(function ($, window, undefined) {
-    var document = window.document,
-        ua = navigator.userAgent,
-        ie = ua.indexOf("MSIE ") > 0 || ua.indexOf("Trident/") > 0,
-        mobile = isInputEventSupported("touchstart"),
-        iemobile = /iemobile/i.test(ua),
-        iphone = /iphone/i.test(ua) && !iemobile;
-
-    function Inputmask(alias, options, internal) {
-      if (!(this instanceof Inputmask)) {
-        return new Inputmask(alias, options, internal);
-      }
-
-      this.el = undefined;
-      this.events = {};
-      this.maskset = undefined;
-      this.refreshValue = false;
-
-      if (internal !== true) {
-        if ($.isPlainObject(alias)) {
-          options = alias;
-        } else {
-          options = options || {};
-          if (alias) options.alias = alias;
-        }
-
-        this.opts = $.extend(true, {}, this.defaults, options);
-        this.noMasksCache = options && options.definitions !== undefined;
-        this.userOptions = options || {};
-        this.isRTL = this.opts.numericInput;
-        resolveAlias(this.opts.alias, options, this.opts);
-      }
-    }
-
-    Inputmask.prototype = {
-      dataAttribute: "data-inputmask",
-      defaults: {
-        placeholder: "_",
-        optionalmarker: ["[", "]"],
-        quantifiermarker: ["{", "}"],
-        groupmarker: ["(", ")"],
-        alternatormarker: "|",
-        escapeChar: "\\",
-        mask: null,
-        regex: null,
-        oncomplete: $.noop,
-        onincomplete: $.noop,
-        oncleared: $.noop,
-        repeat: 0,
-        greedy: false,
-        autoUnmask: false,
-        removeMaskOnSubmit: false,
-        clearMaskOnLostFocus: true,
-        insertMode: true,
-        clearIncomplete: false,
-        alias: null,
-        onKeyDown: $.noop,
-        onBeforeMask: null,
-        onBeforePaste: function onBeforePaste(pastedValue, opts) {
-          return $.isFunction(opts.onBeforeMask) ? opts.onBeforeMask.call(this, pastedValue, opts) : pastedValue;
-        },
-        onBeforeWrite: null,
-        onUnMask: null,
-        showMaskOnFocus: true,
-        showMaskOnHover: true,
-        onKeyValidation: $.noop,
-        skipOptionalPartCharacter: " ",
-        numericInput: false,
-        rightAlign: false,
-        undoOnEscape: true,
-        radixPoint: "",
-        _radixDance: false,
-        groupSeparator: "",
-        keepStatic: null,
-        positionCaretOnTab: true,
-        tabThrough: false,
-        supportsInputType: ["text", "tel", "url", "password", "search"],
-        ignorables: [8, 9, 13, 19, 27, 33, 34, 35, 36, 37, 38, 39, 40, 45, 46, 93, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 0, 229],
-        isComplete: null,
-        preValidation: null,
-        postValidation: null,
-        staticDefinitionSymbol: undefined,
-        jitMasking: false,
-        nullable: true,
-        inputEventOnly: false,
-        noValuePatching: false,
-        positionCaretOnClick: "lvp",
-        casing: null,
-        inputmode: "verbatim",
-        colorMask: false,
-        disablePredictiveText: false,
-        importDataAttributes: true,
-        shiftPositions: true
-      },
-      definitions: {
-        9: {
-          validator: "[0-9\uFF11-\uFF19]",
-          definitionSymbol: "*"
-        },
-        a: {
-          validator: "[A-Za-z\u0410-\u044F\u0401\u0451\xC0-\xFF\xB5]",
-          definitionSymbol: "*"
-        },
-        "*": {
-          validator: "[0-9\uFF11-\uFF19A-Za-z\u0410-\u044F\u0401\u0451\xC0-\xFF\xB5]"
-        }
-      },
-      aliases: {},
-      masksCache: {},
-      mask: function mask(elems) {
-        var that = this;
-
-        function importAttributeOptions(npt, opts, userOptions, dataAttribute) {
-          if (opts.importDataAttributes === true) {
-            var attrOptions = npt.getAttribute(dataAttribute),
-                option,
-                dataoptions,
-                optionData,
-                p;
-
-            var importOption = function importOption(option, optionData) {
-              optionData = optionData !== undefined ? optionData : npt.getAttribute(dataAttribute + "-" + option);
-
-              if (optionData !== null) {
-                if (typeof optionData === "string") {
-                  if (option.indexOf("on") === 0) optionData = window[optionData];else if (optionData === "false") optionData = false;else if (optionData === "true") optionData = true;
-                }
-
-                userOptions[option] = optionData;
-              }
-            };
-
-            if (attrOptions && attrOptions !== "") {
-              attrOptions = attrOptions.replace(/'/g, '"');
-              dataoptions = JSON.parse("{" + attrOptions + "}");
-            }
-
-            if (dataoptions) {
-              optionData = undefined;
-
-              for (p in dataoptions) {
-                if (p.toLowerCase() === "alias") {
-                  optionData = dataoptions[p];
-                  break;
-                }
-              }
-            }
-
-            importOption("alias", optionData);
-
-            if (userOptions.alias) {
-              resolveAlias(userOptions.alias, userOptions, opts);
-            }
-
-            for (option in opts) {
-              if (dataoptions) {
-                optionData = undefined;
-
-                for (p in dataoptions) {
-                  if (p.toLowerCase() === option.toLowerCase()) {
-                    optionData = dataoptions[p];
-                    break;
-                  }
-                }
-              }
-
-              importOption(option, optionData);
-            }
-          }
-
-          $.extend(true, opts, userOptions);
-
-          if (npt.dir === "rtl" || opts.rightAlign) {
-            npt.style.textAlign = "right";
-          }
-
-          if (npt.dir === "rtl" || opts.numericInput) {
-            npt.dir = "ltr";
-            npt.removeAttribute("dir");
-            opts.isRTL = true;
-          }
-
-          return Object.keys(userOptions).length;
-        }
-
-        if (typeof elems === "string") {
-          elems = document.getElementById(elems) || document.querySelectorAll(elems);
-        }
-
-        elems = elems.nodeName ? [elems] : elems;
-        $.each(elems, function (ndx, el) {
-          var scopedOpts = $.extend(true, {}, that.opts);
-
-          if (importAttributeOptions(el, scopedOpts, $.extend(true, {}, that.userOptions), that.dataAttribute)) {
-            var maskset = generateMaskSet(scopedOpts, that.noMasksCache);
-
-            if (maskset !== undefined) {
-              if (el.inputmask !== undefined) {
-                el.inputmask.opts.autoUnmask = true;
-                el.inputmask.remove();
-              }
-
-              el.inputmask = new Inputmask(undefined, undefined, true);
-              el.inputmask.opts = scopedOpts;
-              el.inputmask.noMasksCache = that.noMasksCache;
-              el.inputmask.userOptions = $.extend(true, {}, that.userOptions);
-              el.inputmask.isRTL = scopedOpts.isRTL || scopedOpts.numericInput;
-              el.inputmask.el = el;
-              el.inputmask.maskset = maskset;
-              $.data(el, "_inputmask_opts", scopedOpts);
-              maskScope.call(el.inputmask, {
-                action: "mask"
-              });
-            }
-          }
-        });
-        return elems && elems[0] ? elems[0].inputmask || this : this;
-      },
-      option: function option(options, noremask) {
-        if (typeof options === "string") {
-          return this.opts[options];
-        } else if (_typeof(options) === "object") {
-          $.extend(this.userOptions, options);
-
-          if (this.el && noremask !== true) {
-            this.mask(this.el);
-          }
-
-          return this;
-        }
-      },
-      unmaskedvalue: function unmaskedvalue(value) {
-        this.maskset = this.maskset || generateMaskSet(this.opts, this.noMasksCache);
-        return maskScope.call(this, {
-          action: "unmaskedvalue",
-          value: value
-        });
-      },
-      remove: function remove() {
-        return maskScope.call(this, {
-          action: "remove"
-        });
-      },
-      getemptymask: function getemptymask() {
-        this.maskset = this.maskset || generateMaskSet(this.opts, this.noMasksCache);
-        return maskScope.call(this, {
-          action: "getemptymask"
-        });
-      },
-      hasMaskedValue: function hasMaskedValue() {
-        return !this.opts.autoUnmask;
-      },
-      isComplete: function isComplete() {
-        this.maskset = this.maskset || generateMaskSet(this.opts, this.noMasksCache);
-        return maskScope.call(this, {
-          action: "isComplete"
-        });
-      },
-      getmetadata: function getmetadata() {
-        this.maskset = this.maskset || generateMaskSet(this.opts, this.noMasksCache);
-        return maskScope.call(this, {
-          action: "getmetadata"
-        });
-      },
-      isValid: function isValid(value) {
-        this.maskset = this.maskset || generateMaskSet(this.opts, this.noMasksCache);
-        return maskScope.call(this, {
-          action: "isValid",
-          value: value
-        });
-      },
-      format: function format(value, metadata) {
-        this.maskset = this.maskset || generateMaskSet(this.opts, this.noMasksCache);
-        return maskScope.call(this, {
-          action: "format",
-          value: value,
-          metadata: metadata
-        });
-      },
-      setValue: function setValue(value) {
-        if (this.el) {
-          $(this.el).trigger("setvalue", [value]);
-        }
-      },
-      analyseMask: function analyseMask(mask, regexMask, opts) {
-        var tokenizer = /(?:[?*+]|\{[0-9\+\*]+(?:,[0-9\+\*]*)?(?:\|[0-9\+\*]*)?\})|[^.?*+^${[]()|\\]+|./g,
-            regexTokenizer = /\[\^?]?(?:[^\\\]]+|\\[\S\s]?)*]?|\\(?:0(?:[0-3][0-7]{0,2}|[4-7][0-7]?)?|[1-9][0-9]*|x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4}|c[A-Za-z]|[\S\s]?)|\((?:\?[:=!]?)?|(?:[?*+]|\{[0-9]+(?:,[0-9]*)?\})\??|[^.?*+^${[()|\\]+|./g,
-            escaped = false,
-            currentToken = new MaskToken(),
-            match,
-            m,
-            openenings = [],
-            maskTokens = [],
-            openingToken,
-            currentOpeningToken,
-            alternator,
-            lastMatch,
-            groupToken;
-
-        function MaskToken(isGroup, isOptional, isQuantifier, isAlternator) {
-          this.matches = [];
-          this.openGroup = isGroup || false;
-          this.alternatorGroup = false;
-          this.isGroup = isGroup || false;
-          this.isOptional = isOptional || false;
-          this.isQuantifier = isQuantifier || false;
-          this.isAlternator = isAlternator || false;
-          this.quantifier = {
-            min: 1,
-            max: 1
-          };
-        }
-
-        function insertTestDefinition(mtoken, element, position) {
-          position = position !== undefined ? position : mtoken.matches.length;
-          var prevMatch = mtoken.matches[position - 1];
-
-          if (regexMask) {
-            if (element.indexOf("[") === 0 || escaped && /\\d|\\s|\\w]/i.test(element) || element === ".") {
-              mtoken.matches.splice(position++, 0, {
-                fn: new RegExp(element, opts.casing ? "i" : ""),
-                optionality: false,
-                newBlockMarker: prevMatch === undefined ? "master" : prevMatch.def !== element,
-                casing: null,
-                def: element,
-                placeholder: undefined,
-                nativeDef: element
-              });
-            } else {
-              if (escaped) element = element[element.length - 1];
-              $.each(element.split(""), function (ndx, lmnt) {
-                prevMatch = mtoken.matches[position - 1];
-                mtoken.matches.splice(position++, 0, {
-                  fn: null,
-                  optionality: false,
-                  newBlockMarker: prevMatch === undefined ? "master" : prevMatch.def !== lmnt && prevMatch.fn !== null,
-                  casing: null,
-                  def: opts.staticDefinitionSymbol || lmnt,
-                  placeholder: opts.staticDefinitionSymbol !== undefined ? lmnt : undefined,
-                  nativeDef: (escaped ? "'" : "") + lmnt
-                });
-              });
-            }
-
-            escaped = false;
-          } else {
-            var maskdef = (opts.definitions ? opts.definitions[element] : undefined) || Inputmask.prototype.definitions[element];
-
-            if (maskdef && !escaped) {
-              mtoken.matches.splice(position++, 0, {
-                fn: maskdef.validator ? typeof maskdef.validator == "string" ? new RegExp(maskdef.validator, opts.casing ? "i" : "") : new function () {
-                  this.test = maskdef.validator;
-                }() : new RegExp("."),
-                optionality: false,
-                newBlockMarker: prevMatch === undefined ? "master" : prevMatch.def !== (maskdef.definitionSymbol || element),
-                casing: maskdef.casing,
-                def: maskdef.definitionSymbol || element,
-                placeholder: maskdef.placeholder,
-                nativeDef: element
-              });
-            } else {
-              mtoken.matches.splice(position++, 0, {
-                fn: null,
-                optionality: false,
-                newBlockMarker: prevMatch === undefined ? "master" : prevMatch.def !== element && prevMatch.fn !== null,
-                casing: null,
-                def: opts.staticDefinitionSymbol || element,
-                placeholder: opts.staticDefinitionSymbol !== undefined ? element : undefined,
-                nativeDef: (escaped ? "'" : "") + element
-              });
-              escaped = false;
-            }
-          }
-        }
-
-        function verifyGroupMarker(maskToken) {
-          if (maskToken && maskToken.matches) {
-            $.each(maskToken.matches, function (ndx, token) {
-              var nextToken = maskToken.matches[ndx + 1];
-
-              if ((nextToken === undefined || nextToken.matches === undefined || nextToken.isQuantifier === false) && token && token.isGroup) {
-                token.isGroup = false;
-
-                if (!regexMask) {
-                  insertTestDefinition(token, opts.groupmarker[0], 0);
-
-                  if (token.openGroup !== true) {
-                    insertTestDefinition(token, opts.groupmarker[1]);
-                  }
-                }
-              }
-
-              verifyGroupMarker(token);
-            });
-          }
-        }
-
-        function defaultCase() {
-          if (openenings.length > 0) {
-            currentOpeningToken = openenings[openenings.length - 1];
-            insertTestDefinition(currentOpeningToken, m);
-
-            if (currentOpeningToken.isAlternator) {
-              alternator = openenings.pop();
-
-              for (var mndx = 0; mndx < alternator.matches.length; mndx++) {
-                if (alternator.matches[mndx].isGroup) alternator.matches[mndx].isGroup = false;
-              }
-
-              if (openenings.length > 0) {
-                currentOpeningToken = openenings[openenings.length - 1];
-                currentOpeningToken.matches.push(alternator);
-              } else {
-                currentToken.matches.push(alternator);
-              }
-            }
-          } else {
-            insertTestDefinition(currentToken, m);
-          }
-        }
-
-        function reverseTokens(maskToken) {
-          function reverseStatic(st) {
-            if (st === opts.optionalmarker[0]) st = opts.optionalmarker[1];else if (st === opts.optionalmarker[1]) st = opts.optionalmarker[0];else if (st === opts.groupmarker[0]) st = opts.groupmarker[1];else if (st === opts.groupmarker[1]) st = opts.groupmarker[0];
-            return st;
-          }
-
-          maskToken.matches = maskToken.matches.reverse();
-
-          for (var match in maskToken.matches) {
-            if (maskToken.matches.hasOwnProperty(match)) {
-              var intMatch = parseInt(match);
-
-              if (maskToken.matches[match].isQuantifier && maskToken.matches[intMatch + 1] && maskToken.matches[intMatch + 1].isGroup) {
-                var qt = maskToken.matches[match];
-                maskToken.matches.splice(match, 1);
-                maskToken.matches.splice(intMatch + 1, 0, qt);
-              }
-
-              if (maskToken.matches[match].matches !== undefined) {
-                maskToken.matches[match] = reverseTokens(maskToken.matches[match]);
-              } else {
-                maskToken.matches[match] = reverseStatic(maskToken.matches[match]);
-              }
-            }
-          }
-
-          return maskToken;
-        }
-
-        function groupify(matches) {
-          var groupToken = new MaskToken(true);
-          groupToken.openGroup = false;
-          groupToken.matches = matches;
-          return groupToken;
-        }
-
-        if (regexMask) {
-          opts.optionalmarker[0] = undefined;
-          opts.optionalmarker[1] = undefined;
-        }
-
-        while (match = regexMask ? regexTokenizer.exec(mask) : tokenizer.exec(mask)) {
-          m = match[0];
-
-          if (regexMask) {
-            switch (m.charAt(0)) {
-              case "?":
-                m = "{0,1}";
-                break;
-
-              case "+":
-              case "*":
-                m = "{" + m + "}";
-                break;
-            }
-          }
-
-          if (escaped) {
-            defaultCase();
-            continue;
-          }
-
-          switch (m.charAt(0)) {
-            case "(?=":
-              break;
-
-            case "(?!":
-              break;
-
-            case "(?<=":
-              break;
-
-            case "(?<!":
-              break;
-
-            case opts.escapeChar:
-              escaped = true;
-
-              if (regexMask) {
-                defaultCase();
-              }
-
-              break;
-
-            case opts.optionalmarker[1]:
-            case opts.groupmarker[1]:
-              openingToken = openenings.pop();
-              openingToken.openGroup = false;
-
-              if (openingToken !== undefined) {
-                if (openenings.length > 0) {
-                  currentOpeningToken = openenings[openenings.length - 1];
-                  currentOpeningToken.matches.push(openingToken);
-
-                  if (currentOpeningToken.isAlternator) {
-                    alternator = openenings.pop();
-
-                    for (var mndx = 0; mndx < alternator.matches.length; mndx++) {
-                      alternator.matches[mndx].isGroup = false;
-                      alternator.matches[mndx].alternatorGroup = false;
-                    }
-
-                    if (openenings.length > 0) {
-                      currentOpeningToken = openenings[openenings.length - 1];
-                      currentOpeningToken.matches.push(alternator);
-                    } else {
-                      currentToken.matches.push(alternator);
-                    }
-                  }
-                } else {
-                  currentToken.matches.push(openingToken);
-                }
-              } else defaultCase();
-
-              break;
-
-            case opts.optionalmarker[0]:
-              openenings.push(new MaskToken(false, true));
-              break;
-
-            case opts.groupmarker[0]:
-              openenings.push(new MaskToken(true));
-              break;
-
-            case opts.quantifiermarker[0]:
-              var quantifier = new MaskToken(false, false, true);
-              m = m.replace(/[{}]/g, "");
-              var mqj = m.split("|"),
-                  mq = mqj[0].split(","),
-                  mq0 = isNaN(mq[0]) ? mq[0] : parseInt(mq[0]),
-                  mq1 = mq.length === 1 ? mq0 : isNaN(mq[1]) ? mq[1] : parseInt(mq[1]);
-
-              if (mq0 === "*" || mq0 === "+") {
-                mq0 = mq1 === "*" ? 0 : 1;
-              }
-
-              quantifier.quantifier = {
-                min: mq0,
-                max: mq1,
-                jit: mqj[1]
-              };
-              var matches = openenings.length > 0 ? openenings[openenings.length - 1].matches : currentToken.matches;
-              match = matches.pop();
-
-              if (match.isAlternator) {
-                matches.push(match);
-                matches = match.matches;
-                var groupToken = new MaskToken(true);
-                var tmpMatch = matches.pop();
-                matches.push(groupToken);
-                matches = groupToken.matches;
-                match = tmpMatch;
-              }
-
-              if (!match.isGroup) {
-                match = groupify([match]);
-              }
-
-              matches.push(match);
-              matches.push(quantifier);
-              break;
-
-            case opts.alternatormarker:
-              var groupQuantifier = function groupQuantifier(matches) {
-                var lastMatch = matches.pop();
-
-                if (lastMatch.isQuantifier) {
-                  lastMatch = groupify([matches.pop(), lastMatch]);
-                }
-
-                return lastMatch;
-              };
-
-              if (openenings.length > 0) {
-                currentOpeningToken = openenings[openenings.length - 1];
-                var subToken = currentOpeningToken.matches[currentOpeningToken.matches.length - 1];
-
-                if (currentOpeningToken.openGroup && (subToken.matches === undefined || subToken.isGroup === false && subToken.isAlternator === false)) {
-                  lastMatch = openenings.pop();
-                } else {
-                  lastMatch = groupQuantifier(currentOpeningToken.matches);
-                }
-              } else {
-                lastMatch = groupQuantifier(currentToken.matches);
-              }
-
-              if (lastMatch.isAlternator) {
-                openenings.push(lastMatch);
-              } else {
-                if (lastMatch.alternatorGroup) {
-                  alternator = openenings.pop();
-                  lastMatch.alternatorGroup = false;
-                } else {
-                  alternator = new MaskToken(false, false, false, true);
-                }
-
-                alternator.matches.push(lastMatch);
-                openenings.push(alternator);
-
-                if (lastMatch.openGroup) {
-                  lastMatch.openGroup = false;
-                  var alternatorGroup = new MaskToken(true);
-                  alternatorGroup.alternatorGroup = true;
-                  openenings.push(alternatorGroup);
-                }
-              }
-
-              break;
-
-            default:
-              defaultCase();
-          }
-        }
-
-        while (openenings.length > 0) {
-          openingToken = openenings.pop();
-          currentToken.matches.push(openingToken);
-        }
-
-        if (currentToken.matches.length > 0) {
-          verifyGroupMarker(currentToken);
-          maskTokens.push(currentToken);
-        }
-
-        if (opts.numericInput || opts.isRTL) {
-          reverseTokens(maskTokens[0]);
-        }
-
-        return maskTokens;
-      },
-      positionColorMask: function positionColorMask(input, template) {
-        input.style.left = template.offsetLeft + "px";
-      }
-    };
-
-    Inputmask.extendDefaults = function (options) {
-      $.extend(true, Inputmask.prototype.defaults, options);
-    };
-
-    Inputmask.extendDefinitions = function (definition) {
-      $.extend(true, Inputmask.prototype.definitions, definition);
-    };
-
-    Inputmask.extendAliases = function (alias) {
-      $.extend(true, Inputmask.prototype.aliases, alias);
-    };
-
-    Inputmask.format = function (value, options, metadata) {
-      return Inputmask(options).format(value, metadata);
-    };
-
-    Inputmask.unmask = function (value, options) {
-      return Inputmask(options).unmaskedvalue(value);
-    };
-
-    Inputmask.isValid = function (value, options) {
-      return Inputmask(options).isValid(value);
-    };
-
-    Inputmask.remove = function (elems) {
-      if (typeof elems === "string") {
-        elems = document.getElementById(elems) || document.querySelectorAll(elems);
-      }
-
-      elems = elems.nodeName ? [elems] : elems;
-      $.each(elems, function (ndx, el) {
-        if (el.inputmask) el.inputmask.remove();
+  // модальные окна
+
+  var modals = function modals() {
+    function bindModal(triggerSelector, modalSelector, closeSelector) {
+      var triggers = Array.prototype.slice.call(document.querySelectorAll(triggerSelector));
+      var modal = document.querySelector(modalSelector);
+      var btnsclose = Array.prototype.slice.call(document.querySelectorAll(closeSelector));
+      btnsclose.forEach(function (item) {
+        item.addEventListener('click', closeModal);
       });
-    };
-
-    Inputmask.setValue = function (elems, value) {
-      if (typeof elems === "string") {
-        elems = document.getElementById(elems) || document.querySelectorAll(elems);
-      }
-
-      elems = elems.nodeName ? [elems] : elems;
-      $.each(elems, function (ndx, el) {
-        if (el.inputmask) el.inputmask.setValue(value);else $(el).trigger("setvalue", [value]);
+      triggers.forEach(function (item) {
+        item.addEventListener('click', openModal);
       });
-    };
+      modal.addEventListener('click', function (e) {
+        if (e.target === modal) {
+          closeModal();
+        }
+      });
+      document.body.addEventListener('keyup', function (e) {
+        var key = e.keyCode;
 
-    Inputmask.escapeRegex = function (str) {
-      var specials = ["/", ".", "*", "+", "?", "|", "(", ")", "[", "]", "{", "}", "\\", "$", "^"];
-      return str.replace(new RegExp("(\\" + specials.join("|\\") + ")", "gim"), "\\$1");
-    };
+        if (key == 27) {
+          closeModal();
+        }
 
-    Inputmask.keyCode = {
-      BACKSPACE: 8,
-      BACKSPACE_SAFARI: 127,
-      DELETE: 46,
-      DOWN: 40,
-      END: 35,
-      ENTER: 13,
-      ESCAPE: 27,
-      HOME: 36,
-      INSERT: 45,
-      LEFT: 37,
-      PAGE_DOWN: 34,
-      PAGE_UP: 33,
-      RIGHT: 39,
-      SPACE: 32,
-      TAB: 9,
-      UP: 38,
-      X: 88,
-      CONTROL: 17
-    };
-    Inputmask.dependencyLib = $;
+        ;
+      }, false);
 
-    function resolveAlias(aliasStr, options, opts) {
-      var aliasDefinition = Inputmask.prototype.aliases[aliasStr];
-
-      if (aliasDefinition) {
-        if (aliasDefinition.alias) resolveAlias(aliasDefinition.alias, undefined, opts);
-        $.extend(true, opts, aliasDefinition);
-        $.extend(true, opts, options);
-        return true;
-      } else if (opts.mask === null) {
-        opts.mask = aliasStr;
+      function openModal() {
+        modal.classList.add('modal--show');
+        document.body.style.overflow = 'hidden'; // clearInterval(openTimer);
       }
 
-      return false;
+      function closeModal() {
+        modal.classList.remove('modal--show');
+        document.body.style.overflow = '';
+      }
+
+      ;
+      var burgerCallBtn = document.querySelector('.burger__call-btn');
+      var politicsClose = document.querySelector('.politics-close');
+      var politicsModal = document.querySelector('.politics-modal');
+      burgerCallBtn.addEventListener('click', function () {
+        closeNav(); // closeNav лежит в файле burger-menu.js
+      });
+      politicsClose.addEventListener('click', function () {
+        politicsModal.classList.remove('modal--show'); // politicsModal.classList.remove('animate__animated', 'animate__fadeIn');
+      }); // var contentBtn = document.querySelector('.content-btn');
+      // contentBtn.addEventListener('click', function() {
+      // 	var contentM = document.querySelector('.content__modal');
+      // 	contentM.classList.remove('modal--show');
+      // 	document.body.style.overflow = '';
+      // 	// contentM.classList.remove('animate__animated', 'animate__fadeIn');
+      // });
+      // function showModalByScroll() {
+      // 	if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+      // 		if (modal.classList.contains('form__modal')) {
+      // 			openModal();
+      // 			window.removeEventListener('scroll', showModalByScroll);
+      // 		}
+      // 	}
+      // }
+      // window.addEventListener('scroll', showModalByScroll);
+      // function openTimer() {
+      // 	setTimeout(openModal, 2000);
+      // }
+      // if (modal.classList.contains('form__modal')) {
+      // 	openTimer();
+      // }
     }
 
-    function generateMaskSet(opts, nocache) {
-      function generateMask(mask, metadata, opts) {
-        var regexMask = false;
-
-        if (mask === null || mask === "") {
-          regexMask = opts.regex !== null;
-
-          if (regexMask) {
-            mask = opts.regex;
-            mask = mask.replace(/^(\^)(.*)(\$)$/, "$2");
-          } else {
-            regexMask = true;
-            mask = ".*";
-          }
-        }
-
-        if (mask.length === 1 && opts.greedy === false && opts.repeat !== 0) {
-          opts.placeholder = "";
-        }
-
-        if (opts.repeat > 0 || opts.repeat === "*" || opts.repeat === "+") {
-          var repeatStart = opts.repeat === "*" ? 0 : opts.repeat === "+" ? 1 : opts.repeat;
-          mask = opts.groupmarker[0] + mask + opts.groupmarker[1] + opts.quantifiermarker[0] + repeatStart + "," + opts.repeat + opts.quantifiermarker[1];
-        }
-
-        var masksetDefinition,
-            maskdefKey = regexMask ? "regex_" + opts.regex : opts.numericInput ? mask.split("").reverse().join("") : mask;
-
-        if (Inputmask.prototype.masksCache[maskdefKey] === undefined || nocache === true) {
-          masksetDefinition = {
-            mask: mask,
-            maskToken: Inputmask.prototype.analyseMask(mask, regexMask, opts),
-            validPositions: {},
-            _buffer: undefined,
-            buffer: undefined,
-            tests: {},
-            excludes: {},
-            metadata: metadata,
-            maskLength: undefined,
-            jitOffset: {}
-          };
-
-          if (nocache !== true) {
-            Inputmask.prototype.masksCache[maskdefKey] = masksetDefinition;
-            masksetDefinition = $.extend(true, {}, Inputmask.prototype.masksCache[maskdefKey]);
-          }
-        } else masksetDefinition = $.extend(true, {}, Inputmask.prototype.masksCache[maskdefKey]);
-
-        return masksetDefinition;
-      }
-
-      var ms;
-
-      if ($.isFunction(opts.mask)) {
-        opts.mask = opts.mask(opts);
-      }
-
-      if ($.isArray(opts.mask)) {
-        if (opts.mask.length > 1) {
-          if (opts.keepStatic === null) {
-            opts.keepStatic = "auto";
-
-            for (var i = 0; i < opts.mask.length; i++) {
-              if (opts.mask[i].charAt(0) !== opts.mask[0].charAt(0)) {
-                opts.keepStatic = true;
-                break;
-              }
-            }
-          }
-
-          var altMask = opts.groupmarker[0];
-          $.each(opts.isRTL ? opts.mask.reverse() : opts.mask, function (ndx, msk) {
-            if (altMask.length > 1) {
-              altMask += opts.groupmarker[1] + opts.alternatormarker + opts.groupmarker[0];
-            }
-
-            if (msk.mask !== undefined && !$.isFunction(msk.mask)) {
-              altMask += msk.mask;
-            } else {
-              altMask += msk;
-            }
-          });
-          altMask += opts.groupmarker[1];
-          return generateMask(altMask, opts.mask, opts);
-        } else opts.mask = opts.mask.pop();
-      }
-
-      if (opts.mask && opts.mask.mask !== undefined && !$.isFunction(opts.mask.mask)) {
-        ms = generateMask(opts.mask.mask, opts.mask, opts);
-      } else {
-        ms = generateMask(opts.mask, opts.mask, opts);
-      }
-
-      return ms;
-    }
-
-    function isInputEventSupported(eventName) {
-      var el = document.createElement("input"),
-          evName = "on" + eventName,
-          isSupported = (evName in el);
-
-      if (!isSupported) {
-        el.setAttribute(evName, "return;");
-        isSupported = typeof el[evName] === "function";
-      }
-
-      el = null;
-      return isSupported;
-    }
-
-    function maskScope(actionObj, maskset, opts) {
-      maskset = maskset || this.maskset;
-      opts = opts || this.opts;
-      var inputmask = this,
-          el = this.el,
-          isRTL = this.isRTL,
-          undoValue,
-          $el,
-          skipKeyPressEvent = false,
-          skipInputEvent = false,
-          ignorable = false,
-          maxLength,
-          mouseEnter = false,
-          colorMask,
-          originalPlaceholder;
-
-      var getMaskTemplate = function getMaskTemplate(baseOnInput, minimalPos, includeMode, noJit, clearOptionalTail) {
-        var greedy = opts.greedy;
-        if (clearOptionalTail) opts.greedy = false;
-        minimalPos = minimalPos || 0;
-        var maskTemplate = [],
-            ndxIntlzr,
-            pos = 0,
-            test,
-            testPos,
-            lvp = getLastValidPosition();
-
-        do {
-          if (baseOnInput === true && getMaskSet().validPositions[pos]) {
-            testPos = clearOptionalTail && getMaskSet().validPositions[pos].match.optionality === true && getMaskSet().validPositions[pos + 1] === undefined && (getMaskSet().validPositions[pos].generatedInput === true || getMaskSet().validPositions[pos].input == opts.skipOptionalPartCharacter && pos > 0) ? determineTestTemplate(pos, getTests(pos, ndxIntlzr, pos - 1)) : getMaskSet().validPositions[pos];
-            test = testPos.match;
-            ndxIntlzr = testPos.locator.slice();
-            maskTemplate.push(includeMode === true ? testPos.input : includeMode === false ? test.nativeDef : getPlaceholder(pos, test));
-          } else {
-            testPos = getTestTemplate(pos, ndxIntlzr, pos - 1);
-            test = testPos.match;
-            ndxIntlzr = testPos.locator.slice();
-            var jitMasking = noJit === true ? false : opts.jitMasking !== false ? opts.jitMasking : test.jit;
-
-            if (jitMasking === false || jitMasking === undefined || typeof jitMasking === "number" && isFinite(jitMasking) && jitMasking > pos) {
-              maskTemplate.push(includeMode === false ? test.nativeDef : getPlaceholder(pos, test));
-            }
-          }
-
-          if (opts.keepStatic === "auto") {
-            if (test.newBlockMarker && test.fn !== null) {
-              opts.keepStatic = pos - 1;
-            }
-          }
-
-          pos++;
-        } while ((maxLength === undefined || pos < maxLength) && (test.fn !== null || test.def !== "") || minimalPos > pos);
-
-        if (maskTemplate[maskTemplate.length - 1] === "") {
-          maskTemplate.pop();
-        }
-
-        if (includeMode !== false || getMaskSet().maskLength === undefined) getMaskSet().maskLength = pos - 1;
-        opts.greedy = greedy;
-        return maskTemplate;
-      };
-
-      function getMaskSet() {
-        return maskset;
-      }
-
-      function resetMaskSet(soft) {
-        var maskset = getMaskSet();
-        maskset.buffer = undefined;
-
-        if (soft !== true) {
-          maskset.validPositions = {};
-          maskset.p = 0;
-        }
-      }
-
-      function getLastValidPosition(closestTo, strict, validPositions) {
-        var before = -1,
-            after = -1,
-            valids = validPositions || getMaskSet().validPositions;
-        if (closestTo === undefined) closestTo = -1;
-
-        for (var posNdx in valids) {
-          var psNdx = parseInt(posNdx);
-
-          if (valids[psNdx] && (strict || valids[psNdx].generatedInput !== true)) {
-            if (psNdx <= closestTo) before = psNdx;
-            if (psNdx >= closestTo) after = psNdx;
-          }
-        }
-
-        return before === -1 || before == closestTo ? after : after == -1 ? before : closestTo - before < after - closestTo ? before : after;
-      }
-
-      function getDecisionTaker(tst) {
-        var decisionTaker = tst.locator[tst.alternation];
-
-        if (typeof decisionTaker == "string" && decisionTaker.length > 0) {
-          decisionTaker = decisionTaker.split(",")[0];
-        }
-
-        return decisionTaker !== undefined ? decisionTaker.toString() : "";
-      }
-
-      function getLocator(tst, align) {
-        var locator = (tst.alternation != undefined ? tst.mloc[getDecisionTaker(tst)] : tst.locator).join("");
-        if (locator !== "") while (locator.length < align) {
-          locator += "0";
-        }
-        return locator;
-      }
-
-      function determineTestTemplate(pos, tests) {
-        pos = pos > 0 ? pos - 1 : 0;
-        var altTest = getTest(pos),
-            targetLocator = getLocator(altTest),
-            tstLocator,
-            closest,
-            bestMatch;
-
-        for (var ndx = 0; ndx < tests.length; ndx++) {
-          var tst = tests[ndx];
-          tstLocator = getLocator(tst, targetLocator.length);
-          var distance = Math.abs(tstLocator - targetLocator);
-
-          if (closest === undefined || tstLocator !== "" && distance < closest || bestMatch && !opts.greedy && bestMatch.match.optionality && bestMatch.match.newBlockMarker === "master" && (!tst.match.optionality || !tst.match.newBlockMarker) || bestMatch && bestMatch.match.optionalQuantifier && !tst.match.optionalQuantifier) {
-            closest = distance;
-            bestMatch = tst;
-          }
-        }
-
-        return bestMatch;
-      }
-
-      function getTestTemplate(pos, ndxIntlzr, tstPs) {
-        return getMaskSet().validPositions[pos] || determineTestTemplate(pos, getTests(pos, ndxIntlzr ? ndxIntlzr.slice() : ndxIntlzr, tstPs));
-      }
-
-      function getTest(pos, tests) {
-        if (getMaskSet().validPositions[pos]) {
-          return getMaskSet().validPositions[pos];
-        }
-
-        return (tests || getTests(pos))[0];
-      }
-
-      function positionCanMatchDefinition(pos, def) {
-        var valid = false,
-            tests = getTests(pos);
-
-        for (var tndx = 0; tndx < tests.length; tndx++) {
-          if (tests[tndx].match && tests[tndx].match.def === def) {
-            valid = true;
-            break;
-          }
-        }
-
-        return valid;
-      }
-
-      function getTests(pos, ndxIntlzr, tstPs) {
-        var maskTokens = getMaskSet().maskToken,
-            testPos = ndxIntlzr ? tstPs : 0,
-            ndxInitializer = ndxIntlzr ? ndxIntlzr.slice() : [0],
-            matches = [],
-            insertStop = false,
-            latestMatch,
-            cacheDependency = ndxIntlzr ? ndxIntlzr.join("") : "";
-
-        function resolveTestFromToken(maskToken, ndxInitializer, loopNdx, quantifierRecurse) {
-          function handleMatch(match, loopNdx, quantifierRecurse) {
-            function isFirstMatch(latestMatch, tokenGroup) {
-              var firstMatch = $.inArray(latestMatch, tokenGroup.matches) === 0;
-
-              if (!firstMatch) {
-                $.each(tokenGroup.matches, function (ndx, match) {
-                  if (match.isQuantifier === true) firstMatch = isFirstMatch(latestMatch, tokenGroup.matches[ndx - 1]);else if (match.hasOwnProperty("matches")) firstMatch = isFirstMatch(latestMatch, match);
-                  if (firstMatch) return false;
-                });
-              }
-
-              return firstMatch;
-            }
-
-            function resolveNdxInitializer(pos, alternateNdx, targetAlternation) {
-              var bestMatch, indexPos;
-
-              if (getMaskSet().tests[pos] || getMaskSet().validPositions[pos]) {
-                $.each(getMaskSet().tests[pos] || [getMaskSet().validPositions[pos]], function (ndx, lmnt) {
-                  if (lmnt.mloc[alternateNdx]) {
-                    bestMatch = lmnt;
-                    return false;
-                  }
-
-                  var alternation = targetAlternation !== undefined ? targetAlternation : lmnt.alternation,
-                      ndxPos = lmnt.locator[alternation] !== undefined ? lmnt.locator[alternation].toString().indexOf(alternateNdx) : -1;
-
-                  if ((indexPos === undefined || ndxPos < indexPos) && ndxPos !== -1) {
-                    bestMatch = lmnt;
-                    indexPos = ndxPos;
-                  }
-                });
-              }
-
-              if (bestMatch) {
-                var bestMatchAltIndex = bestMatch.locator[bestMatch.alternation];
-                var locator = bestMatch.mloc[alternateNdx] || bestMatch.mloc[bestMatchAltIndex] || bestMatch.locator;
-                return locator.slice((targetAlternation !== undefined ? targetAlternation : bestMatch.alternation) + 1);
-              } else {
-                return targetAlternation !== undefined ? resolveNdxInitializer(pos, alternateNdx) : undefined;
-              }
-            }
-
-            function isSubsetOf(source, target) {
-              function expand(pattern) {
-                var expanded = [],
-                    start,
-                    end;
-
-                for (var i = 0, l = pattern.length; i < l; i++) {
-                  if (pattern.charAt(i) === "-") {
-                    end = pattern.charCodeAt(i + 1);
-
-                    while (++start < end) {
-                      expanded.push(String.fromCharCode(start));
-                    }
-                  } else {
-                    start = pattern.charCodeAt(i);
-                    expanded.push(pattern.charAt(i));
-                  }
-                }
-
-                return expanded.join("");
-              }
-
-              if (opts.regex && source.match.fn !== null && target.match.fn !== null) {
-                return expand(target.match.def.replace(/[\[\]]/g, "")).indexOf(expand(source.match.def.replace(/[\[\]]/g, ""))) !== -1;
-              }
-
-              return source.match.def === target.match.nativeDef;
-            }
-
-            function staticCanMatchDefinition(source, target) {
-              var sloc = source.locator.slice(source.alternation).join(""),
-                  tloc = target.locator.slice(target.alternation).join(""),
-                  canMatch = sloc == tloc;
-              canMatch = canMatch && source.match.fn === null && target.match.fn !== null ? target.match.fn.test(source.match.def, getMaskSet(), pos, false, opts, false) : false;
-              return canMatch;
-            }
-
-            function setMergeLocators(targetMatch, altMatch) {
-              if (altMatch === undefined || targetMatch.alternation === altMatch.alternation && targetMatch.locator[targetMatch.alternation].toString().indexOf(altMatch.locator[altMatch.alternation]) === -1) {
-                targetMatch.mloc = targetMatch.mloc || {};
-                var locNdx = targetMatch.locator[targetMatch.alternation];
-                if (locNdx === undefined) targetMatch.alternation = undefined;else {
-                  if (typeof locNdx === "string") locNdx = locNdx.split(",")[0];
-                  if (targetMatch.mloc[locNdx] === undefined) targetMatch.mloc[locNdx] = targetMatch.locator.slice();
-
-                  if (altMatch !== undefined) {
-                    for (var ndx in altMatch.mloc) {
-                      if (typeof ndx === "string") ndx = ndx.split(",")[0];
-                      if (targetMatch.mloc[ndx] === undefined) targetMatch.mloc[ndx] = altMatch.mloc[ndx];
-                    }
-
-                    targetMatch.locator[targetMatch.alternation] = Object.keys(targetMatch.mloc).join(",");
-                  }
-
-                  return true;
-                }
-              }
-
-              return false;
-            }
-
-            if (testPos > 500 && quantifierRecurse !== undefined) {
-              throw "Inputmask: There is probably an error in your mask definition or in the code. Create an issue on github with an example of the mask you are using. " + getMaskSet().mask;
-            }
-
-            if (testPos === pos && match.matches === undefined) {
-              matches.push({
-                match: match,
-                locator: loopNdx.reverse(),
-                cd: cacheDependency,
-                mloc: {}
-              });
-              return true;
-            } else if (match.matches !== undefined) {
-              if (match.isGroup && quantifierRecurse !== match) {
-                match = handleMatch(maskToken.matches[$.inArray(match, maskToken.matches) + 1], loopNdx, quantifierRecurse);
-                if (match) return true;
-              } else if (match.isOptional) {
-                var optionalToken = match;
-                match = resolveTestFromToken(match, ndxInitializer, loopNdx, quantifierRecurse);
-
-                if (match) {
-                  $.each(matches, function (ndx, mtch) {
-                    mtch.match.optionality = true;
-                  });
-                  latestMatch = matches[matches.length - 1].match;
-
-                  if (quantifierRecurse === undefined && isFirstMatch(latestMatch, optionalToken)) {
-                    insertStop = true;
-                    testPos = pos;
-                  } else return true;
-                }
-              } else if (match.isAlternator) {
-                var alternateToken = match,
-                    malternateMatches = [],
-                    maltMatches,
-                    currentMatches = matches.slice(),
-                    loopNdxCnt = loopNdx.length;
-                var altIndex = ndxInitializer.length > 0 ? ndxInitializer.shift() : -1;
-
-                if (altIndex === -1 || typeof altIndex === "string") {
-                  var currentPos = testPos,
-                      ndxInitializerClone = ndxInitializer.slice(),
-                      altIndexArr = [],
-                      amndx;
-
-                  if (typeof altIndex == "string") {
-                    altIndexArr = altIndex.split(",");
-                  } else {
-                    for (amndx = 0; amndx < alternateToken.matches.length; amndx++) {
-                      altIndexArr.push(amndx.toString());
-                    }
-                  }
-
-                  if (getMaskSet().excludes[pos]) {
-                    var altIndexArrClone = altIndexArr.slice();
-
-                    for (var i = 0, el = getMaskSet().excludes[pos].length; i < el; i++) {
-                      altIndexArr.splice(altIndexArr.indexOf(getMaskSet().excludes[pos][i].toString()), 1);
-                    }
-
-                    if (altIndexArr.length === 0) {
-                      getMaskSet().excludes[pos] = undefined;
-                      altIndexArr = altIndexArrClone;
-                    }
-                  }
-
-                  if (opts.keepStatic === true || isFinite(parseInt(opts.keepStatic)) && currentPos >= opts.keepStatic) altIndexArr = altIndexArr.slice(0, 1);
-                  var unMatchedAlternation = false;
-
-                  for (var ndx = 0; ndx < altIndexArr.length; ndx++) {
-                    amndx = parseInt(altIndexArr[ndx]);
-                    matches = [];
-                    ndxInitializer = typeof altIndex === "string" ? resolveNdxInitializer(testPos, amndx, loopNdxCnt) || ndxInitializerClone.slice() : ndxInitializerClone.slice();
-                    if (alternateToken.matches[amndx] && handleMatch(alternateToken.matches[amndx], [amndx].concat(loopNdx), quantifierRecurse)) match = true;else if (ndx === 0) {
-                      unMatchedAlternation = true;
-                    }
-                    maltMatches = matches.slice();
-                    testPos = currentPos;
-                    matches = [];
-
-                    for (var ndx1 = 0; ndx1 < maltMatches.length; ndx1++) {
-                      var altMatch = maltMatches[ndx1],
-                          dropMatch = false;
-                      altMatch.match.jit = altMatch.match.jit || unMatchedAlternation;
-                      altMatch.alternation = altMatch.alternation || loopNdxCnt;
-                      setMergeLocators(altMatch);
-
-                      for (var ndx2 = 0; ndx2 < malternateMatches.length; ndx2++) {
-                        var altMatch2 = malternateMatches[ndx2];
-
-                        if (typeof altIndex !== "string" || altMatch.alternation !== undefined && $.inArray(altMatch.locator[altMatch.alternation].toString(), altIndexArr) !== -1) {
-                          if (altMatch.match.nativeDef === altMatch2.match.nativeDef) {
-                            dropMatch = true;
-                            setMergeLocators(altMatch2, altMatch);
-                            break;
-                          } else if (isSubsetOf(altMatch, altMatch2)) {
-                            if (setMergeLocators(altMatch, altMatch2)) {
-                              dropMatch = true;
-                              malternateMatches.splice(malternateMatches.indexOf(altMatch2), 0, altMatch);
-                            }
-
-                            break;
-                          } else if (isSubsetOf(altMatch2, altMatch)) {
-                            setMergeLocators(altMatch2, altMatch);
-                            break;
-                          } else if (staticCanMatchDefinition(altMatch, altMatch2)) {
-                            if (setMergeLocators(altMatch, altMatch2)) {
-                              dropMatch = true;
-                              malternateMatches.splice(malternateMatches.indexOf(altMatch2), 0, altMatch);
-                            }
-
-                            break;
-                          }
-                        }
-                      }
-
-                      if (!dropMatch) {
-                        malternateMatches.push(altMatch);
-                      }
-                    }
-                  }
-
-                  matches = currentMatches.concat(malternateMatches);
-                  testPos = pos;
-                  insertStop = matches.length > 0;
-                  match = malternateMatches.length > 0;
-                  ndxInitializer = ndxInitializerClone.slice();
-                } else match = handleMatch(alternateToken.matches[altIndex] || maskToken.matches[altIndex], [altIndex].concat(loopNdx), quantifierRecurse);
-
-                if (match) return true;
-              } else if (match.isQuantifier && quantifierRecurse !== maskToken.matches[$.inArray(match, maskToken.matches) - 1]) {
-                var qt = match;
-
-                for (var qndx = ndxInitializer.length > 0 ? ndxInitializer.shift() : 0; qndx < (isNaN(qt.quantifier.max) ? qndx + 1 : qt.quantifier.max) && testPos <= pos; qndx++) {
-                  var tokenGroup = maskToken.matches[$.inArray(qt, maskToken.matches) - 1];
-                  match = handleMatch(tokenGroup, [qndx].concat(loopNdx), tokenGroup);
-
-                  if (match) {
-                    latestMatch = matches[matches.length - 1].match;
-                    latestMatch.optionalQuantifier = qndx >= qt.quantifier.min;
-                    latestMatch.jit = (qndx || 1) * tokenGroup.matches.indexOf(latestMatch) >= qt.quantifier.jit;
-
-                    if (latestMatch.optionalQuantifier && isFirstMatch(latestMatch, tokenGroup)) {
-                      insertStop = true;
-                      testPos = pos;
-                      break;
-                    }
-
-                    if (latestMatch.jit) {
-                      getMaskSet().jitOffset[pos] = tokenGroup.matches.indexOf(latestMatch);
-                    }
-
-                    return true;
-                  }
-                }
-              } else {
-                match = resolveTestFromToken(match, ndxInitializer, loopNdx, quantifierRecurse);
-                if (match) return true;
-              }
-            } else {
-              testPos++;
-            }
-          }
-
-          for (var tndx = ndxInitializer.length > 0 ? ndxInitializer.shift() : 0; tndx < maskToken.matches.length; tndx++) {
-            if (maskToken.matches[tndx].isQuantifier !== true) {
-              var match = handleMatch(maskToken.matches[tndx], [tndx].concat(loopNdx), quantifierRecurse);
-
-              if (match && testPos === pos) {
-                return match;
-              } else if (testPos > pos) {
-                break;
-              }
-            }
-          }
-        }
-
-        function mergeLocators(pos, tests) {
-          var locator = [];
-          if (!$.isArray(tests)) tests = [tests];
-
-          if (tests.length > 0) {
-            if (tests[0].alternation === undefined) {
-              locator = determineTestTemplate(pos, tests.slice()).locator.slice();
-              if (locator.length === 0) locator = tests[0].locator.slice();
-            } else {
-              $.each(tests, function (ndx, tst) {
-                if (tst.def !== "") {
-                  if (locator.length === 0) locator = tst.locator.slice();else {
-                    for (var i = 0; i < locator.length; i++) {
-                      if (tst.locator[i] && locator[i].toString().indexOf(tst.locator[i]) === -1) {
-                        locator[i] += "," + tst.locator[i];
-                      }
-                    }
-                  }
-                }
-              });
-            }
-          }
-
-          return locator;
-        }
-
-        if (pos > -1) {
-          if (ndxIntlzr === undefined) {
-            var previousPos = pos - 1,
-                test;
-
-            while ((test = getMaskSet().validPositions[previousPos] || getMaskSet().tests[previousPos]) === undefined && previousPos > -1) {
-              previousPos--;
-            }
-
-            if (test !== undefined && previousPos > -1) {
-              ndxInitializer = mergeLocators(previousPos, test);
-              cacheDependency = ndxInitializer.join("");
-              testPos = previousPos;
-            }
-          }
-
-          if (getMaskSet().tests[pos] && getMaskSet().tests[pos][0].cd === cacheDependency) {
-            return getMaskSet().tests[pos];
-          }
-
-          for (var mtndx = ndxInitializer.shift(); mtndx < maskTokens.length; mtndx++) {
-            var match = resolveTestFromToken(maskTokens[mtndx], ndxInitializer, [mtndx]);
-
-            if (match && testPos === pos || testPos > pos) {
-              break;
-            }
-          }
-        }
-
-        if (matches.length === 0 || insertStop) {
-          matches.push({
-            match: {
-              fn: null,
-              optionality: false,
-              casing: null,
-              def: "",
-              placeholder: ""
-            },
-            locator: [],
-            mloc: {},
-            cd: cacheDependency
-          });
-        }
-
-        if (ndxIntlzr !== undefined && getMaskSet().tests[pos]) {
-          return $.extend(true, [], matches);
-        }
-
-        getMaskSet().tests[pos] = $.extend(true, [], matches);
-        return getMaskSet().tests[pos];
-      }
-
-      function getBufferTemplate() {
-        if (getMaskSet()._buffer === undefined) {
-          getMaskSet()._buffer = getMaskTemplate(false, 1);
-          if (getMaskSet().buffer === undefined) getMaskSet().buffer = getMaskSet()._buffer.slice();
-        }
-
-        return getMaskSet()._buffer;
-      }
-
-      function getBuffer(noCache) {
-        if (getMaskSet().buffer === undefined || noCache === true) {
-          getMaskSet().buffer = getMaskTemplate(true, getLastValidPosition(), true);
-          if (getMaskSet()._buffer === undefined) getMaskSet()._buffer = getMaskSet().buffer.slice();
-        }
-
-        return getMaskSet().buffer;
-      }
-
-      function refreshFromBuffer(start, end, buffer) {
-        var i, p;
-
-        if (start === true) {
-          resetMaskSet();
-          start = 0;
-          end = buffer.length;
-        } else {
-          for (i = start; i < end; i++) {
-            delete getMaskSet().validPositions[i];
-          }
-        }
-
-        p = start;
-
-        for (i = start; i < end; i++) {
-          resetMaskSet(true);
-
-          if (buffer[i] !== opts.skipOptionalPartCharacter) {
-            var valResult = isValid(p, buffer[i], true, true);
-
-            if (valResult !== false) {
-              resetMaskSet(true);
-              p = valResult.caret !== undefined ? valResult.caret : valResult.pos + 1;
-            }
-          }
-        }
-      }
-
-      function casing(elem, test, pos) {
-        switch (opts.casing || test.casing) {
-          case "upper":
-            elem = elem.toUpperCase();
-            break;
-
-          case "lower":
-            elem = elem.toLowerCase();
-            break;
-
-          case "title":
-            var posBefore = getMaskSet().validPositions[pos - 1];
-
-            if (pos === 0 || posBefore && posBefore.input === String.fromCharCode(Inputmask.keyCode.SPACE)) {
-              elem = elem.toUpperCase();
-            } else {
-              elem = elem.toLowerCase();
-            }
-
-            break;
-
-          default:
-            if ($.isFunction(opts.casing)) {
-              var args = Array.prototype.slice.call(arguments);
-              args.push(getMaskSet().validPositions);
-              elem = opts.casing.apply(this, args);
-            }
-
-        }
-
-        return elem;
-      }
-
-      function checkAlternationMatch(altArr1, altArr2, na) {
-        var altArrC = opts.greedy ? altArr2 : altArr2.slice(0, 1),
-            isMatch = false,
-            naArr = na !== undefined ? na.split(",") : [],
-            naNdx;
-
-        for (var i = 0; i < naArr.length; i++) {
-          if ((naNdx = altArr1.indexOf(naArr[i])) !== -1) {
-            altArr1.splice(naNdx, 1);
-          }
-        }
-
-        for (var alndx = 0; alndx < altArr1.length; alndx++) {
-          if ($.inArray(altArr1[alndx], altArrC) !== -1) {
-            isMatch = true;
-            break;
-          }
-        }
-
-        return isMatch;
-      }
-
-      function alternate(pos, c, strict, fromSetValid, rAltPos) {
-        var validPsClone = $.extend(true, {}, getMaskSet().validPositions),
-            lastAlt,
-            alternation,
-            isValidRslt = false,
-            altPos,
-            prevAltPos,
-            i,
-            validPos,
-            decisionPos,
-            lAltPos = rAltPos !== undefined ? rAltPos : getLastValidPosition();
-
-        if (lAltPos === -1 && rAltPos === undefined) {
-          lastAlt = 0;
-          prevAltPos = getTest(lastAlt);
-          alternation = prevAltPos.alternation;
-        } else {
-          for (; lAltPos >= 0; lAltPos--) {
-            altPos = getMaskSet().validPositions[lAltPos];
-
-            if (altPos && altPos.alternation !== undefined) {
-              if (prevAltPos && prevAltPos.locator[altPos.alternation] !== altPos.locator[altPos.alternation]) {
-                break;
-              }
-
-              lastAlt = lAltPos;
-              alternation = getMaskSet().validPositions[lastAlt].alternation;
-              prevAltPos = altPos;
-            }
-          }
-        }
-
-        if (alternation !== undefined) {
-          decisionPos = parseInt(lastAlt);
-          getMaskSet().excludes[decisionPos] = getMaskSet().excludes[decisionPos] || [];
-
-          if (pos !== true) {
-            getMaskSet().excludes[decisionPos].push(getDecisionTaker(prevAltPos));
-          }
-
-          var validInputsClone = [],
-              staticInputsBeforePos = 0;
-
-          for (i = decisionPos; i < getLastValidPosition(undefined, true) + 1; i++) {
-            validPos = getMaskSet().validPositions[i];
-
-            if (validPos && validPos.generatedInput !== true) {
-              validInputsClone.push(validPos.input);
-            } else if (i < pos) staticInputsBeforePos++;
-
-            delete getMaskSet().validPositions[i];
-          }
-
-          while (getMaskSet().excludes[decisionPos] && getMaskSet().excludes[decisionPos].length < 10) {
-            var posOffset = staticInputsBeforePos * -1,
-                validInputs = validInputsClone.slice();
-            getMaskSet().tests[decisionPos] = undefined;
-            resetMaskSet(true);
-            isValidRslt = true;
-
-            while (validInputs.length > 0) {
-              var input = validInputs.shift();
-
-              if (!(isValidRslt = isValid(getLastValidPosition(undefined, true) + 1, input, false, fromSetValid, true))) {
-                break;
-              }
-            }
-
-            if (isValidRslt && c !== undefined) {
-              var targetLvp = getLastValidPosition(pos) + 1;
-
-              for (i = decisionPos; i < getLastValidPosition() + 1; i++) {
-                validPos = getMaskSet().validPositions[i];
-
-                if ((validPos === undefined || validPos.match.fn == null) && i < pos + posOffset) {
-                  posOffset++;
-                }
-              }
-
-              pos = pos + posOffset;
-              isValidRslt = isValid(pos > targetLvp ? targetLvp : pos, c, strict, fromSetValid, true);
-            }
-
-            if (!isValidRslt) {
-              resetMaskSet();
-              prevAltPos = getTest(decisionPos);
-              getMaskSet().validPositions = $.extend(true, {}, validPsClone);
-
-              if (getMaskSet().excludes[decisionPos]) {
-                var decisionTaker = getDecisionTaker(prevAltPos);
-
-                if (getMaskSet().excludes[decisionPos].indexOf(decisionTaker) !== -1) {
-                  isValidRslt = alternate(pos, c, strict, fromSetValid, decisionPos - 1);
-                  break;
-                }
-
-                getMaskSet().excludes[decisionPos].push(decisionTaker);
-
-                for (i = decisionPos; i < getLastValidPosition(undefined, true) + 1; i++) {
-                  delete getMaskSet().validPositions[i];
-                }
-              } else {
-                isValidRslt = alternate(pos, c, strict, fromSetValid, decisionPos - 1);
-                break;
-              }
-            } else break;
-          }
-        }
-
-        getMaskSet().excludes[decisionPos] = undefined;
-        return isValidRslt;
-      }
-
-      function isValid(pos, c, strict, fromSetValid, fromAlternate, validateOnly) {
-        function isSelection(posObj) {
-          return isRTL ? posObj.begin - posObj.end > 1 || posObj.begin - posObj.end === 1 : posObj.end - posObj.begin > 1 || posObj.end - posObj.begin === 1;
-        }
-
-        strict = strict === true;
-        var maskPos = pos;
-
-        if (pos.begin !== undefined) {
-          maskPos = isRTL ? pos.end : pos.begin;
-        }
-
-        function _isValid(position, c, strict) {
-          var rslt = false;
-          $.each(getTests(position), function (ndx, tst) {
-            var test = tst.match;
-            getBuffer(true);
-            rslt = test.fn != null ? test.fn.test(c, getMaskSet(), position, strict, opts, isSelection(pos)) : (c === test.def || c === opts.skipOptionalPartCharacter) && test.def !== "" ? {
-              c: getPlaceholder(position, test, true) || test.def,
-              pos: position
-            } : false;
-
-            if (rslt !== false) {
-              var elem = rslt.c !== undefined ? rslt.c : c,
-                  validatedPos = position;
-              elem = elem === opts.skipOptionalPartCharacter && test.fn === null ? getPlaceholder(position, test, true) || test.def : elem;
-
-              if (rslt.remove !== undefined) {
-                if (!$.isArray(rslt.remove)) rslt.remove = [rslt.remove];
-                $.each(rslt.remove.sort(function (a, b) {
-                  return b - a;
-                }), function (ndx, lmnt) {
-                  revalidateMask({
-                    begin: lmnt,
-                    end: lmnt + 1
-                  });
-                });
-              }
-
-              if (rslt.insert !== undefined) {
-                if (!$.isArray(rslt.insert)) rslt.insert = [rslt.insert];
-                $.each(rslt.insert.sort(function (a, b) {
-                  return a - b;
-                }), function (ndx, lmnt) {
-                  isValid(lmnt.pos, lmnt.c, true, fromSetValid);
-                });
-              }
-
-              if (rslt !== true && rslt.pos !== undefined && rslt.pos !== position) {
-                validatedPos = rslt.pos;
-              }
-
-              if (rslt !== true && rslt.pos === undefined && rslt.c === undefined) {
-                return false;
-              }
-
-              if (!revalidateMask(pos, $.extend({}, tst, {
-                input: casing(elem, test, validatedPos)
-              }), fromSetValid, validatedPos)) {
-                rslt = false;
-              }
-
-              return false;
-            }
-          });
-          return rslt;
-        }
-
-        var result = true,
-            positionsClone = $.extend(true, {}, getMaskSet().validPositions);
-
-        if ($.isFunction(opts.preValidation) && !strict && fromSetValid !== true && validateOnly !== true) {
-          result = opts.preValidation(getBuffer(), maskPos, c, isSelection(pos), opts, getMaskSet());
-        }
-
-        if (result === true) {
-          trackbackPositions(undefined, maskPos, true);
-
-          if (maxLength === undefined || maskPos < maxLength) {
-            result = _isValid(maskPos, c, strict);
-
-            if ((!strict || fromSetValid === true) && result === false && validateOnly !== true) {
-              var currentPosValid = getMaskSet().validPositions[maskPos];
-
-              if (currentPosValid && currentPosValid.match.fn === null && (currentPosValid.match.def === c || c === opts.skipOptionalPartCharacter)) {
-                result = {
-                  caret: seekNext(maskPos)
-                };
-              } else {
-                if ((opts.insertMode || getMaskSet().validPositions[seekNext(maskPos)] === undefined) && (!isMask(maskPos, true) || getMaskSet().jitOffset[maskPos])) {
-                  if (getMaskSet().jitOffset[maskPos] && getMaskSet().validPositions[seekNext(maskPos)] === undefined) {
-                    result = isValid(maskPos + getMaskSet().jitOffset[maskPos], c, strict);
-                    if (result !== false) result.caret = maskPos;
-                  } else for (var nPos = maskPos + 1, snPos = seekNext(maskPos); nPos <= snPos; nPos++) {
-                    result = _isValid(nPos, c, strict);
-
-                    if (result !== false) {
-                      result = trackbackPositions(maskPos, result.pos !== undefined ? result.pos : nPos) || result;
-                      maskPos = nPos;
-                      break;
-                    }
-                  }
-                }
-              }
-            }
-          }
-
-          if (result === false && opts.keepStatic !== false && (opts.regex == null || isComplete(getBuffer())) && !strict && fromAlternate !== true) {
-            result = alternate(maskPos, c, strict, fromSetValid);
-          }
-
-          if (result === true) {
-            result = {
-              pos: maskPos
-            };
-          }
-        }
-
-        if ($.isFunction(opts.postValidation) && result !== false && !strict && fromSetValid !== true && validateOnly !== true) {
-          var postResult = opts.postValidation(getBuffer(true), pos.begin !== undefined ? isRTL ? pos.end : pos.begin : pos, result, opts);
-
-          if (postResult !== undefined) {
-            if (postResult.refreshFromBuffer && postResult.buffer) {
-              var refresh = postResult.refreshFromBuffer;
-              refreshFromBuffer(refresh === true ? refresh : refresh.start, refresh.end, postResult.buffer);
-            }
-
-            result = postResult === true ? result : postResult;
-          }
-        }
-
-        if (result && result.pos === undefined) {
-          result.pos = maskPos;
-        }
-
-        if (result === false || validateOnly === true) {
-          resetMaskSet(true);
-          getMaskSet().validPositions = $.extend(true, {}, positionsClone);
-        }
-
-        return result;
-      }
-
-      function trackbackPositions(originalPos, newPos, fillOnly) {
-        var result;
-
-        if (originalPos === undefined) {
-          for (originalPos = newPos - 1; originalPos > 0; originalPos--) {
-            if (getMaskSet().validPositions[originalPos]) break;
-          }
-        }
-
-        for (var ps = originalPos; ps < newPos; ps++) {
-          if (getMaskSet().validPositions[ps] === undefined && !isMask(ps, true)) {
-            var vp = ps == 0 ? getTest(ps) : getMaskSet().validPositions[ps - 1];
-
-            if (vp) {
-              var tests = getTests(ps).slice();
-              if (tests[tests.length - 1].match.def === "") tests.pop();
-              var bestMatch = determineTestTemplate(ps, tests);
-              bestMatch = $.extend({}, bestMatch, {
-                input: getPlaceholder(ps, bestMatch.match, true) || bestMatch.match.def
-              });
-              bestMatch.generatedInput = true;
-              revalidateMask(ps, bestMatch, true);
-
-              if (fillOnly !== true) {
-                var cvpInput = getMaskSet().validPositions[newPos].input;
-                getMaskSet().validPositions[newPos] = undefined;
-                result = isValid(newPos, cvpInput, true, true);
-              }
-            }
-          }
-        }
-
-        return result;
-      }
-
-      function revalidateMask(pos, validTest, fromSetValid, validatedPos) {
-        function IsEnclosedStatic(pos, valids, selection) {
-          var posMatch = valids[pos];
-
-          if (posMatch !== undefined && (posMatch.match.fn === null && posMatch.match.optionality !== true || posMatch.input === opts.radixPoint)) {
-            var prevMatch = selection.begin <= pos - 1 ? valids[pos - 1] && valids[pos - 1].match.fn === null && valids[pos - 1] : valids[pos - 1],
-                nextMatch = selection.end > pos + 1 ? valids[pos + 1] && valids[pos + 1].match.fn === null && valids[pos + 1] : valids[pos + 1];
-            return prevMatch && nextMatch;
-          }
-
-          return false;
-        }
-
-        var begin = pos.begin !== undefined ? pos.begin : pos,
-            end = pos.end !== undefined ? pos.end : pos;
-
-        if (pos.begin > pos.end) {
-          begin = pos.end;
-          end = pos.begin;
-        }
-
-        validatedPos = validatedPos !== undefined ? validatedPos : begin;
-
-        if (begin !== end || opts.insertMode && getMaskSet().validPositions[validatedPos] !== undefined && fromSetValid === undefined) {
-          var positionsClone = $.extend(true, {}, getMaskSet().validPositions),
-              lvp = getLastValidPosition(undefined, true),
-              i;
-          getMaskSet().p = begin;
-
-          for (i = lvp; i >= begin; i--) {
-            if (getMaskSet().validPositions[i] && getMaskSet().validPositions[i].match.nativeDef === "+") {
-              opts.isNegative = false;
-            }
-
-            delete getMaskSet().validPositions[i];
-          }
-
-          var valid = true,
-              j = validatedPos,
-              vps = getMaskSet().validPositions,
-              needsValidation = false,
-              posMatch = j,
-              i = j;
-
-          if (validTest) {
-            getMaskSet().validPositions[validatedPos] = $.extend(true, {}, validTest);
-            posMatch++;
-            j++;
-            if (begin < end) i++;
-          }
-
-          for (; i <= lvp; i++) {
-            var t = positionsClone[i];
-
-            if (t !== undefined && (i >= end || i >= begin && t.generatedInput !== true && IsEnclosedStatic(i, positionsClone, {
-              begin: begin,
-              end: end
-            }))) {
-              while (getTest(posMatch).match.def !== "") {
-                if (needsValidation === false && positionsClone[posMatch] && positionsClone[posMatch].match.nativeDef === t.match.nativeDef) {
-                  getMaskSet().validPositions[posMatch] = $.extend(true, {}, positionsClone[posMatch]);
-                  getMaskSet().validPositions[posMatch].input = t.input;
-                  trackbackPositions(undefined, posMatch, true);
-                  j = posMatch + 1;
-                  valid = true;
-                } else if (opts.shiftPositions && positionCanMatchDefinition(posMatch, t.match.def)) {
-                  var result = isValid(posMatch, t.input, true, true);
-                  valid = result !== false;
-                  j = result.caret || result.insert ? getLastValidPosition() : posMatch + 1;
-                  needsValidation = true;
-                } else {
-                  valid = t.generatedInput === true || t.input === opts.radixPoint && opts.numericInput === true;
-                }
-
-                if (valid) break;
-
-                if (!valid && posMatch > end && isMask(posMatch, true) && (t.match.fn !== null || posMatch > getMaskSet().maskLength)) {
-                  break;
-                }
-
-                posMatch++;
-              }
-
-              if (getTest(posMatch).match.def == "") valid = false;
-              posMatch = j;
-            }
-
-            if (!valid) break;
-          }
-
-          if (!valid) {
-            getMaskSet().validPositions = $.extend(true, {}, positionsClone);
-            resetMaskSet(true);
-            return false;
-          }
-        } else if (validTest) {
-          getMaskSet().validPositions[validatedPos] = $.extend(true, {}, validTest);
-        }
-
-        resetMaskSet(true);
-        return true;
-      }
-
-      function isMask(pos, strict) {
-        var test = getTestTemplate(pos).match;
-        if (test.def === "") test = getTest(pos).match;
-
-        if (test.fn != null) {
-          return test.fn;
-        }
-
-        if (strict !== true && pos > -1) {
-          var tests = getTests(pos);
-          return tests.length > 1 + (tests[tests.length - 1].match.def === "" ? 1 : 0);
-        }
-
-        return false;
-      }
-
-      function seekNext(pos, newBlock) {
-        var position = pos + 1;
-
-        while (getTest(position).match.def !== "" && (newBlock === true && (getTest(position).match.newBlockMarker !== true || !isMask(position)) || newBlock !== true && !isMask(position))) {
-          position++;
-        }
-
-        return position;
-      }
-
-      function seekPrevious(pos, newBlock) {
-        var position = pos,
-            tests;
-        if (position <= 0) return 0;
-
-        while (--position > 0 && (newBlock === true && getTest(position).match.newBlockMarker !== true || newBlock !== true && !isMask(position) && (tests = getTests(position), tests.length < 2 || tests.length === 2 && tests[1].match.def === ""))) {}
-
-        return position;
-      }
-
-      function writeBuffer(input, buffer, caretPos, event, triggerEvents) {
-        if (event && $.isFunction(opts.onBeforeWrite)) {
-          var result = opts.onBeforeWrite.call(inputmask, event, buffer, caretPos, opts);
-
-          if (result) {
-            if (result.refreshFromBuffer) {
-              var refresh = result.refreshFromBuffer;
-              refreshFromBuffer(refresh === true ? refresh : refresh.start, refresh.end, result.buffer || buffer);
-              buffer = getBuffer(true);
-            }
-
-            if (caretPos !== undefined) caretPos = result.caret !== undefined ? result.caret : caretPos;
-          }
-        }
-
-        if (input !== undefined) {
-          input.inputmask._valueSet(buffer.join(""));
-
-          if (caretPos !== undefined && (event === undefined || event.type !== "blur")) {
-            caret(input, caretPos);
-          } else renderColorMask(input, caretPos, buffer.length === 0);
-
-          if (triggerEvents === true) {
-            var $input = $(input),
-                nptVal = input.inputmask._valueGet();
-
-            skipInputEvent = true;
-            $input.trigger("input");
-            setTimeout(function () {
-              if (nptVal === getBufferTemplate().join("")) {
-                $input.trigger("cleared");
-              } else if (isComplete(buffer) === true) {
-                $input.trigger("complete");
-              }
-            }, 0);
-          }
-        }
-      }
-
-      function getPlaceholder(pos, test, returnPL) {
-        test = test || getTest(pos).match;
-
-        if (test.placeholder !== undefined || returnPL === true) {
-          return $.isFunction(test.placeholder) ? test.placeholder(opts) : test.placeholder;
-        } else if (test.fn === null) {
-          if (pos > -1 && getMaskSet().validPositions[pos] === undefined) {
-            var tests = getTests(pos),
-                staticAlternations = [],
-                prevTest;
-
-            if (tests.length > 1 + (tests[tests.length - 1].match.def === "" ? 1 : 0)) {
-              for (var i = 0; i < tests.length; i++) {
-                if (tests[i].match.optionality !== true && tests[i].match.optionalQuantifier !== true && (tests[i].match.fn === null || prevTest === undefined || tests[i].match.fn.test(prevTest.match.def, getMaskSet(), pos, true, opts) !== false)) {
-                  staticAlternations.push(tests[i]);
-                  if (tests[i].match.fn === null) prevTest = tests[i];
-
-                  if (staticAlternations.length > 1) {
-                    if (/[0-9a-bA-Z]/.test(staticAlternations[0].match.def)) {
-                      return opts.placeholder.charAt(pos % opts.placeholder.length);
-                    }
-                  }
-                }
-              }
-            }
-          }
-
-          return test.def;
-        }
-
-        return opts.placeholder.charAt(pos % opts.placeholder.length);
-      }
-
-      function HandleNativePlaceholder(npt, value) {
-        if (ie) {
-          if (npt.inputmask._valueGet() !== value && (npt.placeholder !== value || npt.placeholder === "")) {
-            var buffer = getBuffer().slice(),
-                nptValue = npt.inputmask._valueGet();
-
-            if (nptValue !== value) {
-              var lvp = getLastValidPosition();
-
-              if (lvp === -1 && nptValue === getBufferTemplate().join("")) {
-                buffer = [];
-              } else if (lvp !== -1) {
-                clearOptionalTail(buffer);
-              }
-
-              writeBuffer(npt, buffer);
-            }
-          }
-        } else if (npt.placeholder !== value) {
-          npt.placeholder = value;
-          if (npt.placeholder === "") npt.removeAttribute("placeholder");
-        }
-      }
-
-      var EventRuler = {
-        on: function on(input, eventName, eventHandler) {
-          var ev = function ev(e) {
-            var that = this;
-
-            if (that.inputmask === undefined && this.nodeName !== "FORM") {
-              var imOpts = $.data(that, "_inputmask_opts");
-              if (imOpts) new Inputmask(imOpts).mask(that);else EventRuler.off(that);
-            } else if (e.type !== "setvalue" && this.nodeName !== "FORM" && (that.disabled || that.readOnly && !(e.type === "keydown" && e.ctrlKey && e.keyCode === 67 || opts.tabThrough === false && e.keyCode === Inputmask.keyCode.TAB))) {
-              e.preventDefault();
-            } else {
-              switch (e.type) {
-                case "input":
-                  if (skipInputEvent === true) {
-                    skipInputEvent = false;
-                    return e.preventDefault();
-                  }
-
-                  if (mobile) {
-                    var args = arguments;
-                    setTimeout(function () {
-                      eventHandler.apply(that, args);
-                      caret(that, that.inputmask.caretPos, undefined, true);
-                    }, 0);
-                    return false;
-                  }
-
-                  break;
-
-                case "keydown":
-                  skipKeyPressEvent = false;
-                  skipInputEvent = false;
-                  break;
-
-                case "keypress":
-                  if (skipKeyPressEvent === true) {
-                    return e.preventDefault();
-                  }
-
-                  skipKeyPressEvent = true;
-                  break;
-
-                case "click":
-                  if (iemobile || iphone) {
-                    var args = arguments;
-                    setTimeout(function () {
-                      eventHandler.apply(that, args);
-                    }, 0);
-                    return false;
-                  }
-
-                  break;
-              }
-
-              var returnVal = eventHandler.apply(that, arguments);
-
-              if (returnVal === false) {
-                e.preventDefault();
-                e.stopPropagation();
-              }
-
-              return returnVal;
-            }
-          };
-
-          input.inputmask.events[eventName] = input.inputmask.events[eventName] || [];
-          input.inputmask.events[eventName].push(ev);
-
-          if ($.inArray(eventName, ["submit", "reset"]) !== -1) {
-            if (input.form !== null) $(input.form).on(eventName, ev);
-          } else {
-            $(input).on(eventName, ev);
-          }
-        },
-        off: function off(input, event) {
-          if (input.inputmask && input.inputmask.events) {
-            var events;
-
-            if (event) {
-              events = [];
-              events[event] = input.inputmask.events[event];
-            } else {
-              events = input.inputmask.events;
-            }
-
-            $.each(events, function (eventName, evArr) {
-              while (evArr.length > 0) {
-                var ev = evArr.pop();
-
-                if ($.inArray(eventName, ["submit", "reset"]) !== -1) {
-                  if (input.form !== null) $(input.form).off(eventName, ev);
-                } else {
-                  $(input).off(eventName, ev);
-                }
-              }
-
-              delete input.inputmask.events[eventName];
-            });
-          }
-        }
-      };
-      var EventHandlers = {
-        keydownEvent: function keydownEvent(e) {
-          var input = this,
-              $input = $(input),
-              k = e.keyCode,
-              pos = caret(input);
-
-          if (k === Inputmask.keyCode.BACKSPACE || k === Inputmask.keyCode.DELETE || iphone && k === Inputmask.keyCode.BACKSPACE_SAFARI || e.ctrlKey && k === Inputmask.keyCode.X && !isInputEventSupported("cut")) {
-            e.preventDefault();
-            handleRemove(input, k, pos);
-            writeBuffer(input, getBuffer(true), getMaskSet().p, e, input.inputmask._valueGet() !== getBuffer().join(""));
-          } else if (k === Inputmask.keyCode.END || k === Inputmask.keyCode.PAGE_DOWN) {
-            e.preventDefault();
-            var caretPos = seekNext(getLastValidPosition());
-            caret(input, e.shiftKey ? pos.begin : caretPos, caretPos, true);
-          } else if (k === Inputmask.keyCode.HOME && !e.shiftKey || k === Inputmask.keyCode.PAGE_UP) {
-            e.preventDefault();
-            caret(input, 0, e.shiftKey ? pos.begin : 0, true);
-          } else if ((opts.undoOnEscape && k === Inputmask.keyCode.ESCAPE || k === 90 && e.ctrlKey) && e.altKey !== true) {
-            checkVal(input, true, false, undoValue.split(""));
-            $input.trigger("click");
-          } else if (k === Inputmask.keyCode.INSERT && !(e.shiftKey || e.ctrlKey)) {
-            opts.insertMode = !opts.insertMode;
-            input.setAttribute("im-insert", opts.insertMode);
-          } else if (opts.tabThrough === true && k === Inputmask.keyCode.TAB) {
-            if (e.shiftKey === true) {
-              if (getTest(pos.begin).match.fn === null) {
-                pos.begin = seekNext(pos.begin);
-              }
-
-              pos.end = seekPrevious(pos.begin, true);
-              pos.begin = seekPrevious(pos.end, true);
-            } else {
-              pos.begin = seekNext(pos.begin, true);
-              pos.end = seekNext(pos.begin, true);
-              if (pos.end < getMaskSet().maskLength) pos.end--;
-            }
-
-            if (pos.begin < getMaskSet().maskLength) {
-              e.preventDefault();
-              caret(input, pos.begin, pos.end);
-            }
-          }
-
-          opts.onKeyDown.call(this, e, getBuffer(), caret(input).begin, opts);
-          ignorable = $.inArray(k, opts.ignorables) !== -1;
-        },
-        keypressEvent: function keypressEvent(e, checkval, writeOut, strict, ndx) {
-          var input = this,
-              $input = $(input),
-              k = e.which || e.charCode || e.keyCode;
-
-          if (checkval !== true && !(e.ctrlKey && e.altKey) && (e.ctrlKey || e.metaKey || ignorable)) {
-            if (k === Inputmask.keyCode.ENTER && undoValue !== getBuffer().join("")) {
-              undoValue = getBuffer().join("");
-              setTimeout(function () {
-                $input.trigger("change");
-              }, 0);
-            }
-
-            return true;
-          } else {
-            if (k) {
-              if (k === 46 && e.shiftKey === false && opts.radixPoint !== "") k = opts.radixPoint.charCodeAt(0);
-              var pos = checkval ? {
-                begin: ndx,
-                end: ndx
-              } : caret(input),
-                  forwardPosition,
-                  c = String.fromCharCode(k),
-                  offset = 0;
-
-              if (opts._radixDance && opts.numericInput) {
-                var caretPos = getBuffer().indexOf(opts.radixPoint.charAt(0)) + 1;
-
-                if (pos.begin <= caretPos) {
-                  if (k === opts.radixPoint.charCodeAt(0)) offset = 1;
-                  pos.begin -= 1;
-                  pos.end -= 1;
-                }
-              }
-
-              getMaskSet().writeOutBuffer = true;
-              var valResult = isValid(pos, c, strict);
-
-              if (valResult !== false) {
-                resetMaskSet(true);
-                forwardPosition = valResult.caret !== undefined ? valResult.caret : seekNext(valResult.pos.begin ? valResult.pos.begin : valResult.pos);
-                getMaskSet().p = forwardPosition;
-              }
-
-              forwardPosition = (opts.numericInput && valResult.caret === undefined ? seekPrevious(forwardPosition) : forwardPosition) + offset;
-
-              if (writeOut !== false) {
-                setTimeout(function () {
-                  opts.onKeyValidation.call(input, k, valResult, opts);
-                }, 0);
-
-                if (getMaskSet().writeOutBuffer && valResult !== false) {
-                  var buffer = getBuffer();
-                  writeBuffer(input, buffer, forwardPosition, e, checkval !== true);
-                }
-              }
-
-              e.preventDefault();
-
-              if (checkval) {
-                if (valResult !== false) valResult.forwardPosition = forwardPosition;
-                return valResult;
-              }
-            }
-          }
-        },
-        pasteEvent: function pasteEvent(e) {
-          var input = this,
-              ev = e.originalEvent || e,
-              $input = $(input),
-              inputValue = input.inputmask._valueGet(true),
-              caretPos = caret(input),
-              tempValue;
-
-          if (isRTL) {
-            tempValue = caretPos.end;
-            caretPos.end = caretPos.begin;
-            caretPos.begin = tempValue;
-          }
-
-          var valueBeforeCaret = inputValue.substr(0, caretPos.begin),
-              valueAfterCaret = inputValue.substr(caretPos.end, inputValue.length);
-          if (valueBeforeCaret === (isRTL ? getBufferTemplate().reverse() : getBufferTemplate()).slice(0, caretPos.begin).join("")) valueBeforeCaret = "";
-          if (valueAfterCaret === (isRTL ? getBufferTemplate().reverse() : getBufferTemplate()).slice(caretPos.end).join("")) valueAfterCaret = "";
-
-          if (window.clipboardData && window.clipboardData.getData) {
-            inputValue = valueBeforeCaret + window.clipboardData.getData("Text") + valueAfterCaret;
-          } else if (ev.clipboardData && ev.clipboardData.getData) {
-            inputValue = valueBeforeCaret + ev.clipboardData.getData("text/plain") + valueAfterCaret;
-          } else return true;
-
-          var pasteValue = inputValue;
-
-          if ($.isFunction(opts.onBeforePaste)) {
-            pasteValue = opts.onBeforePaste.call(inputmask, inputValue, opts);
-
-            if (pasteValue === false) {
-              return e.preventDefault();
-            }
-
-            if (!pasteValue) {
-              pasteValue = inputValue;
-            }
-          }
-
-          checkVal(input, false, false, pasteValue.toString().split(""));
-          writeBuffer(input, getBuffer(), seekNext(getLastValidPosition()), e, undoValue !== getBuffer().join(""));
-          return e.preventDefault();
-        },
-        inputFallBackEvent: function inputFallBackEvent(e) {
-          function radixPointHandler(input, inputValue, caretPos) {
-            if (inputValue.charAt(caretPos.begin - 1) === "." && opts.radixPoint !== "") {
-              inputValue = inputValue.split("");
-              inputValue[caretPos.begin - 1] = opts.radixPoint.charAt(0);
-              inputValue = inputValue.join("");
-            }
-
-            return inputValue;
-          }
-
-          function ieMobileHandler(input, inputValue, caretPos) {
-            if (iemobile) {
-              var inputChar = inputValue.replace(getBuffer().join(""), "");
-
-              if (inputChar.length === 1) {
-                var iv = inputValue.split("");
-                iv.splice(caretPos.begin, 0, inputChar);
-                inputValue = iv.join("");
-              }
-            }
-
-            return inputValue;
-          }
-
-          var input = this,
-              inputValue = input.inputmask._valueGet();
-
-          if (getBuffer().join("") !== inputValue) {
-            var caretPos = caret(input);
-            inputValue = radixPointHandler(input, inputValue, caretPos);
-            inputValue = ieMobileHandler(input, inputValue, caretPos);
-
-            if (getBuffer().join("") !== inputValue) {
-              var buffer = getBuffer().join(""),
-                  offset = !opts.numericInput && inputValue.length > buffer.length ? -1 : 0,
-                  frontPart = inputValue.substr(0, caretPos.begin),
-                  backPart = inputValue.substr(caretPos.begin),
-                  frontBufferPart = buffer.substr(0, caretPos.begin + offset),
-                  backBufferPart = buffer.substr(caretPos.begin + offset);
-              var selection = caretPos,
-                  entries = "",
-                  isEntry = false;
-
-              if (frontPart !== frontBufferPart) {
-                var fpl = (isEntry = frontPart.length >= frontBufferPart.length) ? frontPart.length : frontBufferPart.length,
-                    i;
-
-                for (i = 0; frontPart.charAt(i) === frontBufferPart.charAt(i) && i < fpl; i++) {
-                  ;
-                }
-
-                if (isEntry) {
-                  selection.begin = i - offset;
-                  entries += frontPart.slice(i, selection.end);
-                }
-              }
-
-              if (backPart !== backBufferPart) {
-                if (backPart.length > backBufferPart.length) {
-                  entries += backPart.slice(0, 1);
-                } else {
-                  if (backPart.length < backBufferPart.length) {
-                    selection.end += backBufferPart.length - backPart.length;
-
-                    if (!isEntry && opts.radixPoint !== "" && backPart === "" && frontPart.charAt(selection.begin + offset - 1) === opts.radixPoint) {
-                      selection.begin--;
-                      entries = opts.radixPoint;
-                    }
-                  }
-                }
-              }
-
-              writeBuffer(input, getBuffer(), {
-                begin: selection.begin + offset,
-                end: selection.end + offset
-              });
-
-              if (entries.length > 0) {
-                $.each(entries.split(""), function (ndx, entry) {
-                  var keypress = new $.Event("keypress");
-                  keypress.which = entry.charCodeAt(0);
-                  ignorable = false;
-                  EventHandlers.keypressEvent.call(input, keypress);
-                });
-              } else {
-                if (selection.begin === selection.end - 1) {
-                  selection.begin = seekPrevious(selection.begin + 1);
-
-                  if (selection.begin === selection.end - 1) {
-                    caret(input, selection.begin);
-                  } else {
-                    caret(input, selection.begin, selection.end);
-                  }
-                }
-
-                var keydown = new $.Event("keydown");
-                keydown.keyCode = opts.numericInput ? Inputmask.keyCode.BACKSPACE : Inputmask.keyCode.DELETE;
-                EventHandlers.keydownEvent.call(input, keydown);
-              }
-
-              e.preventDefault();
-            }
-          }
-        },
-        beforeInputEvent: function beforeInputEvent(e) {
-          if (e.cancelable) {
-            var input = this;
-
-            switch (e.inputType) {
-              case "insertText":
-                $.each(e.data.split(""), function (ndx, entry) {
-                  var keypress = new $.Event("keypress");
-                  keypress.which = entry.charCodeAt(0);
-                  ignorable = false;
-                  EventHandlers.keypressEvent.call(input, keypress);
-                });
-                return e.preventDefault();
-
-              case "deleteContentBackward":
-                var keydown = new $.Event("keydown");
-                keydown.keyCode = Inputmask.keyCode.BACKSPACE;
-                EventHandlers.keydownEvent.call(input, keydown);
-                return e.preventDefault();
-
-              case "deleteContentForward":
-                var keydown = new $.Event("keydown");
-                keydown.keyCode = Inputmask.keyCode.DELETE;
-                EventHandlers.keydownEvent.call(input, keydown);
-                return e.preventDefault();
-            }
-          }
-        },
-        setValueEvent: function setValueEvent(e) {
-          this.inputmask.refreshValue = false;
-
-          var input = this,
-              value = e && e.detail ? e.detail[0] : arguments[1],
-              value = value || input.inputmask._valueGet(true);
-
-          if ($.isFunction(opts.onBeforeMask)) value = opts.onBeforeMask.call(inputmask, value, opts) || value;
-          value = value.toString().split("");
-          checkVal(input, true, false, value);
-          undoValue = getBuffer().join("");
-
-          if ((opts.clearMaskOnLostFocus || opts.clearIncomplete) && input.inputmask._valueGet() === getBufferTemplate().join("")) {
-            input.inputmask._valueSet("");
-          }
-        },
-        focusEvent: function focusEvent(e) {
-          var input = this,
-              nptValue = input.inputmask._valueGet();
-
-          if (opts.showMaskOnFocus) {
-            if (nptValue !== getBuffer().join("")) {
-              writeBuffer(input, getBuffer(), seekNext(getLastValidPosition()));
-            } else if (mouseEnter === false) {
-              caret(input, seekNext(getLastValidPosition()));
-            }
-          }
-
-          if (opts.positionCaretOnTab === true && mouseEnter === false) {
-            EventHandlers.clickEvent.apply(input, [e, true]);
-          }
-
-          undoValue = getBuffer().join("");
-        },
-        mouseleaveEvent: function mouseleaveEvent(e) {
-          var input = this;
-          mouseEnter = false;
-
-          if (opts.clearMaskOnLostFocus && document.activeElement !== input) {
-            HandleNativePlaceholder(input, originalPlaceholder);
-          }
-        },
-        clickEvent: function clickEvent(e, tabbed) {
-          function doRadixFocus(clickPos) {
-            if (opts.radixPoint !== "") {
-              var vps = getMaskSet().validPositions;
-
-              if (vps[clickPos] === undefined || vps[clickPos].input === getPlaceholder(clickPos)) {
-                if (clickPos < seekNext(-1)) return true;
-                var radixPos = $.inArray(opts.radixPoint, getBuffer());
-
-                if (radixPos !== -1) {
-                  for (var vp in vps) {
-                    if (radixPos < vp && vps[vp].input !== getPlaceholder(vp)) {
-                      return false;
-                    }
-                  }
-
-                  return true;
-                }
-              }
-            }
-
-            return false;
-          }
-
-          var input = this;
-          setTimeout(function () {
-            if (document.activeElement === input) {
-              var selectedCaret = caret(input);
-
-              if (tabbed) {
-                if (isRTL) {
-                  selectedCaret.end = selectedCaret.begin;
-                } else {
-                  selectedCaret.begin = selectedCaret.end;
-                }
-              }
-
-              if (selectedCaret.begin === selectedCaret.end) {
-                switch (opts.positionCaretOnClick) {
-                  case "none":
-                    break;
-
-                  case "select":
-                    caret(input, 0, getBuffer().length);
-                    break;
-
-                  case "ignore":
-                    caret(input, seekNext(getLastValidPosition()));
-                    break;
-
-                  case "radixFocus":
-                    if (doRadixFocus(selectedCaret.begin)) {
-                      var radixPos = getBuffer().join("").indexOf(opts.radixPoint);
-                      caret(input, opts.numericInput ? seekNext(radixPos) : radixPos);
-                      break;
-                    }
-
-                  default:
-                    var clickPosition = selectedCaret.begin,
-                        lvclickPosition = getLastValidPosition(clickPosition, true),
-                        lastPosition = seekNext(lvclickPosition);
-
-                    if (clickPosition < lastPosition) {
-                      caret(input, !isMask(clickPosition, true) && !isMask(clickPosition - 1, true) ? seekNext(clickPosition) : clickPosition);
-                    } else {
-                      var lvp = getMaskSet().validPositions[lvclickPosition],
-                          tt = getTestTemplate(lastPosition, lvp ? lvp.match.locator : undefined, lvp),
-                          placeholder = getPlaceholder(lastPosition, tt.match);
-
-                      if (placeholder !== "" && getBuffer()[lastPosition] !== placeholder && tt.match.optionalQuantifier !== true && tt.match.newBlockMarker !== true || !isMask(lastPosition, opts.keepStatic) && tt.match.def === placeholder) {
-                        var newPos = seekNext(lastPosition);
-
-                        if (clickPosition >= newPos || clickPosition === lastPosition) {
-                          lastPosition = newPos;
-                        }
-                      }
-
-                      caret(input, lastPosition);
-                    }
-
-                    break;
-                }
-              }
-            }
-          }, 0);
-        },
-        cutEvent: function cutEvent(e) {
-          var input = this,
-              $input = $(input),
-              pos = caret(input),
-              ev = e.originalEvent || e;
-          var clipboardData = window.clipboardData || ev.clipboardData,
-              clipData = isRTL ? getBuffer().slice(pos.end, pos.begin) : getBuffer().slice(pos.begin, pos.end);
-          clipboardData.setData("text", isRTL ? clipData.reverse().join("") : clipData.join(""));
-          if (document.execCommand) document.execCommand("copy");
-          handleRemove(input, Inputmask.keyCode.DELETE, pos);
-          writeBuffer(input, getBuffer(), getMaskSet().p, e, undoValue !== getBuffer().join(""));
-        },
-        blurEvent: function blurEvent(e) {
-          var $input = $(this),
-              input = this;
-
-          if (input.inputmask) {
-            HandleNativePlaceholder(input, originalPlaceholder);
-
-            var nptValue = input.inputmask._valueGet(),
-                buffer = getBuffer().slice();
-
-            if (nptValue !== "" || colorMask !== undefined) {
-              if (opts.clearMaskOnLostFocus) {
-                if (getLastValidPosition() === -1 && nptValue === getBufferTemplate().join("")) {
-                  buffer = [];
-                } else {
-                  clearOptionalTail(buffer);
-                }
-              }
-
-              if (isComplete(buffer) === false) {
-                setTimeout(function () {
-                  $input.trigger("incomplete");
-                }, 0);
-
-                if (opts.clearIncomplete) {
-                  resetMaskSet();
-
-                  if (opts.clearMaskOnLostFocus) {
-                    buffer = [];
-                  } else {
-                    buffer = getBufferTemplate().slice();
-                  }
-                }
-              }
-
-              writeBuffer(input, buffer, undefined, e);
-            }
-
-            if (undoValue !== getBuffer().join("")) {
-              undoValue = buffer.join("");
-              $input.trigger("change");
-            }
-          }
-        },
-        mouseenterEvent: function mouseenterEvent(e) {
-          var input = this;
-          mouseEnter = true;
-
-          if (document.activeElement !== input && opts.showMaskOnHover) {
-            HandleNativePlaceholder(input, (isRTL ? getBuffer().slice().reverse() : getBuffer()).join(""));
-          }
-        },
-        submitEvent: function submitEvent(e) {
-          if (undoValue !== getBuffer().join("")) {
-            $el.trigger("change");
-          }
-
-          if (opts.clearMaskOnLostFocus && getLastValidPosition() === -1 && el.inputmask._valueGet && el.inputmask._valueGet() === getBufferTemplate().join("")) {
-            el.inputmask._valueSet("");
-          }
-
-          if (opts.clearIncomplete && isComplete(getBuffer()) === false) {
-            el.inputmask._valueSet("");
-          }
-
-          if (opts.removeMaskOnSubmit) {
-            el.inputmask._valueSet(el.inputmask.unmaskedvalue(), true);
-
-            setTimeout(function () {
-              writeBuffer(el, getBuffer());
-            }, 0);
-          }
-        },
-        resetEvent: function resetEvent(e) {
-          el.inputmask.refreshValue = true;
-          setTimeout(function () {
-            $el.trigger("setvalue");
-          }, 0);
-        }
-      };
-
-      function checkVal(input, writeOut, strict, nptvl, initiatingEvent) {
-        var inputmask = this || input.inputmask,
-            inputValue = nptvl.slice(),
-            charCodes = "",
-            initialNdx = -1,
-            result = undefined;
-
-        function isTemplateMatch(ndx, charCodes) {
-          var charCodeNdx = getMaskTemplate(true, 0, false).slice(ndx, seekNext(ndx)).join("").replace(/'/g, "").indexOf(charCodes);
-          return charCodeNdx !== -1 && !isMask(ndx) && (getTest(ndx).match.nativeDef === charCodes.charAt(0) || getTest(ndx).match.fn === null && getTest(ndx).match.nativeDef === "'" + charCodes.charAt(0) || getTest(ndx).match.nativeDef === " " && (getTest(ndx + 1).match.nativeDef === charCodes.charAt(0) || getTest(ndx + 1).match.fn === null && getTest(ndx + 1).match.nativeDef === "'" + charCodes.charAt(0)));
-        }
-
-        resetMaskSet();
-
-        if (!strict && opts.autoUnmask !== true) {
-          var staticInput = getBufferTemplate().slice(0, seekNext(-1)).join(""),
-              matches = inputValue.join("").match(new RegExp("^" + Inputmask.escapeRegex(staticInput), "g"));
-
-          if (matches && matches.length > 0) {
-            inputValue.splice(0, matches.length * staticInput.length);
-            initialNdx = seekNext(initialNdx);
-          }
-        } else {
-          initialNdx = seekNext(initialNdx);
-        }
-
-        if (initialNdx === -1) {
-          getMaskSet().p = seekNext(initialNdx);
-          initialNdx = 0;
-        } else getMaskSet().p = initialNdx;
-
-        inputmask.caretPos = {
-          begin: initialNdx
-        };
-        $.each(inputValue, function (ndx, charCode) {
-          if (charCode !== undefined) {
-            if (getMaskSet().validPositions[ndx] === undefined && inputValue[ndx] === getPlaceholder(ndx) && isMask(ndx, true) && isValid(ndx, inputValue[ndx], true, undefined, undefined, true) === false) {
-              getMaskSet().p++;
-            } else {
-              var keypress = new $.Event("_checkval");
-              keypress.which = charCode.charCodeAt(0);
-              charCodes += charCode;
-              var lvp = getLastValidPosition(undefined, true);
-
-              if (!isTemplateMatch(initialNdx, charCodes)) {
-                result = EventHandlers.keypressEvent.call(input, keypress, true, false, strict, inputmask.caretPos.begin);
-
-                if (result) {
-                  initialNdx = inputmask.caretPos.begin + 1;
-                  charCodes = "";
-                }
-              } else {
-                result = EventHandlers.keypressEvent.call(input, keypress, true, false, strict, lvp + 1);
-              }
-
-              if (result) {
-                writeBuffer(undefined, getBuffer(), result.forwardPosition, keypress, false);
-                inputmask.caretPos = {
-                  begin: result.forwardPosition,
-                  end: result.forwardPosition
-                };
-              }
-            }
-          }
-        });
-        if (writeOut) writeBuffer(input, getBuffer(), result ? result.forwardPosition : undefined, initiatingEvent || new $.Event("checkval"), initiatingEvent && initiatingEvent.type === "input");
-      }
-
-      function unmaskedvalue(input) {
-        if (input) {
-          if (input.inputmask === undefined) {
-            return input.value;
-          }
-
-          if (input.inputmask && input.inputmask.refreshValue) {
-            EventHandlers.setValueEvent.call(input);
-          }
-        }
-
-        var umValue = [],
-            vps = getMaskSet().validPositions;
-
-        for (var pndx in vps) {
-          if (vps[pndx].match && vps[pndx].match.fn != null) {
-            umValue.push(vps[pndx].input);
-          }
-        }
-
-        var unmaskedValue = umValue.length === 0 ? "" : (isRTL ? umValue.reverse() : umValue).join("");
-
-        if ($.isFunction(opts.onUnMask)) {
-          var bufferValue = (isRTL ? getBuffer().slice().reverse() : getBuffer()).join("");
-          unmaskedValue = opts.onUnMask.call(inputmask, bufferValue, unmaskedValue, opts);
-        }
-
-        return unmaskedValue;
-      }
-
-      function caret(input, begin, end, notranslate) {
-        function translatePosition(pos) {
-          if (isRTL && typeof pos === "number" && (!opts.greedy || opts.placeholder !== "") && el) {
-            pos = el.inputmask._valueGet().length - pos;
-          }
-
-          return pos;
-        }
-
-        var range;
-
-        if (begin !== undefined) {
-          if ($.isArray(begin)) {
-            end = isRTL ? begin[0] : begin[1];
-            begin = isRTL ? begin[1] : begin[0];
-          }
-
-          if (begin.begin !== undefined) {
-            end = isRTL ? begin.begin : begin.end;
-            begin = isRTL ? begin.end : begin.begin;
-          }
-
-          if (typeof begin === "number") {
-            begin = notranslate ? begin : translatePosition(begin);
-            end = notranslate ? end : translatePosition(end);
-            end = typeof end == "number" ? end : begin;
-            var scrollCalc = parseInt(((input.ownerDocument.defaultView || window).getComputedStyle ? (input.ownerDocument.defaultView || window).getComputedStyle(input, null) : input.currentStyle).fontSize) * end;
-            input.scrollLeft = scrollCalc > input.scrollWidth ? scrollCalc : 0;
-            input.inputmask.caretPos = {
-              begin: begin,
-              end: end
-            };
-
-            if (input === document.activeElement) {
-              if ("selectionStart" in input) {
-                input.selectionStart = begin;
-                input.selectionEnd = end;
-              } else if (window.getSelection) {
-                range = document.createRange();
-
-                if (input.firstChild === undefined || input.firstChild === null) {
-                  var textNode = document.createTextNode("");
-                  input.appendChild(textNode);
-                }
-
-                range.setStart(input.firstChild, begin < input.inputmask._valueGet().length ? begin : input.inputmask._valueGet().length);
-                range.setEnd(input.firstChild, end < input.inputmask._valueGet().length ? end : input.inputmask._valueGet().length);
-                range.collapse(true);
-                var sel = window.getSelection();
-                sel.removeAllRanges();
-                sel.addRange(range);
-              } else if (input.createTextRange) {
-                range = input.createTextRange();
-                range.collapse(true);
-                range.moveEnd("character", end);
-                range.moveStart("character", begin);
-                range.select();
-              }
-
-              renderColorMask(input, {
-                begin: begin,
-                end: end
-              });
-            }
-          }
-        } else {
-          if ("selectionStart" in input) {
-            begin = input.selectionStart;
-            end = input.selectionEnd;
-          } else if (window.getSelection) {
-            range = window.getSelection().getRangeAt(0);
-
-            if (range.commonAncestorContainer.parentNode === input || range.commonAncestorContainer === input) {
-              begin = range.startOffset;
-              end = range.endOffset;
-            }
-          } else if (document.selection && document.selection.createRange) {
-            range = document.selection.createRange();
-            begin = 0 - range.duplicate().moveStart("character", -input.inputmask._valueGet().length);
-            end = begin + range.text.length;
-          }
-
-          return {
-            begin: notranslate ? begin : translatePosition(begin),
-            end: notranslate ? end : translatePosition(end)
-          };
-        }
-      }
-
-      function determineLastRequiredPosition(returnDefinition) {
-        var buffer = getMaskTemplate(true, getLastValidPosition(), true, true),
-            bl = buffer.length,
-            pos,
-            lvp = getLastValidPosition(),
-            positions = {},
-            lvTest = getMaskSet().validPositions[lvp],
-            ndxIntlzr = lvTest !== undefined ? lvTest.locator.slice() : undefined,
-            testPos;
-
-        for (pos = lvp + 1; pos < buffer.length; pos++) {
-          testPos = getTestTemplate(pos, ndxIntlzr, pos - 1);
-          ndxIntlzr = testPos.locator.slice();
-          positions[pos] = $.extend(true, {}, testPos);
-        }
-
-        var lvTestAlt = lvTest && lvTest.alternation !== undefined ? lvTest.locator[lvTest.alternation] : undefined;
-
-        for (pos = bl - 1; pos > lvp; pos--) {
-          testPos = positions[pos];
-
-          if ((testPos.match.optionality || testPos.match.optionalQuantifier && testPos.match.newBlockMarker || lvTestAlt && (lvTestAlt !== positions[pos].locator[lvTest.alternation] && testPos.match.fn != null || testPos.match.fn === null && testPos.locator[lvTest.alternation] && checkAlternationMatch(testPos.locator[lvTest.alternation].toString().split(","), lvTestAlt.toString().split(",")) && getTests(pos)[0].def !== "")) && buffer[pos] === getPlaceholder(pos, testPos.match)) {
-            bl--;
-          } else break;
-        }
-
-        return returnDefinition ? {
-          l: bl,
-          def: positions[bl] ? positions[bl].match : undefined
-        } : bl;
-      }
-
-      function clearOptionalTail(buffer) {
-        buffer.length = 0;
-        var template = getMaskTemplate(true, 0, true, undefined, true),
-            lmnt,
-            validPos;
-
-        while (lmnt = template.shift(), lmnt !== undefined) {
-          buffer.push(lmnt);
-        }
-
-        return buffer;
-      }
-
-      function isComplete(buffer) {
-        if ($.isFunction(opts.isComplete)) return opts.isComplete(buffer, opts);
-        if (opts.repeat === "*") return undefined;
-        var complete = false,
-            lrp = determineLastRequiredPosition(true),
-            aml = seekPrevious(lrp.l);
-
-        if (lrp.def === undefined || lrp.def.newBlockMarker || lrp.def.optionality || lrp.def.optionalQuantifier) {
-          complete = true;
-
-          for (var i = 0; i <= aml; i++) {
-            var test = getTestTemplate(i).match;
-
-            if (test.fn !== null && getMaskSet().validPositions[i] === undefined && test.optionality !== true && test.optionalQuantifier !== true || test.fn === null && buffer[i] !== getPlaceholder(i, test)) {
-              complete = false;
-              break;
-            }
-          }
-        }
-
-        return complete;
-      }
-
-      function handleRemove(input, k, pos, strict, fromIsValid) {
-        if (opts.numericInput || isRTL) {
-          if (k === Inputmask.keyCode.BACKSPACE) {
-            k = Inputmask.keyCode.DELETE;
-          } else if (k === Inputmask.keyCode.DELETE) {
-            k = Inputmask.keyCode.BACKSPACE;
-          }
-
-          if (isRTL) {
-            var pend = pos.end;
-            pos.end = pos.begin;
-            pos.begin = pend;
-          }
-        }
-
-        if (k === Inputmask.keyCode.BACKSPACE && pos.end - pos.begin < 1) {
-          pos.begin = seekPrevious(pos.begin);
-
-          if (getMaskSet().validPositions[pos.begin] !== undefined && getMaskSet().validPositions[pos.begin].input === opts.groupSeparator) {
-            pos.begin--;
-          }
-        } else if (k === Inputmask.keyCode.DELETE && pos.begin === pos.end) {
-          pos.end = isMask(pos.end, true) && getMaskSet().validPositions[pos.end] && getMaskSet().validPositions[pos.end].input !== opts.radixPoint ? pos.end + 1 : seekNext(pos.end) + 1;
-
-          if (getMaskSet().validPositions[pos.begin] !== undefined && getMaskSet().validPositions[pos.begin].input === opts.groupSeparator) {
-            pos.end++;
-          }
-        }
-
-        revalidateMask(pos);
-
-        if (strict !== true && opts.keepStatic !== false || opts.regex !== null) {
-          var result = alternate(true);
-
-          if (result) {
-            var newPos = result.caret !== undefined ? result.caret : result.pos ? seekNext(result.pos.begin ? result.pos.begin : result.pos) : getLastValidPosition(-1, true);
-
-            if (k !== Inputmask.keyCode.DELETE || pos.begin > newPos) {
-              pos.begin == newPos;
-            }
-          }
-        }
-
-        var lvp = getLastValidPosition(pos.begin, true);
-
-        if (lvp < pos.begin || pos.begin === -1) {
-          getMaskSet().p = seekNext(lvp);
-        } else if (strict !== true) {
-          getMaskSet().p = pos.begin;
-
-          if (fromIsValid !== true) {
-            while (getMaskSet().p < lvp && getMaskSet().validPositions[getMaskSet().p] === undefined) {
-              getMaskSet().p++;
-            }
-          }
-        }
-      }
-
-      function initializeColorMask(input) {
-        var computedStyle = (input.ownerDocument.defaultView || window).getComputedStyle(input, null);
-
-        function findCaretPos(clientx) {
-          var e = document.createElement("span"),
-              caretPos;
-
-          for (var style in computedStyle) {
-            if (isNaN(style) && style.indexOf("font") !== -1) {
-              e.style[style] = computedStyle[style];
-            }
-          }
-
-          e.style.textTransform = computedStyle.textTransform;
-          e.style.letterSpacing = computedStyle.letterSpacing;
-          e.style.position = "absolute";
-          e.style.height = "auto";
-          e.style.width = "auto";
-          e.style.visibility = "hidden";
-          e.style.whiteSpace = "nowrap";
-          document.body.appendChild(e);
-
-          var inputText = input.inputmask._valueGet(),
-              previousWidth = 0,
-              itl;
-
-          for (caretPos = 0, itl = inputText.length; caretPos <= itl; caretPos++) {
-            e.innerHTML += inputText.charAt(caretPos) || "_";
-
-            if (e.offsetWidth >= clientx) {
-              var offset1 = clientx - previousWidth;
-              var offset2 = e.offsetWidth - clientx;
-              e.innerHTML = inputText.charAt(caretPos);
-              offset1 -= e.offsetWidth / 3;
-              caretPos = offset1 < offset2 ? caretPos - 1 : caretPos;
-              break;
-            }
-
-            previousWidth = e.offsetWidth;
-          }
-
-          document.body.removeChild(e);
-          return caretPos;
-        }
-
-        var template = document.createElement("div");
-        template.style.width = computedStyle.width;
-        template.style.textAlign = computedStyle.textAlign;
-        colorMask = document.createElement("div");
-        input.inputmask.colorMask = colorMask;
-        colorMask.className = "im-colormask";
-        input.parentNode.insertBefore(colorMask, input);
-        input.parentNode.removeChild(input);
-        colorMask.appendChild(input);
-        colorMask.appendChild(template);
-        input.style.left = template.offsetLeft + "px";
-        $(colorMask).on("mouseleave", function (e) {
-          return EventHandlers.mouseleaveEvent.call(input, [e]);
-        });
-        $(colorMask).on("mouseenter", function (e) {
-          return EventHandlers.mouseenterEvent.call(input, [e]);
-        });
-        $(colorMask).on("click", function (e) {
-          caret(input, findCaretPos(e.clientX));
-          return EventHandlers.clickEvent.call(input, [e]);
-        });
-      }
-
-      function renderColorMask(input, caretPos, clear) {
-        var maskTemplate = [],
-            isStatic = false,
-            test,
-            testPos,
-            ndxIntlzr,
-            pos = 0;
-
-        function setEntry(entry) {
-          if (entry === undefined) entry = "";
-
-          if (!isStatic && (test.fn === null || testPos.input === undefined)) {
-            isStatic = true;
-            maskTemplate.push("<span class='im-static'>" + entry);
-          } else if (isStatic && (test.fn !== null && testPos.input !== undefined || test.def === "")) {
-            isStatic = false;
-            var mtl = maskTemplate.length;
-            maskTemplate[mtl - 1] = maskTemplate[mtl - 1] + "</span>";
-            maskTemplate.push(entry);
-          } else maskTemplate.push(entry);
-        }
-
-        function setCaret() {
-          if (document.activeElement === input) {
-            maskTemplate.splice(caretPos.begin, 0, caretPos.begin === caretPos.end || caretPos.end > getMaskSet().maskLength ? '<mark class="im-caret" style="border-right-width: 1px;border-right-style: solid;">' : '<mark class="im-caret-select">');
-            maskTemplate.splice(caretPos.end + 1, 0, "</mark>");
-          }
-        }
-
-        if (colorMask !== undefined) {
-          var buffer = getBuffer();
-
-          if (caretPos === undefined) {
-            caretPos = caret(input);
-          } else if (caretPos.begin === undefined) {
-            caretPos = {
-              begin: caretPos,
-              end: caretPos
-            };
-          }
-
-          if (clear !== true) {
-            var lvp = getLastValidPosition();
-
-            do {
-              if (getMaskSet().validPositions[pos]) {
-                testPos = getMaskSet().validPositions[pos];
-                test = testPos.match;
-                ndxIntlzr = testPos.locator.slice();
-                setEntry(buffer[pos]);
-              } else {
-                testPos = getTestTemplate(pos, ndxIntlzr, pos - 1);
-                test = testPos.match;
-                ndxIntlzr = testPos.locator.slice();
-
-                if (opts.jitMasking === false || pos < lvp || typeof opts.jitMasking === "number" && isFinite(opts.jitMasking) && opts.jitMasking > pos) {
-                  setEntry(getPlaceholder(pos, test));
-                } else isStatic = false;
-              }
-
-              pos++;
-            } while ((maxLength === undefined || pos < maxLength) && (test.fn !== null || test.def !== "") || lvp > pos || isStatic);
-
-            if (isStatic) setEntry();
-            setCaret();
-          }
-
-          var template = colorMask.getElementsByTagName("div")[0];
-          template.innerHTML = maskTemplate.join("");
-          input.inputmask.positionColorMask(input, template);
-        }
-      }
-
-      function mask(elem) {
-        function isElementTypeSupported(input, opts) {
-          function patchValueProperty(npt) {
-            var valueGet;
-            var valueSet;
-
-            function patchValhook(type) {
-              if ($.valHooks && ($.valHooks[type] === undefined || $.valHooks[type].inputmaskpatch !== true)) {
-                var valhookGet = $.valHooks[type] && $.valHooks[type].get ? $.valHooks[type].get : function (elem) {
-                  return elem.value;
-                };
-                var valhookSet = $.valHooks[type] && $.valHooks[type].set ? $.valHooks[type].set : function (elem, value) {
-                  elem.value = value;
-                  return elem;
-                };
-                $.valHooks[type] = {
-                  get: function get(elem) {
-                    if (elem.inputmask) {
-                      if (elem.inputmask.opts.autoUnmask) {
-                        return elem.inputmask.unmaskedvalue();
-                      } else {
-                        var result = valhookGet(elem);
-                        return getLastValidPosition(undefined, undefined, elem.inputmask.maskset.validPositions) !== -1 || opts.nullable !== true ? result : "";
-                      }
-                    } else return valhookGet(elem);
-                  },
-                  set: function set(elem, value) {
-                    var $elem = $(elem),
-                        result;
-                    result = valhookSet(elem, value);
-
-                    if (elem.inputmask) {
-                      $elem.trigger("setvalue", [value]);
-                    }
-
-                    return result;
-                  },
-                  inputmaskpatch: true
-                };
-              }
-            }
-
-            function getter() {
-              if (this.inputmask) {
-                return this.inputmask.opts.autoUnmask ? this.inputmask.unmaskedvalue() : getLastValidPosition() !== -1 || opts.nullable !== true ? document.activeElement === this && opts.clearMaskOnLostFocus ? (isRTL ? clearOptionalTail(getBuffer().slice()).reverse() : clearOptionalTail(getBuffer().slice())).join("") : valueGet.call(this) : "";
-              } else return valueGet.call(this);
-            }
-
-            function setter(value) {
-              valueSet.call(this, value);
-
-              if (this.inputmask) {
-                $(this).trigger("setvalue", [value]);
-              }
-            }
-
-            function installNativeValueSetFallback(npt) {
-              EventRuler.on(npt, "mouseenter", function (event) {
-                var $input = $(this),
-                    input = this,
-                    value = input.inputmask._valueGet();
-
-                if (value !== getBuffer().join("")) {
-                  $input.trigger("setvalue");
-                }
-              });
-            }
-
-            if (!npt.inputmask.__valueGet) {
-              if (opts.noValuePatching !== true) {
-                if (Object.getOwnPropertyDescriptor) {
-                  if (typeof Object.getPrototypeOf !== "function") {
-                    Object.getPrototypeOf = _typeof("test".__proto__) === "object" ? function (object) {
-                      return object.__proto__;
-                    } : function (object) {
-                      return object.constructor.prototype;
-                    };
-                  }
-
-                  var valueProperty = Object.getPrototypeOf ? Object.getOwnPropertyDescriptor(Object.getPrototypeOf(npt), "value") : undefined;
-
-                  if (valueProperty && valueProperty.get && valueProperty.set) {
-                    valueGet = valueProperty.get;
-                    valueSet = valueProperty.set;
-                    Object.defineProperty(npt, "value", {
-                      get: getter,
-                      set: setter,
-                      configurable: true
-                    });
-                  } else if (npt.tagName !== "INPUT") {
-                    valueGet = function valueGet() {
-                      return this.textContent;
-                    };
-
-                    valueSet = function valueSet(value) {
-                      this.textContent = value;
-                    };
-
-                    Object.defineProperty(npt, "value", {
-                      get: getter,
-                      set: setter,
-                      configurable: true
-                    });
-                  }
-                } else if (document.__lookupGetter__ && npt.__lookupGetter__("value")) {
-                  valueGet = npt.__lookupGetter__("value");
-                  valueSet = npt.__lookupSetter__("value");
-
-                  npt.__defineGetter__("value", getter);
-
-                  npt.__defineSetter__("value", setter);
-                }
-
-                npt.inputmask.__valueGet = valueGet;
-                npt.inputmask.__valueSet = valueSet;
-              }
-
-              npt.inputmask._valueGet = function (overruleRTL) {
-                return isRTL && overruleRTL !== true ? valueGet.call(this.el).split("").reverse().join("") : valueGet.call(this.el);
-              };
-
-              npt.inputmask._valueSet = function (value, overruleRTL) {
-                valueSet.call(this.el, value === null || value === undefined ? "" : overruleRTL !== true && isRTL ? value.split("").reverse().join("") : value);
-              };
-
-              if (valueGet === undefined) {
-                valueGet = function valueGet() {
-                  return this.value;
-                };
-
-                valueSet = function valueSet(value) {
-                  this.value = value;
-                };
-
-                patchValhook(npt.type);
-                installNativeValueSetFallback(npt);
-              }
-            }
-          }
-
-          var elementType = input.getAttribute("type");
-          var isSupported = input.tagName === "INPUT" && $.inArray(elementType, opts.supportsInputType) !== -1 || input.isContentEditable || input.tagName === "TEXTAREA";
-
-          if (!isSupported) {
-            if (input.tagName === "INPUT") {
-              var el = document.createElement("input");
-              el.setAttribute("type", elementType);
-              isSupported = el.type === "text";
-              el = null;
-            } else isSupported = "partial";
-          }
-
-          if (isSupported !== false) {
-            patchValueProperty(input);
-          } else input.inputmask = undefined;
-
-          return isSupported;
-        }
-
-        EventRuler.off(elem);
-        var isSupported = isElementTypeSupported(elem, opts);
-
-        if (isSupported !== false) {
-          el = elem;
-          $el = $(el);
-          originalPlaceholder = el.placeholder;
-          maxLength = el !== undefined ? el.maxLength : undefined;
-          if (maxLength === -1) maxLength = undefined;
-
-          if (opts.colorMask === true) {
-            initializeColorMask(el);
-          }
-
-          if (mobile) {
-            if ("inputMode" in el) {
-              el.inputmode = opts.inputmode;
-              el.setAttribute("inputmode", opts.inputmode);
-            }
-
-            if (opts.disablePredictiveText === true) {
-              if ("autocorrect" in el) {
-                el.autocorrect = false;
-              } else {
-                if (opts.colorMask !== true) {
-                  initializeColorMask(el);
-                }
-
-                el.type = "password";
-              }
-            }
-          }
-
-          if (isSupported === true) {
-            el.setAttribute("im-insert", opts.insertMode);
-            EventRuler.on(el, "submit", EventHandlers.submitEvent);
-            EventRuler.on(el, "reset", EventHandlers.resetEvent);
-            EventRuler.on(el, "blur", EventHandlers.blurEvent);
-            EventRuler.on(el, "focus", EventHandlers.focusEvent);
-
-            if (opts.colorMask !== true) {
-              EventRuler.on(el, "click", EventHandlers.clickEvent);
-              EventRuler.on(el, "mouseleave", EventHandlers.mouseleaveEvent);
-              EventRuler.on(el, "mouseenter", EventHandlers.mouseenterEvent);
-            }
-
-            EventRuler.on(el, "paste", EventHandlers.pasteEvent);
-            EventRuler.on(el, "cut", EventHandlers.cutEvent);
-            EventRuler.on(el, "complete", opts.oncomplete);
-            EventRuler.on(el, "incomplete", opts.onincomplete);
-            EventRuler.on(el, "cleared", opts.oncleared);
-
-            if (!mobile && opts.inputEventOnly !== true) {
-              EventRuler.on(el, "keydown", EventHandlers.keydownEvent);
-              EventRuler.on(el, "keypress", EventHandlers.keypressEvent);
-            } else {
-              el.removeAttribute("maxLength");
-            }
-
-            EventRuler.on(el, "input", EventHandlers.inputFallBackEvent);
-            EventRuler.on(el, "beforeinput", EventHandlers.beforeInputEvent);
-          }
-
-          EventRuler.on(el, "setvalue", EventHandlers.setValueEvent);
-          undoValue = getBufferTemplate().join("");
-
-          if (el.inputmask._valueGet(true) !== "" || opts.clearMaskOnLostFocus === false || document.activeElement === el) {
-            var initialValue = $.isFunction(opts.onBeforeMask) ? opts.onBeforeMask.call(inputmask, el.inputmask._valueGet(true), opts) || el.inputmask._valueGet(true) : el.inputmask._valueGet(true);
-            if (initialValue !== "") checkVal(el, true, false, initialValue.split(""));
-            var buffer = getBuffer().slice();
-            undoValue = buffer.join("");
-
-            if (isComplete(buffer) === false) {
-              if (opts.clearIncomplete) {
-                resetMaskSet();
-              }
-            }
-
-            if (opts.clearMaskOnLostFocus && document.activeElement !== el) {
-              if (getLastValidPosition() === -1) {
-                buffer = [];
-              } else {
-                clearOptionalTail(buffer);
-              }
-            }
-
-            if (opts.clearMaskOnLostFocus === false || opts.showMaskOnFocus && document.activeElement === el || el.inputmask._valueGet(true) !== "") writeBuffer(el, buffer);
-
-            if (document.activeElement === el) {
-              caret(el, seekNext(getLastValidPosition()));
-            }
-          }
-        }
-      }
-
-      var valueBuffer;
-
-      if (actionObj !== undefined) {
-        switch (actionObj.action) {
-          case "isComplete":
-            el = actionObj.el;
-            return isComplete(getBuffer());
-
-          case "unmaskedvalue":
-            if (el === undefined || actionObj.value !== undefined) {
-              valueBuffer = actionObj.value;
-              valueBuffer = ($.isFunction(opts.onBeforeMask) ? opts.onBeforeMask.call(inputmask, valueBuffer, opts) || valueBuffer : valueBuffer).split("");
-              checkVal.call(this, undefined, false, false, valueBuffer);
-              if ($.isFunction(opts.onBeforeWrite)) opts.onBeforeWrite.call(inputmask, undefined, getBuffer(), 0, opts);
-            }
-
-            return unmaskedvalue(el);
-
-          case "mask":
-            mask(el);
-            break;
-
-          case "format":
-            valueBuffer = ($.isFunction(opts.onBeforeMask) ? opts.onBeforeMask.call(inputmask, actionObj.value, opts) || actionObj.value : actionObj.value).split("");
-            checkVal.call(this, undefined, true, false, valueBuffer);
-
-            if (actionObj.metadata) {
-              return {
-                value: isRTL ? getBuffer().slice().reverse().join("") : getBuffer().join(""),
-                metadata: maskScope.call(this, {
-                  action: "getmetadata"
-                }, maskset, opts)
-              };
-            }
-
-            return isRTL ? getBuffer().slice().reverse().join("") : getBuffer().join("");
-
-          case "isValid":
-            if (actionObj.value) {
-              valueBuffer = actionObj.value.split("");
-              checkVal.call(this, undefined, true, true, valueBuffer);
-            } else {
-              actionObj.value = getBuffer().join("");
-            }
-
-            var buffer = getBuffer();
-            var rl = determineLastRequiredPosition(),
-                lmib = buffer.length - 1;
-
-            for (; lmib > rl; lmib--) {
-              if (isMask(lmib)) break;
-            }
-
-            buffer.splice(rl, lmib + 1 - rl);
-            return isComplete(buffer) && actionObj.value === getBuffer().join("");
-
-          case "getemptymask":
-            return getBufferTemplate().join("");
-
-          case "remove":
-            if (el && el.inputmask) {
-              $.data(el, "_inputmask_opts", null);
-              $el = $(el);
-
-              el.inputmask._valueSet(opts.autoUnmask ? unmaskedvalue(el) : el.inputmask._valueGet(true));
-
-              EventRuler.off(el);
-
-              if (el.inputmask.colorMask) {
-                colorMask = el.inputmask.colorMask;
-                colorMask.removeChild(el);
-                colorMask.parentNode.insertBefore(el, colorMask);
-                colorMask.parentNode.removeChild(colorMask);
-              }
-
-              var valueProperty;
-
-              if (Object.getOwnPropertyDescriptor && Object.getPrototypeOf) {
-                valueProperty = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(el), "value");
-
-                if (valueProperty) {
-                  if (el.inputmask.__valueGet) {
-                    Object.defineProperty(el, "value", {
-                      get: el.inputmask.__valueGet,
-                      set: el.inputmask.__valueSet,
-                      configurable: true
-                    });
-                  }
-                }
-              } else if (document.__lookupGetter__ && el.__lookupGetter__("value")) {
-                if (el.inputmask.__valueGet) {
-                  el.__defineGetter__("value", el.inputmask.__valueGet);
-
-                  el.__defineSetter__("value", el.inputmask.__valueSet);
-                }
-              }
-
-              el.inputmask = undefined;
-            }
-
-            return el;
-            break;
-
-          case "getmetadata":
-            if ($.isArray(maskset.metadata)) {
-              var maskTarget = getMaskTemplate(true, 0, false).join("");
-              $.each(maskset.metadata, function (ndx, mtdt) {
-                if (mtdt.mask === maskTarget) {
-                  maskTarget = mtdt;
-                  return false;
-                }
-              });
-              return maskTarget;
-            }
-
-            return maskset.metadata;
-        }
-      }
-    }
-
-    return Inputmask;
-  }); // Номер телефона (inputmask)
-
-
-  var selector = document.querySelectorAll('input[type="tel"]');
-  var im = new Inputmask("+7-(999)-999-99-99");
-  im.mask(selector); // ==========
-  // Исходник для SlickSlider
-
-  !function (i) {
-    "use strict";
-
-    "function" == typeof define && define.amd ? define(["jquery"], i) : "undefined" != typeof exports ? module.exports = i(require("jquery")) : i(jQuery);
-  }(function (i) {
-    "use strict";
-
-    var e = window.Slick || {};
-    (e = function () {
-      var e = 0;
-      return function (t, o) {
-        var s,
-            n = this;
-        n.defaults = {
-          accessibility: !0,
-          adaptiveHeight: !1,
-          appendArrows: i(t),
-          appendDots: i(t),
-          arrows: !0,
-          asNavFor: null,
-          prevArrow: '<button class="slick-prev" aria-label="Previous" type="button">Previous</button>',
-          nextArrow: '<button class="slick-next" aria-label="Next" type="button">Next</button>',
-          autoplay: !1,
-          autoplaySpeed: 3e3,
-          centerMode: !1,
-          centerPadding: "50px",
-          cssEase: "ease",
-          customPaging: function customPaging(e, t) {
-            return i('<button type="button" />').text(t + 1);
-          },
-          dots: !1,
-          dotsClass: "slick-dots",
-          draggable: !0,
-          easing: "linear",
-          edgeFriction: .35,
-          fade: !1,
-          focusOnSelect: !1,
-          focusOnChange: !1,
-          infinite: !0,
-          initialSlide: 0,
-          lazyLoad: "ondemand",
-          mobileFirst: !1,
-          pauseOnHover: !0,
-          pauseOnFocus: !0,
-          pauseOnDotsHover: !1,
-          respondTo: "window",
-          responsive: null,
-          rows: 1,
-          rtl: !1,
-          slide: "",
-          slidesPerRow: 1,
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          speed: 500,
-          swipe: !0,
-          swipeToSlide: !1,
-          touchMove: !0,
-          touchThreshold: 5,
-          useCSS: !0,
-          useTransform: !0,
-          variableWidth: !1,
-          vertical: !1,
-          verticalSwiping: !1,
-          waitForAnimate: !0,
-          zIndex: 1e3
-        }, n.initials = {
-          animating: !1,
-          dragging: !1,
-          autoPlayTimer: null,
-          currentDirection: 0,
-          currentLeft: null,
-          currentSlide: 0,
-          direction: 1,
-          $dots: null,
-          listWidth: null,
-          listHeight: null,
-          loadIndex: 0,
-          $nextArrow: null,
-          $prevArrow: null,
-          scrolling: !1,
-          slideCount: null,
-          slideWidth: null,
-          $slideTrack: null,
-          $slides: null,
-          sliding: !1,
-          slideOffset: 0,
-          swipeLeft: null,
-          swiping: !1,
-          $list: null,
-          touchObject: {},
-          transformsEnabled: !1,
-          unslicked: !1
-        }, i.extend(n, n.initials), n.activeBreakpoint = null, n.animType = null, n.animProp = null, n.breakpoints = [], n.breakpointSettings = [], n.cssTransitions = !1, n.focussed = !1, n.interrupted = !1, n.hidden = "hidden", n.paused = !0, n.positionProp = null, n.respondTo = null, n.rowCount = 1, n.shouldClick = !0, n.$slider = i(t), n.$slidesCache = null, n.transformType = null, n.transitionType = null, n.visibilityChange = "visibilitychange", n.windowWidth = 0, n.windowTimer = null, s = i(t).data("slick") || {}, n.options = i.extend({}, n.defaults, o, s), n.currentSlide = n.options.initialSlide, n.originalSettings = n.options, void 0 !== document.mozHidden ? (n.hidden = "mozHidden", n.visibilityChange = "mozvisibilitychange") : void 0 !== document.webkitHidden && (n.hidden = "webkitHidden", n.visibilityChange = "webkitvisibilitychange"), n.autoPlay = i.proxy(n.autoPlay, n), n.autoPlayClear = i.proxy(n.autoPlayClear, n), n.autoPlayIterator = i.proxy(n.autoPlayIterator, n), n.changeSlide = i.proxy(n.changeSlide, n), n.clickHandler = i.proxy(n.clickHandler, n), n.selectHandler = i.proxy(n.selectHandler, n), n.setPosition = i.proxy(n.setPosition, n), n.swipeHandler = i.proxy(n.swipeHandler, n), n.dragHandler = i.proxy(n.dragHandler, n), n.keyHandler = i.proxy(n.keyHandler, n), n.instanceUid = e++, n.htmlExpr = /^(?:\s*(<[\w\W]+>)[^>]*)$/, n.registerBreakpoints(), n.init(!0);
-      };
-    }()).prototype.activateADA = function () {
-      this.$slideTrack.find(".slick-active").attr({
-        "aria-hidden": "false"
-      }).find("a, input, button, select").attr({
-        tabindex: "0"
-      });
-    }, e.prototype.addSlide = e.prototype.slickAdd = function (e, t, o) {
-      var s = this;
-      if ("boolean" == typeof t) o = t, t = null;else if (t < 0 || t >= s.slideCount) return !1;
-      s.unload(), "number" == typeof t ? 0 === t && 0 === s.$slides.length ? i(e).appendTo(s.$slideTrack) : o ? i(e).insertBefore(s.$slides.eq(t)) : i(e).insertAfter(s.$slides.eq(t)) : !0 === o ? i(e).prependTo(s.$slideTrack) : i(e).appendTo(s.$slideTrack), s.$slides = s.$slideTrack.children(this.options.slide), s.$slideTrack.children(this.options.slide).detach(), s.$slideTrack.append(s.$slides), s.$slides.each(function (e, t) {
-        i(t).attr("data-slick-index", e);
-      }), s.$slidesCache = s.$slides, s.reinit();
-    }, e.prototype.animateHeight = function () {
-      var i = this;
-
-      if (1 === i.options.slidesToShow && !0 === i.options.adaptiveHeight && !1 === i.options.vertical) {
-        var e = i.$slides.eq(i.currentSlide).outerHeight(!0);
-        i.$list.animate({
-          height: e
-        }, i.options.speed);
-      }
-    }, e.prototype.animateSlide = function (e, t) {
-      var o = {},
-          s = this;
-      s.animateHeight(), !0 === s.options.rtl && !1 === s.options.vertical && (e = -e), !1 === s.transformsEnabled ? !1 === s.options.vertical ? s.$slideTrack.animate({
-        left: e
-      }, s.options.speed, s.options.easing, t) : s.$slideTrack.animate({
-        top: e
-      }, s.options.speed, s.options.easing, t) : !1 === s.cssTransitions ? (!0 === s.options.rtl && (s.currentLeft = -s.currentLeft), i({
-        animStart: s.currentLeft
-      }).animate({
-        animStart: e
-      }, {
-        duration: s.options.speed,
-        easing: s.options.easing,
-        step: function step(i) {
-          i = Math.ceil(i), !1 === s.options.vertical ? (o[s.animType] = "translate(" + i + "px, 0px)", s.$slideTrack.css(o)) : (o[s.animType] = "translate(0px," + i + "px)", s.$slideTrack.css(o));
-        },
-        complete: function complete() {
-          t && t.call();
-        }
-      })) : (s.applyTransition(), e = Math.ceil(e), !1 === s.options.vertical ? o[s.animType] = "translate3d(" + e + "px, 0px, 0px)" : o[s.animType] = "translate3d(0px," + e + "px, 0px)", s.$slideTrack.css(o), t && setTimeout(function () {
-        s.disableTransition(), t.call();
-      }, s.options.speed));
-    }, e.prototype.getNavTarget = function () {
-      var e = this,
-          t = e.options.asNavFor;
-      return t && null !== t && (t = i(t).not(e.$slider)), t;
-    }, e.prototype.asNavFor = function (e) {
-      var t = this.getNavTarget();
-      null !== t && "object" == _typeof(t) && t.each(function () {
-        var t = i(this).slick("getSlick");
-        t.unslicked || t.slideHandler(e, !0);
-      });
-    }, e.prototype.applyTransition = function (i) {
-      var e = this,
-          t = {};
-      !1 === e.options.fade ? t[e.transitionType] = e.transformType + " " + e.options.speed + "ms " + e.options.cssEase : t[e.transitionType] = "opacity " + e.options.speed + "ms " + e.options.cssEase, !1 === e.options.fade ? e.$slideTrack.css(t) : e.$slides.eq(i).css(t);
-    }, e.prototype.autoPlay = function () {
-      var i = this;
-      i.autoPlayClear(), i.slideCount > i.options.slidesToShow && (i.autoPlayTimer = setInterval(i.autoPlayIterator, i.options.autoplaySpeed));
-    }, e.prototype.autoPlayClear = function () {
-      var i = this;
-      i.autoPlayTimer && clearInterval(i.autoPlayTimer);
-    }, e.prototype.autoPlayIterator = function () {
-      var i = this,
-          e = i.currentSlide + i.options.slidesToScroll;
-      i.paused || i.interrupted || i.focussed || (!1 === i.options.infinite && (1 === i.direction && i.currentSlide + 1 === i.slideCount - 1 ? i.direction = 0 : 0 === i.direction && (e = i.currentSlide - i.options.slidesToScroll, i.currentSlide - 1 == 0 && (i.direction = 1))), i.slideHandler(e));
-    }, e.prototype.buildArrows = function () {
-      var e = this;
-      !0 === e.options.arrows && (e.$prevArrow = i(e.options.prevArrow).addClass("slick-arrow"), e.$nextArrow = i(e.options.nextArrow).addClass("slick-arrow"), e.slideCount > e.options.slidesToShow ? (e.$prevArrow.removeClass("slick-hidden").removeAttr("aria-hidden tabindex"), e.$nextArrow.removeClass("slick-hidden").removeAttr("aria-hidden tabindex"), e.htmlExpr.test(e.options.prevArrow) && e.$prevArrow.prependTo(e.options.appendArrows), e.htmlExpr.test(e.options.nextArrow) && e.$nextArrow.appendTo(e.options.appendArrows), !0 !== e.options.infinite && e.$prevArrow.addClass("slick-disabled").attr("aria-disabled", "true")) : e.$prevArrow.add(e.$nextArrow).addClass("slick-hidden").attr({
-        "aria-disabled": "true",
-        tabindex: "-1"
-      }));
-    }, e.prototype.buildDots = function () {
-      var e,
-          t,
-          o = this;
-
-      if (!0 === o.options.dots) {
-        for (o.$slider.addClass("slick-dotted"), t = i("<ul />").addClass(o.options.dotsClass), e = 0; e <= o.getDotCount(); e += 1) {
-          t.append(i("<li />").append(o.options.customPaging.call(this, o, e)));
-        }
-
-        o.$dots = t.appendTo(o.options.appendDots), o.$dots.find("li").first().addClass("slick-active");
-      }
-    }, e.prototype.buildOut = function () {
-      var e = this;
-      e.$slides = e.$slider.children(e.options.slide + ":not(.slick-cloned)").addClass("slick-slide"), e.slideCount = e.$slides.length, e.$slides.each(function (e, t) {
-        i(t).attr("data-slick-index", e).data("originalStyling", i(t).attr("style") || "");
-      }), e.$slider.addClass("slick-slider"), e.$slideTrack = 0 === e.slideCount ? i('<div class="slick-track"/>').appendTo(e.$slider) : e.$slides.wrapAll('<div class="slick-track"/>').parent(), e.$list = e.$slideTrack.wrap('<div class="slick-list"/>').parent(), e.$slideTrack.css("opacity", 0), !0 !== e.options.centerMode && !0 !== e.options.swipeToSlide || (e.options.slidesToScroll = 1), i("img[data-lazy]", e.$slider).not("[src]").addClass("slick-loading"), e.setupInfinite(), e.buildArrows(), e.buildDots(), e.updateDots(), e.setSlideClasses("number" == typeof e.currentSlide ? e.currentSlide : 0), !0 === e.options.draggable && e.$list.addClass("draggable");
-    }, e.prototype.buildRows = function () {
-      var i,
-          e,
-          t,
-          o,
-          s,
-          n,
-          r,
-          l = this;
-
-      if (o = document.createDocumentFragment(), n = l.$slider.children(), l.options.rows > 1) {
-        for (r = l.options.slidesPerRow * l.options.rows, s = Math.ceil(n.length / r), i = 0; i < s; i++) {
-          var d = document.createElement("div");
-
-          for (e = 0; e < l.options.rows; e++) {
-            var a = document.createElement("div");
-
-            for (t = 0; t < l.options.slidesPerRow; t++) {
-              var c = i * r + (e * l.options.slidesPerRow + t);
-              n.get(c) && a.appendChild(n.get(c));
-            }
-
-            d.appendChild(a);
-          }
-
-          o.appendChild(d);
-        }
-
-        l.$slider.empty().append(o), l.$slider.children().children().children().css({
-          width: 100 / l.options.slidesPerRow + "%",
-          display: "inline-block"
-        });
-      }
-    }, e.prototype.checkResponsive = function (e, t) {
-      var o,
-          s,
-          n,
-          r = this,
-          l = !1,
-          d = r.$slider.width(),
-          a = window.innerWidth || i(window).width();
-
-      if ("window" === r.respondTo ? n = a : "slider" === r.respondTo ? n = d : "min" === r.respondTo && (n = Math.min(a, d)), r.options.responsive && r.options.responsive.length && null !== r.options.responsive) {
-        s = null;
-
-        for (o in r.breakpoints) {
-          r.breakpoints.hasOwnProperty(o) && (!1 === r.originalSettings.mobileFirst ? n < r.breakpoints[o] && (s = r.breakpoints[o]) : n > r.breakpoints[o] && (s = r.breakpoints[o]));
-        }
-
-        null !== s ? null !== r.activeBreakpoint ? (s !== r.activeBreakpoint || t) && (r.activeBreakpoint = s, "unslick" === r.breakpointSettings[s] ? r.unslick(s) : (r.options = i.extend({}, r.originalSettings, r.breakpointSettings[s]), !0 === e && (r.currentSlide = r.options.initialSlide), r.refresh(e)), l = s) : (r.activeBreakpoint = s, "unslick" === r.breakpointSettings[s] ? r.unslick(s) : (r.options = i.extend({}, r.originalSettings, r.breakpointSettings[s]), !0 === e && (r.currentSlide = r.options.initialSlide), r.refresh(e)), l = s) : null !== r.activeBreakpoint && (r.activeBreakpoint = null, r.options = r.originalSettings, !0 === e && (r.currentSlide = r.options.initialSlide), r.refresh(e), l = s), e || !1 === l || r.$slider.trigger("breakpoint", [r, l]);
-      }
-    }, e.prototype.changeSlide = function (e, t) {
-      var o,
-          s,
-          n,
-          r = this,
-          l = i(e.currentTarget);
-
-      switch (l.is("a") && e.preventDefault(), l.is("li") || (l = l.closest("li")), n = r.slideCount % r.options.slidesToScroll != 0, o = n ? 0 : (r.slideCount - r.currentSlide) % r.options.slidesToScroll, e.data.message) {
-        case "previous":
-          s = 0 === o ? r.options.slidesToScroll : r.options.slidesToShow - o, r.slideCount > r.options.slidesToShow && r.slideHandler(r.currentSlide - s, !1, t);
-          break;
-
-        case "next":
-          s = 0 === o ? r.options.slidesToScroll : o, r.slideCount > r.options.slidesToShow && r.slideHandler(r.currentSlide + s, !1, t);
-          break;
-
-        case "index":
-          var d = 0 === e.data.index ? 0 : e.data.index || l.index() * r.options.slidesToScroll;
-          r.slideHandler(r.checkNavigable(d), !1, t), l.children().trigger("focus");
-          break;
-
-        default:
-          return;
-      }
-    }, e.prototype.checkNavigable = function (i) {
-      var e, t;
-      if (e = this.getNavigableIndexes(), t = 0, i > e[e.length - 1]) i = e[e.length - 1];else for (var o in e) {
-        if (i < e[o]) {
-          i = t;
-          break;
-        }
-
-        t = e[o];
-      }
-      return i;
-    }, e.prototype.cleanUpEvents = function () {
-      var e = this;
-      e.options.dots && null !== e.$dots && (i("li", e.$dots).off("click.slick", e.changeSlide).off("mouseenter.slick", i.proxy(e.interrupt, e, !0)).off("mouseleave.slick", i.proxy(e.interrupt, e, !1)), !0 === e.options.accessibility && e.$dots.off("keydown.slick", e.keyHandler)), e.$slider.off("focus.slick blur.slick"), !0 === e.options.arrows && e.slideCount > e.options.slidesToShow && (e.$prevArrow && e.$prevArrow.off("click.slick", e.changeSlide), e.$nextArrow && e.$nextArrow.off("click.slick", e.changeSlide), !0 === e.options.accessibility && (e.$prevArrow && e.$prevArrow.off("keydown.slick", e.keyHandler), e.$nextArrow && e.$nextArrow.off("keydown.slick", e.keyHandler))), e.$list.off("touchstart.slick mousedown.slick", e.swipeHandler), e.$list.off("touchmove.slick mousemove.slick", e.swipeHandler), e.$list.off("touchend.slick mouseup.slick", e.swipeHandler), e.$list.off("touchcancel.slick mouseleave.slick", e.swipeHandler), e.$list.off("click.slick", e.clickHandler), i(document).off(e.visibilityChange, e.visibility), e.cleanUpSlideEvents(), !0 === e.options.accessibility && e.$list.off("keydown.slick", e.keyHandler), !0 === e.options.focusOnSelect && i(e.$slideTrack).children().off("click.slick", e.selectHandler), i(window).off("orientationchange.slick.slick-" + e.instanceUid, e.orientationChange), i(window).off("resize.slick.slick-" + e.instanceUid, e.resize), i("[draggable!=true]", e.$slideTrack).off("dragstart", e.preventDefault), i(window).off("load.slick.slick-" + e.instanceUid, e.setPosition);
-    }, e.prototype.cleanUpSlideEvents = function () {
-      var e = this;
-      e.$list.off("mouseenter.slick", i.proxy(e.interrupt, e, !0)), e.$list.off("mouseleave.slick", i.proxy(e.interrupt, e, !1));
-    }, e.prototype.cleanUpRows = function () {
-      var i,
-          e = this;
-      e.options.rows > 1 && ((i = e.$slides.children().children()).removeAttr("style"), e.$slider.empty().append(i));
-    }, e.prototype.clickHandler = function (i) {
-      !1 === this.shouldClick && (i.stopImmediatePropagation(), i.stopPropagation(), i.preventDefault());
-    }, e.prototype.destroy = function (e) {
-      var t = this;
-      t.autoPlayClear(), t.touchObject = {}, t.cleanUpEvents(), i(".slick-cloned", t.$slider).detach(), t.$dots && t.$dots.remove(), t.$prevArrow && t.$prevArrow.length && (t.$prevArrow.removeClass("slick-disabled slick-arrow slick-hidden").removeAttr("aria-hidden aria-disabled tabindex").css("display", ""), t.htmlExpr.test(t.options.prevArrow) && t.$prevArrow.remove()), t.$nextArrow && t.$nextArrow.length && (t.$nextArrow.removeClass("slick-disabled slick-arrow slick-hidden").removeAttr("aria-hidden aria-disabled tabindex").css("display", ""), t.htmlExpr.test(t.options.nextArrow) && t.$nextArrow.remove()), t.$slides && (t.$slides.removeClass("slick-slide slick-active slick-center slick-visible slick-current").removeAttr("aria-hidden").removeAttr("data-slick-index").each(function () {
-        i(this).attr("style", i(this).data("originalStyling"));
-      }), t.$slideTrack.children(this.options.slide).detach(), t.$slideTrack.detach(), t.$list.detach(), t.$slider.append(t.$slides)), t.cleanUpRows(), t.$slider.removeClass("slick-slider"), t.$slider.removeClass("slick-initialized"), t.$slider.removeClass("slick-dotted"), t.unslicked = !0, e || t.$slider.trigger("destroy", [t]);
-    }, e.prototype.disableTransition = function (i) {
-      var e = this,
-          t = {};
-      t[e.transitionType] = "", !1 === e.options.fade ? e.$slideTrack.css(t) : e.$slides.eq(i).css(t);
-    }, e.prototype.fadeSlide = function (i, e) {
-      var t = this;
-      !1 === t.cssTransitions ? (t.$slides.eq(i).css({
-        zIndex: t.options.zIndex
-      }), t.$slides.eq(i).animate({
-        opacity: 1
-      }, t.options.speed, t.options.easing, e)) : (t.applyTransition(i), t.$slides.eq(i).css({
-        opacity: 1,
-        zIndex: t.options.zIndex
-      }), e && setTimeout(function () {
-        t.disableTransition(i), e.call();
-      }, t.options.speed));
-    }, e.prototype.fadeSlideOut = function (i) {
-      var e = this;
-      !1 === e.cssTransitions ? e.$slides.eq(i).animate({
-        opacity: 0,
-        zIndex: e.options.zIndex - 2
-      }, e.options.speed, e.options.easing) : (e.applyTransition(i), e.$slides.eq(i).css({
-        opacity: 0,
-        zIndex: e.options.zIndex - 2
-      }));
-    }, e.prototype.filterSlides = e.prototype.slickFilter = function (i) {
-      var e = this;
-      null !== i && (e.$slidesCache = e.$slides, e.unload(), e.$slideTrack.children(this.options.slide).detach(), e.$slidesCache.filter(i).appendTo(e.$slideTrack), e.reinit());
-    }, e.prototype.focusHandler = function () {
-      var e = this;
-      e.$slider.off("focus.slick blur.slick").on("focus.slick blur.slick", "*", function (t) {
-        t.stopImmediatePropagation();
-        var o = i(this);
-        setTimeout(function () {
-          e.options.pauseOnFocus && (e.focussed = o.is(":focus"), e.autoPlay());
-        }, 0);
-      });
-    }, e.prototype.getCurrent = e.prototype.slickCurrentSlide = function () {
-      return this.currentSlide;
-    }, e.prototype.getDotCount = function () {
-      var i = this,
-          e = 0,
-          t = 0,
-          o = 0;
-      if (!0 === i.options.infinite) {
-        if (i.slideCount <= i.options.slidesToShow) ++o;else for (; e < i.slideCount;) {
-          ++o, e = t + i.options.slidesToScroll, t += i.options.slidesToScroll <= i.options.slidesToShow ? i.options.slidesToScroll : i.options.slidesToShow;
-        }
-      } else if (!0 === i.options.centerMode) o = i.slideCount;else if (i.options.asNavFor) for (; e < i.slideCount;) {
-        ++o, e = t + i.options.slidesToScroll, t += i.options.slidesToScroll <= i.options.slidesToShow ? i.options.slidesToScroll : i.options.slidesToShow;
-      } else o = 1 + Math.ceil((i.slideCount - i.options.slidesToShow) / i.options.slidesToScroll);
-      return o - 1;
-    }, e.prototype.getLeft = function (i) {
-      var e,
-          t,
-          o,
-          s,
-          n = this,
-          r = 0;
-      return n.slideOffset = 0, t = n.$slides.first().outerHeight(!0), !0 === n.options.infinite ? (n.slideCount > n.options.slidesToShow && (n.slideOffset = n.slideWidth * n.options.slidesToShow * -1, s = -1, !0 === n.options.vertical && !0 === n.options.centerMode && (2 === n.options.slidesToShow ? s = -1.5 : 1 === n.options.slidesToShow && (s = -2)), r = t * n.options.slidesToShow * s), n.slideCount % n.options.slidesToScroll != 0 && i + n.options.slidesToScroll > n.slideCount && n.slideCount > n.options.slidesToShow && (i > n.slideCount ? (n.slideOffset = (n.options.slidesToShow - (i - n.slideCount)) * n.slideWidth * -1, r = (n.options.slidesToShow - (i - n.slideCount)) * t * -1) : (n.slideOffset = n.slideCount % n.options.slidesToScroll * n.slideWidth * -1, r = n.slideCount % n.options.slidesToScroll * t * -1))) : i + n.options.slidesToShow > n.slideCount && (n.slideOffset = (i + n.options.slidesToShow - n.slideCount) * n.slideWidth, r = (i + n.options.slidesToShow - n.slideCount) * t), n.slideCount <= n.options.slidesToShow && (n.slideOffset = 0, r = 0), !0 === n.options.centerMode && n.slideCount <= n.options.slidesToShow ? n.slideOffset = n.slideWidth * Math.floor(n.options.slidesToShow) / 2 - n.slideWidth * n.slideCount / 2 : !0 === n.options.centerMode && !0 === n.options.infinite ? n.slideOffset += n.slideWidth * Math.floor(n.options.slidesToShow / 2) - n.slideWidth : !0 === n.options.centerMode && (n.slideOffset = 0, n.slideOffset += n.slideWidth * Math.floor(n.options.slidesToShow / 2)), e = !1 === n.options.vertical ? i * n.slideWidth * -1 + n.slideOffset : i * t * -1 + r, !0 === n.options.variableWidth && (o = n.slideCount <= n.options.slidesToShow || !1 === n.options.infinite ? n.$slideTrack.children(".slick-slide").eq(i) : n.$slideTrack.children(".slick-slide").eq(i + n.options.slidesToShow), e = !0 === n.options.rtl ? o[0] ? -1 * (n.$slideTrack.width() - o[0].offsetLeft - o.width()) : 0 : o[0] ? -1 * o[0].offsetLeft : 0, !0 === n.options.centerMode && (o = n.slideCount <= n.options.slidesToShow || !1 === n.options.infinite ? n.$slideTrack.children(".slick-slide").eq(i) : n.$slideTrack.children(".slick-slide").eq(i + n.options.slidesToShow + 1), e = !0 === n.options.rtl ? o[0] ? -1 * (n.$slideTrack.width() - o[0].offsetLeft - o.width()) : 0 : o[0] ? -1 * o[0].offsetLeft : 0, e += (n.$list.width() - o.outerWidth()) / 2)), e;
-    }, e.prototype.getOption = e.prototype.slickGetOption = function (i) {
-      return this.options[i];
-    }, e.prototype.getNavigableIndexes = function () {
-      var i,
-          e = this,
-          t = 0,
-          o = 0,
-          s = [];
-
-      for (!1 === e.options.infinite ? i = e.slideCount : (t = -1 * e.options.slidesToScroll, o = -1 * e.options.slidesToScroll, i = 2 * e.slideCount); t < i;) {
-        s.push(t), t = o + e.options.slidesToScroll, o += e.options.slidesToScroll <= e.options.slidesToShow ? e.options.slidesToScroll : e.options.slidesToShow;
-      }
-
-      return s;
-    }, e.prototype.getSlick = function () {
-      return this;
-    }, e.prototype.getSlideCount = function () {
-      var e,
-          t,
-          o = this;
-      return t = !0 === o.options.centerMode ? o.slideWidth * Math.floor(o.options.slidesToShow / 2) : 0, !0 === o.options.swipeToSlide ? (o.$slideTrack.find(".slick-slide").each(function (s, n) {
-        if (n.offsetLeft - t + i(n).outerWidth() / 2 > -1 * o.swipeLeft) return e = n, !1;
-      }), Math.abs(i(e).attr("data-slick-index") - o.currentSlide) || 1) : o.options.slidesToScroll;
-    }, e.prototype.goTo = e.prototype.slickGoTo = function (i, e) {
-      this.changeSlide({
-        data: {
-          message: "index",
-          index: parseInt(i)
-        }
-      }, e);
-    }, e.prototype.init = function (e) {
-      var t = this;
-      i(t.$slider).hasClass("slick-initialized") || (i(t.$slider).addClass("slick-initialized"), t.buildRows(), t.buildOut(), t.setProps(), t.startLoad(), t.loadSlider(), t.initializeEvents(), t.updateArrows(), t.updateDots(), t.checkResponsive(!0), t.focusHandler()), e && t.$slider.trigger("init", [t]), !0 === t.options.accessibility && t.initADA(), t.options.autoplay && (t.paused = !1, t.autoPlay());
-    }, e.prototype.initADA = function () {
-      var e = this,
-          t = Math.ceil(e.slideCount / e.options.slidesToShow),
-          o = e.getNavigableIndexes().filter(function (i) {
-        return i >= 0 && i < e.slideCount;
-      });
-      e.$slides.add(e.$slideTrack.find(".slick-cloned")).attr({
-        "aria-hidden": "true",
-        tabindex: "-1"
-      }).find("a, input, button, select").attr({
-        tabindex: "-1"
-      }), null !== e.$dots && (e.$slides.not(e.$slideTrack.find(".slick-cloned")).each(function (t) {
-        var s = o.indexOf(t);
-        i(this).attr({
-          role: "tabpanel",
-          id: "slick-slide" + e.instanceUid + t,
-          tabindex: -1
-        }), -1 !== s && i(this).attr({
-          "aria-describedby": "slick-slide-control" + e.instanceUid + s
-        });
-      }), e.$dots.attr("role", "tablist").find("li").each(function (s) {
-        var n = o[s];
-        i(this).attr({
-          role: "presentation"
-        }), i(this).find("button").first().attr({
-          role: "tab",
-          id: "slick-slide-control" + e.instanceUid + s,
-          "aria-controls": "slick-slide" + e.instanceUid + n,
-          "aria-label": s + 1 + " of " + t,
-          "aria-selected": null,
-          tabindex: "-1"
-        });
-      }).eq(e.currentSlide).find("button").attr({
-        "aria-selected": "true",
-        tabindex: "0"
-      }).end());
-
-      for (var s = e.currentSlide, n = s + e.options.slidesToShow; s < n; s++) {
-        e.$slides.eq(s).attr("tabindex", 0);
-      }
-
-      e.activateADA();
-    }, e.prototype.initArrowEvents = function () {
-      var i = this;
-      !0 === i.options.arrows && i.slideCount > i.options.slidesToShow && (i.$prevArrow.off("click.slick").on("click.slick", {
-        message: "previous"
-      }, i.changeSlide), i.$nextArrow.off("click.slick").on("click.slick", {
-        message: "next"
-      }, i.changeSlide), !0 === i.options.accessibility && (i.$prevArrow.on("keydown.slick", i.keyHandler), i.$nextArrow.on("keydown.slick", i.keyHandler)));
-    }, e.prototype.initDotEvents = function () {
-      var e = this;
-      !0 === e.options.dots && (i("li", e.$dots).on("click.slick", {
-        message: "index"
-      }, e.changeSlide), !0 === e.options.accessibility && e.$dots.on("keydown.slick", e.keyHandler)), !0 === e.options.dots && !0 === e.options.pauseOnDotsHover && i("li", e.$dots).on("mouseenter.slick", i.proxy(e.interrupt, e, !0)).on("mouseleave.slick", i.proxy(e.interrupt, e, !1));
-    }, e.prototype.initSlideEvents = function () {
-      var e = this;
-      e.options.pauseOnHover && (e.$list.on("mouseenter.slick", i.proxy(e.interrupt, e, !0)), e.$list.on("mouseleave.slick", i.proxy(e.interrupt, e, !1)));
-    }, e.prototype.initializeEvents = function () {
-      var e = this;
-      e.initArrowEvents(), e.initDotEvents(), e.initSlideEvents(), e.$list.on("touchstart.slick mousedown.slick", {
-        action: "start"
-      }, e.swipeHandler), e.$list.on("touchmove.slick mousemove.slick", {
-        action: "move"
-      }, e.swipeHandler), e.$list.on("touchend.slick mouseup.slick", {
-        action: "end"
-      }, e.swipeHandler), e.$list.on("touchcancel.slick mouseleave.slick", {
-        action: "end"
-      }, e.swipeHandler), e.$list.on("click.slick", e.clickHandler), i(document).on(e.visibilityChange, i.proxy(e.visibility, e)), !0 === e.options.accessibility && e.$list.on("keydown.slick", e.keyHandler), !0 === e.options.focusOnSelect && i(e.$slideTrack).children().on("click.slick", e.selectHandler), i(window).on("orientationchange.slick.slick-" + e.instanceUid, i.proxy(e.orientationChange, e)), i(window).on("resize.slick.slick-" + e.instanceUid, i.proxy(e.resize, e)), i("[draggable!=true]", e.$slideTrack).on("dragstart", e.preventDefault), i(window).on("load.slick.slick-" + e.instanceUid, e.setPosition), i(e.setPosition);
-    }, e.prototype.initUI = function () {
-      var i = this;
-      !0 === i.options.arrows && i.slideCount > i.options.slidesToShow && (i.$prevArrow.show(), i.$nextArrow.show()), !0 === i.options.dots && i.slideCount > i.options.slidesToShow && i.$dots.show();
-    }, e.prototype.keyHandler = function (i) {
-      var e = this;
-      i.target.tagName.match("TEXTAREA|INPUT|SELECT") || (37 === i.keyCode && !0 === e.options.accessibility ? e.changeSlide({
-        data: {
-          message: !0 === e.options.rtl ? "next" : "previous"
-        }
-      }) : 39 === i.keyCode && !0 === e.options.accessibility && e.changeSlide({
-        data: {
-          message: !0 === e.options.rtl ? "previous" : "next"
-        }
-      }));
-    }, e.prototype.lazyLoad = function () {
-      function e(e) {
-        i("img[data-lazy]", e).each(function () {
-          var e = i(this),
-              t = i(this).attr("data-lazy"),
-              o = i(this).attr("data-srcset"),
-              s = i(this).attr("data-sizes") || n.$slider.attr("data-sizes"),
-              r = document.createElement("img");
-          r.onload = function () {
-            e.animate({
-              opacity: 0
-            }, 100, function () {
-              o && (e.attr("srcset", o), s && e.attr("sizes", s)), e.attr("src", t).animate({
-                opacity: 1
-              }, 200, function () {
-                e.removeAttr("data-lazy data-srcset data-sizes").removeClass("slick-loading");
-              }), n.$slider.trigger("lazyLoaded", [n, e, t]);
-            });
-          }, r.onerror = function () {
-            e.removeAttr("data-lazy").removeClass("slick-loading").addClass("slick-lazyload-error"), n.$slider.trigger("lazyLoadError", [n, e, t]);
-          }, r.src = t;
-        });
-      }
-
-      var t,
-          o,
-          s,
-          n = this;
-      if (!0 === n.options.centerMode ? !0 === n.options.infinite ? s = (o = n.currentSlide + (n.options.slidesToShow / 2 + 1)) + n.options.slidesToShow + 2 : (o = Math.max(0, n.currentSlide - (n.options.slidesToShow / 2 + 1)), s = n.options.slidesToShow / 2 + 1 + 2 + n.currentSlide) : (o = n.options.infinite ? n.options.slidesToShow + n.currentSlide : n.currentSlide, s = Math.ceil(o + n.options.slidesToShow), !0 === n.options.fade && (o > 0 && o--, s <= n.slideCount && s++)), t = n.$slider.find(".slick-slide").slice(o, s), "anticipated" === n.options.lazyLoad) for (var r = o - 1, l = s, d = n.$slider.find(".slick-slide"), a = 0; a < n.options.slidesToScroll; a++) {
-        r < 0 && (r = n.slideCount - 1), t = (t = t.add(d.eq(r))).add(d.eq(l)), r--, l++;
-      }
-      e(t), n.slideCount <= n.options.slidesToShow ? e(n.$slider.find(".slick-slide")) : n.currentSlide >= n.slideCount - n.options.slidesToShow ? e(n.$slider.find(".slick-cloned").slice(0, n.options.slidesToShow)) : 0 === n.currentSlide && e(n.$slider.find(".slick-cloned").slice(-1 * n.options.slidesToShow));
-    }, e.prototype.loadSlider = function () {
-      var i = this;
-      i.setPosition(), i.$slideTrack.css({
-        opacity: 1
-      }), i.$slider.removeClass("slick-loading"), i.initUI(), "progressive" === i.options.lazyLoad && i.progressiveLazyLoad();
-    }, e.prototype.next = e.prototype.slickNext = function () {
-      this.changeSlide({
-        data: {
-          message: "next"
-        }
-      });
-    }, e.prototype.orientationChange = function () {
-      var i = this;
-      i.checkResponsive(), i.setPosition();
-    }, e.prototype.pause = e.prototype.slickPause = function () {
-      var i = this;
-      i.autoPlayClear(), i.paused = !0;
-    }, e.prototype.play = e.prototype.slickPlay = function () {
-      var i = this;
-      i.autoPlay(), i.options.autoplay = !0, i.paused = !1, i.focussed = !1, i.interrupted = !1;
-    }, e.prototype.postSlide = function (e) {
-      var t = this;
-      t.unslicked || (t.$slider.trigger("afterChange", [t, e]), t.animating = !1, t.slideCount > t.options.slidesToShow && t.setPosition(), t.swipeLeft = null, t.options.autoplay && t.autoPlay(), !0 === t.options.accessibility && (t.initADA(), t.options.focusOnChange && i(t.$slides.get(t.currentSlide)).attr("tabindex", 0).focus()));
-    }, e.prototype.prev = e.prototype.slickPrev = function () {
-      this.changeSlide({
-        data: {
-          message: "previous"
-        }
-      });
-    }, e.prototype.preventDefault = function (i) {
-      i.preventDefault();
-    }, e.prototype.progressiveLazyLoad = function (e) {
-      e = e || 1;
-      var t,
-          o,
-          s,
-          n,
-          r,
-          l = this,
-          d = i("img[data-lazy]", l.$slider);
-      d.length ? (t = d.first(), o = t.attr("data-lazy"), s = t.attr("data-srcset"), n = t.attr("data-sizes") || l.$slider.attr("data-sizes"), (r = document.createElement("img")).onload = function () {
-        s && (t.attr("srcset", s), n && t.attr("sizes", n)), t.attr("src", o).removeAttr("data-lazy data-srcset data-sizes").removeClass("slick-loading"), !0 === l.options.adaptiveHeight && l.setPosition(), l.$slider.trigger("lazyLoaded", [l, t, o]), l.progressiveLazyLoad();
-      }, r.onerror = function () {
-        e < 3 ? setTimeout(function () {
-          l.progressiveLazyLoad(e + 1);
-        }, 500) : (t.removeAttr("data-lazy").removeClass("slick-loading").addClass("slick-lazyload-error"), l.$slider.trigger("lazyLoadError", [l, t, o]), l.progressiveLazyLoad());
-      }, r.src = o) : l.$slider.trigger("allImagesLoaded", [l]);
-    }, e.prototype.refresh = function (e) {
-      var t,
-          o,
-          s = this;
-      o = s.slideCount - s.options.slidesToShow, !s.options.infinite && s.currentSlide > o && (s.currentSlide = o), s.slideCount <= s.options.slidesToShow && (s.currentSlide = 0), t = s.currentSlide, s.destroy(!0), i.extend(s, s.initials, {
-        currentSlide: t
-      }), s.init(), e || s.changeSlide({
-        data: {
-          message: "index",
-          index: t
-        }
-      }, !1);
-    }, e.prototype.registerBreakpoints = function () {
-      var e,
-          t,
-          o,
-          s = this,
-          n = s.options.responsive || null;
-
-      if ("array" === i.type(n) && n.length) {
-        s.respondTo = s.options.respondTo || "window";
-
-        for (e in n) {
-          if (o = s.breakpoints.length - 1, n.hasOwnProperty(e)) {
-            for (t = n[e].breakpoint; o >= 0;) {
-              s.breakpoints[o] && s.breakpoints[o] === t && s.breakpoints.splice(o, 1), o--;
-            }
-
-            s.breakpoints.push(t), s.breakpointSettings[t] = n[e].settings;
-          }
-        }
-
-        s.breakpoints.sort(function (i, e) {
-          return s.options.mobileFirst ? i - e : e - i;
-        });
-      }
-    }, e.prototype.reinit = function () {
-      var e = this;
-      e.$slides = e.$slideTrack.children(e.options.slide).addClass("slick-slide"), e.slideCount = e.$slides.length, e.currentSlide >= e.slideCount && 0 !== e.currentSlide && (e.currentSlide = e.currentSlide - e.options.slidesToScroll), e.slideCount <= e.options.slidesToShow && (e.currentSlide = 0), e.registerBreakpoints(), e.setProps(), e.setupInfinite(), e.buildArrows(), e.updateArrows(), e.initArrowEvents(), e.buildDots(), e.updateDots(), e.initDotEvents(), e.cleanUpSlideEvents(), e.initSlideEvents(), e.checkResponsive(!1, !0), !0 === e.options.focusOnSelect && i(e.$slideTrack).children().on("click.slick", e.selectHandler), e.setSlideClasses("number" == typeof e.currentSlide ? e.currentSlide : 0), e.setPosition(), e.focusHandler(), e.paused = !e.options.autoplay, e.autoPlay(), e.$slider.trigger("reInit", [e]);
-    }, e.prototype.resize = function () {
-      var e = this;
-      i(window).width() !== e.windowWidth && (clearTimeout(e.windowDelay), e.windowDelay = window.setTimeout(function () {
-        e.windowWidth = i(window).width(), e.checkResponsive(), e.unslicked || e.setPosition();
-      }, 50));
-    }, e.prototype.removeSlide = e.prototype.slickRemove = function (i, e, t) {
-      var o = this;
-      if (i = "boolean" == typeof i ? !0 === (e = i) ? 0 : o.slideCount - 1 : !0 === e ? --i : i, o.slideCount < 1 || i < 0 || i > o.slideCount - 1) return !1;
-      o.unload(), !0 === t ? o.$slideTrack.children().remove() : o.$slideTrack.children(this.options.slide).eq(i).remove(), o.$slides = o.$slideTrack.children(this.options.slide), o.$slideTrack.children(this.options.slide).detach(), o.$slideTrack.append(o.$slides), o.$slidesCache = o.$slides, o.reinit();
-    }, e.prototype.setCSS = function (i) {
-      var e,
-          t,
-          o = this,
-          s = {};
-      !0 === o.options.rtl && (i = -i), e = "left" == o.positionProp ? Math.ceil(i) + "px" : "0px", t = "top" == o.positionProp ? Math.ceil(i) + "px" : "0px", s[o.positionProp] = i, !1 === o.transformsEnabled ? o.$slideTrack.css(s) : (s = {}, !1 === o.cssTransitions ? (s[o.animType] = "translate(" + e + ", " + t + ")", o.$slideTrack.css(s)) : (s[o.animType] = "translate3d(" + e + ", " + t + ", 0px)", o.$slideTrack.css(s)));
-    }, e.prototype.setDimensions = function () {
-      var i = this;
-      !1 === i.options.vertical ? !0 === i.options.centerMode && i.$list.css({
-        padding: "0px " + i.options.centerPadding
-      }) : (i.$list.height(i.$slides.first().outerHeight(!0) * i.options.slidesToShow), !0 === i.options.centerMode && i.$list.css({
-        padding: i.options.centerPadding + " 0px"
-      })), i.listWidth = i.$list.width(), i.listHeight = i.$list.height(), !1 === i.options.vertical && !1 === i.options.variableWidth ? (i.slideWidth = Math.ceil(i.listWidth / i.options.slidesToShow), i.$slideTrack.width(Math.ceil(i.slideWidth * i.$slideTrack.children(".slick-slide").length))) : !0 === i.options.variableWidth ? i.$slideTrack.width(5e3 * i.slideCount) : (i.slideWidth = Math.ceil(i.listWidth), i.$slideTrack.height(Math.ceil(i.$slides.first().outerHeight(!0) * i.$slideTrack.children(".slick-slide").length)));
-      var e = i.$slides.first().outerWidth(!0) - i.$slides.first().width();
-      !1 === i.options.variableWidth && i.$slideTrack.children(".slick-slide").width(i.slideWidth - e);
-    }, e.prototype.setFade = function () {
-      var e,
-          t = this;
-      t.$slides.each(function (o, s) {
-        e = t.slideWidth * o * -1, !0 === t.options.rtl ? i(s).css({
-          position: "relative",
-          right: e,
-          top: 0,
-          zIndex: t.options.zIndex - 2,
-          opacity: 0
-        }) : i(s).css({
-          position: "relative",
-          left: e,
-          top: 0,
-          zIndex: t.options.zIndex - 2,
-          opacity: 0
-        });
-      }), t.$slides.eq(t.currentSlide).css({
-        zIndex: t.options.zIndex - 1,
-        opacity: 1
-      });
-    }, e.prototype.setHeight = function () {
-      var i = this;
-
-      if (1 === i.options.slidesToShow && !0 === i.options.adaptiveHeight && !1 === i.options.vertical) {
-        var e = i.$slides.eq(i.currentSlide).outerHeight(!0);
-        i.$list.css("height", e);
-      }
-    }, e.prototype.setOption = e.prototype.slickSetOption = function () {
-      var e,
-          t,
-          o,
-          s,
-          n,
-          r = this,
-          l = !1;
-      if ("object" === i.type(arguments[0]) ? (o = arguments[0], l = arguments[1], n = "multiple") : "string" === i.type(arguments[0]) && (o = arguments[0], s = arguments[1], l = arguments[2], "responsive" === arguments[0] && "array" === i.type(arguments[1]) ? n = "responsive" : void 0 !== arguments[1] && (n = "single")), "single" === n) r.options[o] = s;else if ("multiple" === n) i.each(o, function (i, e) {
-        r.options[i] = e;
-      });else if ("responsive" === n) for (t in s) {
-        if ("array" !== i.type(r.options.responsive)) r.options.responsive = [s[t]];else {
-          for (e = r.options.responsive.length - 1; e >= 0;) {
-            r.options.responsive[e].breakpoint === s[t].breakpoint && r.options.responsive.splice(e, 1), e--;
-          }
-
-          r.options.responsive.push(s[t]);
-        }
-      }
-      l && (r.unload(), r.reinit());
-    }, e.prototype.setPosition = function () {
-      var i = this;
-      i.setDimensions(), i.setHeight(), !1 === i.options.fade ? i.setCSS(i.getLeft(i.currentSlide)) : i.setFade(), i.$slider.trigger("setPosition", [i]);
-    }, e.prototype.setProps = function () {
-      var i = this,
-          e = document.body.style;
-      i.positionProp = !0 === i.options.vertical ? "top" : "left", "top" === i.positionProp ? i.$slider.addClass("slick-vertical") : i.$slider.removeClass("slick-vertical"), void 0 === e.WebkitTransition && void 0 === e.MozTransition && void 0 === e.msTransition || !0 === i.options.useCSS && (i.cssTransitions = !0), i.options.fade && ("number" == typeof i.options.zIndex ? i.options.zIndex < 3 && (i.options.zIndex = 3) : i.options.zIndex = i.defaults.zIndex), void 0 !== e.OTransform && (i.animType = "OTransform", i.transformType = "-o-transform", i.transitionType = "OTransition", void 0 === e.perspectiveProperty && void 0 === e.webkitPerspective && (i.animType = !1)), void 0 !== e.MozTransform && (i.animType = "MozTransform", i.transformType = "-moz-transform", i.transitionType = "MozTransition", void 0 === e.perspectiveProperty && void 0 === e.MozPerspective && (i.animType = !1)), void 0 !== e.webkitTransform && (i.animType = "webkitTransform", i.transformType = "-webkit-transform", i.transitionType = "webkitTransition", void 0 === e.perspectiveProperty && void 0 === e.webkitPerspective && (i.animType = !1)), void 0 !== e.msTransform && (i.animType = "msTransform", i.transformType = "-ms-transform", i.transitionType = "msTransition", void 0 === e.msTransform && (i.animType = !1)), void 0 !== e.transform && !1 !== i.animType && (i.animType = "transform", i.transformType = "transform", i.transitionType = "transition"), i.transformsEnabled = i.options.useTransform && null !== i.animType && !1 !== i.animType;
-    }, e.prototype.setSlideClasses = function (i) {
-      var e,
-          t,
-          o,
-          s,
-          n = this;
-
-      if (t = n.$slider.find(".slick-slide").removeClass("slick-active slick-center slick-current").attr("aria-hidden", "true"), n.$slides.eq(i).addClass("slick-current"), !0 === n.options.centerMode) {
-        var r = n.options.slidesToShow % 2 == 0 ? 1 : 0;
-        e = Math.floor(n.options.slidesToShow / 2), !0 === n.options.infinite && (i >= e && i <= n.slideCount - 1 - e ? n.$slides.slice(i - e + r, i + e + 1).addClass("slick-active").attr("aria-hidden", "false") : (o = n.options.slidesToShow + i, t.slice(o - e + 1 + r, o + e + 2).addClass("slick-active").attr("aria-hidden", "false")), 0 === i ? t.eq(t.length - 1 - n.options.slidesToShow).addClass("slick-center") : i === n.slideCount - 1 && t.eq(n.options.slidesToShow).addClass("slick-center")), n.$slides.eq(i).addClass("slick-center");
-      } else i >= 0 && i <= n.slideCount - n.options.slidesToShow ? n.$slides.slice(i, i + n.options.slidesToShow).addClass("slick-active").attr("aria-hidden", "false") : t.length <= n.options.slidesToShow ? t.addClass("slick-active").attr("aria-hidden", "false") : (s = n.slideCount % n.options.slidesToShow, o = !0 === n.options.infinite ? n.options.slidesToShow + i : i, n.options.slidesToShow == n.options.slidesToScroll && n.slideCount - i < n.options.slidesToShow ? t.slice(o - (n.options.slidesToShow - s), o + s).addClass("slick-active").attr("aria-hidden", "false") : t.slice(o, o + n.options.slidesToShow).addClass("slick-active").attr("aria-hidden", "false"));
-
-      "ondemand" !== n.options.lazyLoad && "anticipated" !== n.options.lazyLoad || n.lazyLoad();
-    }, e.prototype.setupInfinite = function () {
-      var e,
-          t,
-          o,
-          s = this;
-
-      if (!0 === s.options.fade && (s.options.centerMode = !1), !0 === s.options.infinite && !1 === s.options.fade && (t = null, s.slideCount > s.options.slidesToShow)) {
-        for (o = !0 === s.options.centerMode ? s.options.slidesToShow + 1 : s.options.slidesToShow, e = s.slideCount; e > s.slideCount - o; e -= 1) {
-          t = e - 1, i(s.$slides[t]).clone(!0).attr("id", "").attr("data-slick-index", t - s.slideCount).prependTo(s.$slideTrack).addClass("slick-cloned");
-        }
-
-        for (e = 0; e < o + s.slideCount; e += 1) {
-          t = e, i(s.$slides[t]).clone(!0).attr("id", "").attr("data-slick-index", t + s.slideCount).appendTo(s.$slideTrack).addClass("slick-cloned");
-        }
-
-        s.$slideTrack.find(".slick-cloned").find("[id]").each(function () {
-          i(this).attr("id", "");
-        });
-      }
-    }, e.prototype.interrupt = function (i) {
-      var e = this;
-      i || e.autoPlay(), e.interrupted = i;
-    }, e.prototype.selectHandler = function (e) {
-      var t = this,
-          o = i(e.target).is(".slick-slide") ? i(e.target) : i(e.target).parents(".slick-slide"),
-          s = parseInt(o.attr("data-slick-index"));
-      s || (s = 0), t.slideCount <= t.options.slidesToShow ? t.slideHandler(s, !1, !0) : t.slideHandler(s);
-    }, e.prototype.slideHandler = function (i, e, t) {
-      var o,
-          s,
-          n,
-          r,
-          l,
-          d = null,
-          a = this;
-      if (e = e || !1, !(!0 === a.animating && !0 === a.options.waitForAnimate || !0 === a.options.fade && a.currentSlide === i)) if (!1 === e && a.asNavFor(i), o = i, d = a.getLeft(o), r = a.getLeft(a.currentSlide), a.currentLeft = null === a.swipeLeft ? r : a.swipeLeft, !1 === a.options.infinite && !1 === a.options.centerMode && (i < 0 || i > a.getDotCount() * a.options.slidesToScroll)) !1 === a.options.fade && (o = a.currentSlide, !0 !== t ? a.animateSlide(r, function () {
-        a.postSlide(o);
-      }) : a.postSlide(o));else if (!1 === a.options.infinite && !0 === a.options.centerMode && (i < 0 || i > a.slideCount - a.options.slidesToScroll)) !1 === a.options.fade && (o = a.currentSlide, !0 !== t ? a.animateSlide(r, function () {
-        a.postSlide(o);
-      }) : a.postSlide(o));else {
-        if (a.options.autoplay && clearInterval(a.autoPlayTimer), s = o < 0 ? a.slideCount % a.options.slidesToScroll != 0 ? a.slideCount - a.slideCount % a.options.slidesToScroll : a.slideCount + o : o >= a.slideCount ? a.slideCount % a.options.slidesToScroll != 0 ? 0 : o - a.slideCount : o, a.animating = !0, a.$slider.trigger("beforeChange", [a, a.currentSlide, s]), n = a.currentSlide, a.currentSlide = s, a.setSlideClasses(a.currentSlide), a.options.asNavFor && (l = (l = a.getNavTarget()).slick("getSlick")).slideCount <= l.options.slidesToShow && l.setSlideClasses(a.currentSlide), a.updateDots(), a.updateArrows(), !0 === a.options.fade) return !0 !== t ? (a.fadeSlideOut(n), a.fadeSlide(s, function () {
-          a.postSlide(s);
-        })) : a.postSlide(s), void a.animateHeight();
-        !0 !== t ? a.animateSlide(d, function () {
-          a.postSlide(s);
-        }) : a.postSlide(s);
-      }
-    }, e.prototype.startLoad = function () {
-      var i = this;
-      !0 === i.options.arrows && i.slideCount > i.options.slidesToShow && (i.$prevArrow.hide(), i.$nextArrow.hide()), !0 === i.options.dots && i.slideCount > i.options.slidesToShow && i.$dots.hide(), i.$slider.addClass("slick-loading");
-    }, e.prototype.swipeDirection = function () {
-      var i,
-          e,
-          t,
-          o,
-          s = this;
-      return i = s.touchObject.startX - s.touchObject.curX, e = s.touchObject.startY - s.touchObject.curY, t = Math.atan2(e, i), (o = Math.round(180 * t / Math.PI)) < 0 && (o = 360 - Math.abs(o)), o <= 45 && o >= 0 ? !1 === s.options.rtl ? "left" : "right" : o <= 360 && o >= 315 ? !1 === s.options.rtl ? "left" : "right" : o >= 135 && o <= 225 ? !1 === s.options.rtl ? "right" : "left" : !0 === s.options.verticalSwiping ? o >= 35 && o <= 135 ? "down" : "up" : "vertical";
-    }, e.prototype.swipeEnd = function (i) {
-      var e,
-          t,
-          o = this;
-      if (o.dragging = !1, o.swiping = !1, o.scrolling) return o.scrolling = !1, !1;
-      if (o.interrupted = !1, o.shouldClick = !(o.touchObject.swipeLength > 10), void 0 === o.touchObject.curX) return !1;
-
-      if (!0 === o.touchObject.edgeHit && o.$slider.trigger("edge", [o, o.swipeDirection()]), o.touchObject.swipeLength >= o.touchObject.minSwipe) {
-        switch (t = o.swipeDirection()) {
-          case "left":
-          case "down":
-            e = o.options.swipeToSlide ? o.checkNavigable(o.currentSlide + o.getSlideCount()) : o.currentSlide + o.getSlideCount(), o.currentDirection = 0;
-            break;
-
-          case "right":
-          case "up":
-            e = o.options.swipeToSlide ? o.checkNavigable(o.currentSlide - o.getSlideCount()) : o.currentSlide - o.getSlideCount(), o.currentDirection = 1;
-        }
-
-        "vertical" != t && (o.slideHandler(e), o.touchObject = {}, o.$slider.trigger("swipe", [o, t]));
-      } else o.touchObject.startX !== o.touchObject.curX && (o.slideHandler(o.currentSlide), o.touchObject = {});
-    }, e.prototype.swipeHandler = function (i) {
-      var e = this;
-      if (!(!1 === e.options.swipe || "ontouchend" in document && !1 === e.options.swipe || !1 === e.options.draggable && -1 !== i.type.indexOf("mouse"))) switch (e.touchObject.fingerCount = i.originalEvent && void 0 !== i.originalEvent.touches ? i.originalEvent.touches.length : 1, e.touchObject.minSwipe = e.listWidth / e.options.touchThreshold, !0 === e.options.verticalSwiping && (e.touchObject.minSwipe = e.listHeight / e.options.touchThreshold), i.data.action) {
-        case "start":
-          e.swipeStart(i);
-          break;
-
-        case "move":
-          e.swipeMove(i);
-          break;
-
-        case "end":
-          e.swipeEnd(i);
-      }
-    }, e.prototype.swipeMove = function (i) {
-      var e,
-          t,
-          o,
-          s,
-          n,
-          r,
-          l = this;
-      return n = void 0 !== i.originalEvent ? i.originalEvent.touches : null, !(!l.dragging || l.scrolling || n && 1 !== n.length) && (e = l.getLeft(l.currentSlide), l.touchObject.curX = void 0 !== n ? n[0].pageX : i.clientX, l.touchObject.curY = void 0 !== n ? n[0].pageY : i.clientY, l.touchObject.swipeLength = Math.round(Math.sqrt(Math.pow(l.touchObject.curX - l.touchObject.startX, 2))), r = Math.round(Math.sqrt(Math.pow(l.touchObject.curY - l.touchObject.startY, 2))), !l.options.verticalSwiping && !l.swiping && r > 4 ? (l.scrolling = !0, !1) : (!0 === l.options.verticalSwiping && (l.touchObject.swipeLength = r), t = l.swipeDirection(), void 0 !== i.originalEvent && l.touchObject.swipeLength > 4 && (l.swiping = !0, i.preventDefault()), s = (!1 === l.options.rtl ? 1 : -1) * (l.touchObject.curX > l.touchObject.startX ? 1 : -1), !0 === l.options.verticalSwiping && (s = l.touchObject.curY > l.touchObject.startY ? 1 : -1), o = l.touchObject.swipeLength, l.touchObject.edgeHit = !1, !1 === l.options.infinite && (0 === l.currentSlide && "right" === t || l.currentSlide >= l.getDotCount() && "left" === t) && (o = l.touchObject.swipeLength * l.options.edgeFriction, l.touchObject.edgeHit = !0), !1 === l.options.vertical ? l.swipeLeft = e + o * s : l.swipeLeft = e + o * (l.$list.height() / l.listWidth) * s, !0 === l.options.verticalSwiping && (l.swipeLeft = e + o * s), !0 !== l.options.fade && !1 !== l.options.touchMove && (!0 === l.animating ? (l.swipeLeft = null, !1) : void l.setCSS(l.swipeLeft))));
-    }, e.prototype.swipeStart = function (i) {
-      var e,
-          t = this;
-      if (t.interrupted = !0, 1 !== t.touchObject.fingerCount || t.slideCount <= t.options.slidesToShow) return t.touchObject = {}, !1;
-      void 0 !== i.originalEvent && void 0 !== i.originalEvent.touches && (e = i.originalEvent.touches[0]), t.touchObject.startX = t.touchObject.curX = void 0 !== e ? e.pageX : i.clientX, t.touchObject.startY = t.touchObject.curY = void 0 !== e ? e.pageY : i.clientY, t.dragging = !0;
-    }, e.prototype.unfilterSlides = e.prototype.slickUnfilter = function () {
-      var i = this;
-      null !== i.$slidesCache && (i.unload(), i.$slideTrack.children(this.options.slide).detach(), i.$slidesCache.appendTo(i.$slideTrack), i.reinit());
-    }, e.prototype.unload = function () {
-      var e = this;
-      i(".slick-cloned", e.$slider).remove(), e.$dots && e.$dots.remove(), e.$prevArrow && e.htmlExpr.test(e.options.prevArrow) && e.$prevArrow.remove(), e.$nextArrow && e.htmlExpr.test(e.options.nextArrow) && e.$nextArrow.remove(), e.$slides.removeClass("slick-slide slick-active slick-visible slick-current").attr("aria-hidden", "true").css("width", "");
-    }, e.prototype.unslick = function (i) {
-      var e = this;
-      e.$slider.trigger("unslick", [e, i]), e.destroy();
-    }, e.prototype.updateArrows = function () {
-      var i = this;
-      Math.floor(i.options.slidesToShow / 2), !0 === i.options.arrows && i.slideCount > i.options.slidesToShow && !i.options.infinite && (i.$prevArrow.removeClass("slick-disabled").attr("aria-disabled", "false"), i.$nextArrow.removeClass("slick-disabled").attr("aria-disabled", "false"), 0 === i.currentSlide ? (i.$prevArrow.addClass("slick-disabled").attr("aria-disabled", "true"), i.$nextArrow.removeClass("slick-disabled").attr("aria-disabled", "false")) : i.currentSlide >= i.slideCount - i.options.slidesToShow && !1 === i.options.centerMode ? (i.$nextArrow.addClass("slick-disabled").attr("aria-disabled", "true"), i.$prevArrow.removeClass("slick-disabled").attr("aria-disabled", "false")) : i.currentSlide >= i.slideCount - 1 && !0 === i.options.centerMode && (i.$nextArrow.addClass("slick-disabled").attr("aria-disabled", "true"), i.$prevArrow.removeClass("slick-disabled").attr("aria-disabled", "false")));
-    }, e.prototype.updateDots = function () {
-      var i = this;
-      null !== i.$dots && (i.$dots.find("li").removeClass("slick-active").end(), i.$dots.find("li").eq(Math.floor(i.currentSlide / i.options.slidesToScroll)).addClass("slick-active"));
-    }, e.prototype.visibility = function () {
-      var i = this;
-      i.options.autoplay && (document[i.hidden] ? i.interrupted = !0 : i.interrupted = !1);
-    }, i.fn.slick = function () {
-      var i,
-          t,
-          o = this,
-          s = arguments[0],
-          n = Array.prototype.slice.call(arguments, 1),
-          r = o.length;
-
-      for (i = 0; i < r; i++) {
-        if ("object" == _typeof(s) || void 0 === s ? o[i].slick = new e(o[i], s) : t = o[i].slick[s].apply(o[i].slick, n), void 0 !== t) return t;
-      }
-
-      return o;
-    };
+    bindModal('.phone__link', '.application-form', '.modal-close');
+    bindModal('.burger__call-btn', '.application-form', '.modal-close');
+    bindModal('.btn-signup', '.application-form', '.modal-close');
+    bindModal('.consultation-btn', '.application-form', '.modal-close');
+    bindModal('.card', '.content-modal', '.modal-close');
+    bindModal('.btn-politics', '.politics-modal', '.politics-close');
+  }; // ==========
+  // Бургер меню
+
+
+  var body = document.querySelector('body');
+  var overlay = document.querySelector('.overlay');
+  var navIcon = document.querySelector('.menu-btn');
+  var burgerNav = document.querySelector('.burger-menu__block');
+  var burgerItems = Array.prototype.slice.call(document.querySelectorAll('.burger-menu__items span'));
+  var closeBurger = document.querySelector('.close-burger');
+  navIcon.addEventListener('click', function () {
+    this.classList.add('open');
+    overlay.classList.add('show');
+    burgerNav.classList.add('show');
+    body.classList.add('overflow-hidden');
+  });
+
+  function closeNav() {
+    navIcon.classList.remove('open');
+    overlay.classList.remove('show');
+    burgerNav.classList.remove('show');
+    body.classList.remove('overflow-hidden');
+  }
+
+  overlay.addEventListener('click', closeNav);
+  closeBurger.addEventListener('click', closeNav);
+  burgerItems.forEach(function (item) {
+    item.addEventListener('click', closeNav);
   }); // ==========
   // Шапка при скроле
 
@@ -8549,7 +7659,7 @@ window.addEventListener('DOMContentLoaded', function () {
     myFunction();
   };
 
-  var header = document.querySelector(".main-header");
+  var header = document.querySelector(".header");
   var headerWrap = document.querySelector('.header-wrap');
   var sticky = header.offsetTop;
   var section = document.querySelector('.first-screen');
@@ -8559,11 +7669,11 @@ window.addEventListener('DOMContentLoaded', function () {
     if (window.pageYOffset > sticky) {
       header.classList.add("header--fixed");
       header.classList.add('animate__animated', 'animate__fadeIn');
-      content.style.paddingTop = "75px";
+      content.style.paddingTop = "77px";
     } else {
       header.classList.remove("header--fixed");
-      header.classList.remove('animate__animated', 'animate__fadeIn');
       content.style.paddingTop = "";
+      header.classList.remove('animate__animated', 'animate__fadeIn');
     }
   }
 
@@ -8592,107 +7702,338 @@ window.addEventListener('DOMContentLoaded', function () {
   ; // ==========
   // Якори для меню
 
-  var t;
+  function smoothScroll(target, duration) {
+    var target = document.querySelector(target);
+    var targetPosition = target.getBoundingClientRect().top + window.pageYOffset;
+    var startPosition = window.pageYOffset;
+    var distance = targetPosition - startPosition;
+    var startTime = null;
 
-  function up() {
-    var top = Math.max(document.body.scrollTop, document.documentElement.scrollTop);
+    function animation(currentTime) {
+      if (startTime === null) startTime = currentTime;
+      var timeElapsed = currentTime - startTime;
+      var run = ease(timeElapsed, startPosition, distance, duration);
+      window.scroll(0, run);
+      if (timeElapsed < duration) requestAnimationFrame(animation);
+    }
 
-    if (top > 0) {
-      window.scrollBy(0, -150);
-      t = setTimeout('up()', 20);
-    } else clearTimeout(t);
+    function ease(t, b, c, d) {
+      t /= d / 2;
+      if (t < 1) return c / 2 * t * t + b;
+      t--;
+      return -c / 2 * (t * (t - 2) - 1) + b;
+    }
 
-    return false;
+    requestAnimationFrame(animation);
+  } // Это кнопки меню, которые скролят до нужного блока
+
+
+  var mainAnchor = document.querySelector('.main-anchor');
+  var block2Anchor = Array.prototype.slice.call(document.querySelectorAll('.aboutus-anchor'));
+  var block3Anchor = Array.prototype.slice.call(document.querySelectorAll('.projects-anchor'));
+  var block4Anchor = Array.prototype.slice.call(document.querySelectorAll('.skill-anchor'));
+  var block5Anchor = Array.prototype.slice.call(document.querySelectorAll('.review-anchor'));
+  var block6Anchor = Array.prototype.slice.call(document.querySelectorAll('.steps-anchor'));
+  var block7Anchor = Array.prototype.slice.call(document.querySelectorAll('.final-anchor'));
+  mainAnchor.addEventListener('click', function () {
+    // Тут вставляешь название блока куда скролить
+    smoothScroll('#first-screen', 1000);
+  });
+  block2Anchor.forEach(function (i) {
+    i.addEventListener('click', function () {
+      // Тут вставляешь название блока куда скролить
+      smoothScroll('#aboutus', 1000);
+    });
+  });
+  block3Anchor.forEach(function (i) {
+    i.addEventListener('click', function () {
+      // Тут вставляешь название блока куда скролить
+      smoothScroll('#projects', 1000);
+    });
+  });
+  block4Anchor.forEach(function (i) {
+    i.addEventListener('click', function () {
+      // Тут вставляешь название блока куда скролить
+      smoothScroll('#skill', 1000);
+    });
+  });
+  block5Anchor.forEach(function (i) {
+    i.addEventListener('click', function () {
+      // Тут вставляешь название блока куда скролить
+      smoothScroll('#review', 1000);
+    });
+  });
+  block6Anchor.forEach(function (i) {
+    i.addEventListener('click', function () {
+      // Тут вставляешь название блока куда скролить
+      smoothScroll('#steps', 1000);
+    });
+  });
+  block7Anchor.forEach(function (i) {
+    i.addEventListener('click', function () {
+      // Тут вставляешь название блока куда скролить
+      smoothScroll('#final', 1000);
+    });
+  }); // // ==========
+  // Слайдер отзывов
+
+  var mySiema = new Siema({
+    perPage: {
+      768: 1,
+      1024: 2
+    },
+    duration: 200,
+    easing: 'ease-out',
+    loop: true
+  });
+  var prev = document.querySelector('.prev');
+  var next = document.querySelector('.next');
+  prev.addEventListener('click', function () {
+    return mySiema.prev();
+  });
+  next.addEventListener('click', function () {
+    return mySiema.next();
+  }); // ==========
+  // Слайдер карточка домов
+
+  var imgs = Array.prototype.slice.call(document.querySelectorAll('.min-img')); // const imgBtns = [ ... imgs];
+
+  var imgId = 1;
+  imgs.forEach(function (imgItem) {
+    imgItem.addEventListener('click', function (event) {
+      event.preventDefault();
+      imgId = imgItem.dataset.id;
+      slideImage();
+    });
+  });
+
+  function slideImage() {
+    var displayWidth = document.querySelector('.main-img img:first-child').clientWidth;
+    document.querySelector('.main-img').style.transform = "translateX(".concat(-(imgId - 1) * displayWidth, "px)");
   }
 
-  $(document).ready(function () {
-    $(".burger-menu").on("click", "a", function (event) {
-      //отменяем стандартную обработку нажатия по ссылке
-      event.preventDefault(); //забираем идентификатор бока с атрибута href
+  window.addEventListener('resize', slideImage); // ==========
+  // Табы проектов
 
-      var id = $(this).attr('href'),
-          //узнаем высоту от начала страницы до блока на который ссылается якорь
-      top = $(id).offset().top; //анимируем переход на расстояние - top за 1500 мс
+  var filter = function filter() {
+    var projectsMenu = document.querySelector('.projects-menu');
+    var projectType = Array.prototype.slice.call(projectsMenu.querySelectorAll('.tab-btn'));
+    var typeAll = projectsMenu.querySelector('.all');
+    var typeWild = projectsMenu.querySelector('.wild');
+    var typeCarcass = projectsMenu.querySelector('.carcass');
+    var typeGlue = projectsMenu.querySelector('.glue');
+    var projectsCards = document.querySelector('.projects__cards');
+    var cardAll = Array.prototype.slice.call(projectsCards.querySelectorAll('.all'));
+    var cardWild = Array.prototype.slice.call(projectsCards.querySelectorAll('.wild'));
+    var cardCarcass = Array.prototype.slice.call(projectsCards.querySelectorAll('.carcass'));
+    var cardGlue = Array.prototype.slice.call(projectsCards.querySelectorAll('.glue'));
 
-      $('body,html').animate({
-        scrollTop: top
-      }, 600);
-    });
-  }); // ==========
-  // SLICK SLIDER
+    var typeFilter = function typeFilter(markType) {
+      cardAll.forEach(function (mark) {
+        mark.style.display = 'none';
+      });
 
-  $(document).ready(function () {
-    $('.services__carousel').slick({
-      infinite: true,
-      slidesToShow: 3,
-      slidesToScroll: 3,
-      responsive: [{
-        breakpoint: 1200,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3
-        }
-      }, {
-        breakpoint: 660,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2
-        }
-      }, {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1
-        }
-      }]
-    });
-  });
-  $(document).ready(function () {
-    $('.team__carousel').slick({
-      infinite: true,
-      slidesToShow: 3,
-      slidesToScroll: 1,
-      responsive: [{
-        breakpoint: 1200,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1
-        }
-      }, {
-        breakpoint: 700,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1
-        }
-      }, {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1
-        }
-      }]
-    });
-  });
-  $(document).ready(function () {
-    $('.review__carousel').slick({
-      infinite: true,
-      slidesToShow: 1,
-      slidesToScroll: 1
-    });
-  }); // MORE CARDS SERVICES
+      if (markType) {
+        markType.forEach(function (mark) {
+          mark.style.display = 'flex';
+          mark.classList.add('animate__animated', 'animate__fadeIn');
+        });
+      }
+    };
 
-  var moreCards = document.querySelector('.more__cards');
-  var btnServices = document.querySelector('.btn__more-services');
-  var btnNameServices = document.querySelector('.btn-services__name');
-  btnServices.addEventListener('click', function () {
-    if (!moreCards.classList.contains('display')) {
-      moreCards.classList.add('display');
-      btnNameServices.innerText = "Скрыть все услуги";
-    } else {
-      moreCards.classList.remove('display');
-      btnNameServices.innerText = "Показать все услуги";
+    typeAll.addEventListener('click', function () {
+      typeFilter(cardAll);
+    });
+    typeWild.addEventListener('click', function () {
+      typeFilter(cardWild);
+    });
+    typeCarcass.addEventListener('click', function () {
+      typeFilter(cardCarcass);
+    });
+    typeGlue.addEventListener('click', function () {
+      typeFilter(cardGlue);
+    });
+    projectsMenu.addEventListener('click', function (e) {
+      var target = e.target;
+
+      if (target && target.className === 'tab-btn') {
+        projectType.forEach(function (btn) {
+          return btn.classList.remove('active');
+        });
+        target.classList.add('active');
+      }
+    });
+  }; // ==========
+
+
+  var homeBtn = document.querySelector('.home');
+  var summerBtn = document.querySelector('.summer');
+  var saunaBtn = document.querySelector('.sauna');
+  var pergolaBtn = document.querySelector('.pergola');
+  var kidsBtn = document.querySelector('.kids');
+  var homeBlock = document.querySelector('.home-container');
+  var summerBlock = document.querySelector('.summer-container');
+  var saunaBlock = document.querySelector('.sauna-container');
+  var pergolaBlock = document.querySelector('.pergola-container');
+  var kidsBlock = document.querySelector('.kids-container'); // var text = document.querySelector('.skill-title h3');
+  // var info = document.querySelector('.skill-text p');
+  // var pic = document.querySelector('.skill-img img');
+
+  homeBtn.addEventListener('click', function () {
+    if (!homeBlock.classList.contains('show-block')) {
+      homeBlock.classList.add('show-block');
+      summerBlock.classList.remove('show-block');
+      saunaBlock.classList.remove('show-block');
+      pergolaBlock.classList.remove('show-block');
+      kidsBlock.classList.remove('show-block');
     }
-  }); // ==========
+  });
+  summerBtn.addEventListener('click', function () {
+    if (!summerBlock.classList.contains('show-block')) {
+      summerBlock.classList.add('show-block');
+      homeBlock.classList.remove('show-block');
+      saunaBlock.classList.remove('show-block');
+      pergolaBlock.classList.remove('show-block');
+      kidsBlock.classList.remove('show-block');
+    }
+  });
+  saunaBtn.addEventListener('click', function () {
+    if (!saunaBlock.classList.contains('show-block')) {
+      saunaBlock.classList.add('show-block');
+      summerBlock.classList.remove('show-block');
+      homeBlock.classList.remove('show-block');
+      pergolaBlock.classList.remove('show-block');
+      kidsBlock.classList.remove('show-block');
+    }
+  });
+  pergolaBtn.addEventListener('click', function () {
+    if (!pergolaBlock.classList.contains('show-block')) {
+      pergolaBlock.classList.add('show-block');
+      homeBlock.classList.remove('show-block');
+      summerBlock.classList.remove('show-block');
+      saunaBlock.classList.remove('show-block');
+      kidsBlock.classList.remove('show-block');
+    }
+  });
+  kidsBtn.addEventListener('click', function () {
+    if (!kidsBlock.classList.contains('show-block')) {
+      kidsBlock.classList.add('show-block');
+      homeBlock.classList.remove('show-block');
+      summerBlock.classList.remove('show-block');
+      saunaBlock.classList.remove('show-block');
+      pergolaBlock.classList.remove('show-block');
+    }
+  }); // home.addEventListener('click', function() {
+  // 	text.innerHTML="Дома для жилья";
+  // 	info.innerHTML="Какой уютный современный дом сможет обойтись без тепла камина? HomeSrub предлагает установить профессиональные чугунные камины-топки на дровах с отделкой в ​​выбранном Вами стиле.";
+  // 	pic.src="./img/building-info/home-1x.jpg";
+  // 	pic.srcset="./img/building-info/home-2x.jpg 2x";
+  // 	pic.alt="Домик";
+  // });
+  // summer.addEventListener('click', function() {
+  // 	text.innerHTML="Летний домик";
+  // 	info.innerHTML="Кинетический момент влияет на составляющие гироскопического момента больше, чем гироскопический стабилизатоор, сводя задачу к квадратурам. Гироскопический маятник, в соответствии с модифицированным.";
+  // 	pic.src="./img/building-info/summer-1x.jpg";
+  // 	pic.srcset="./img/building-info/summer-2x.jpg 2x";
+  // 	pic.alt="Летний";
+  // });
+  // pergola.addEventListener('click', function() {
+  // 	text.innerHTML="Пергола";
+  // 	info.innerHTML="Традиционный канал конкурентоспособен. А вот по мнению аналитиков стимулирование коммьюнити отражает поведенческий таргетинг, учитывая современные тенденции.";
+  // 	pic.src="./img/building-info/pergola-1x.jpg";
+  // 	pic.srcset="./img/building-info/pergola-2x.jpg 2x";
+  // 	pic.alt="Пергола";
+  // });
+  // sauna.addEventListener('click', function() {
+  // 	text.innerHTML="Сауна";
+  // 	info.innerHTML="Легко проверить, что поле направлений определяет расходящийся ряд. Открытое множество естественно раскручивает экспериментальный лист Мёбиуса, что несомненно приведет нас к истине.";
+  // 	pic.src="./img/building-info/sauna-1x.jpg";
+  // 	pic.srcset="./img/building-info/sauna-2x.jpg 2x";
+  // 	pic.alt="Сауна";
+  // });
+  // kids.addEventListener('click', function() {
+  // 	text.innerHTML="Детская площадка";
+  // 	info.innerHTML="По сути, лемма реально порождает минимум. Длина вектора ускоряет положительный критерий интегрируемости, явно демонстрируя всю чушь вышесказанного. Полином обоснован необходимостью.";
+  // 	pic.src="./img/building-info/kids-1x.jpg";
+  // 	pic.srcset="./img/building-info/kids-2x.jpg 2x";
+  // 	pic.alt="Детская площадка";
+  // });
+
+  var skillContainer = document.querySelectorAll('.skill__type');
+  var skillBtns = document.getElementsByClassName('skill-item');
+
+  for (var i = 0; i < skillBtns.length; i++) {
+    skillBtns[i].addEventListener("click", function () {
+      var active = document.getElementsByClassName("skill--active");
+      active[0].className = active[0].className.replace(" skill--active", "");
+      this.className += " skill--active";
+    });
+  } // // Кнопки Подробнее
+  // let moreText1 = document.querySelector('.more-text1');
+  // let moreBtn1 = document.querySelector('.more-btn1');
+  // let moreText2 = document.querySelector('.more-text2');
+  // let moreBtn2 = document.querySelector('.more-btn2');
+  // let moreText3 = document.querySelector('.more-text3');
+  // let moreBtn3 = document.querySelector('.more-btn3');
+  // let moreText4 = document.querySelector('.more-text4');
+  // let moreBtn4 = document.querySelector('.more-btn4');
+  // moreBtn1.addEventListener('click', function() {
+  // 	if (!moreText1.classList.contains('actReview')) {
+  // 		moreText1.classList.add('actReview');
+  // 		moreBtn1.textContent = 'Скрыть';
+  // 	} else {
+  // 		moreText1.classList.remove('actReview');
+  // 		moreBtn1.textContent = 'Подробнее';
+  // 	}
+  // });
+  // moreBtn2.addEventListener('click', function() {
+  // 	if (!moreText2.classList.contains('actReview')) {
+  // 		moreText2.classList.add('actReview');
+  // 		moreBtn2.textContent = 'Скрыть';
+  // 	} else {
+  // 		moreText2.classList.remove('actReview');
+  // 		moreBtn2.textContent = 'Подробнее';
+  // 	}
+  // });
+  // moreBtn3.addEventListener('click', function() {
+  // 	if (!moreText3.classList.contains('actReview')) {
+  // 		moreText3.classList.add('actReview');
+  // 		moreBtn3.textContent = 'Скрыть';
+  // 	} else {
+  // 		moreText3.classList.remove('actReview');
+  // 		moreBtn3.textContent = 'Подробнее';
+  // 	}
+  // });
+  // moreBtn4.addEventListener('click', function() {
+  // 	if (!moreText4.classList.contains('actReview')) {
+  // 		moreText4.classList.add('actReview');
+  // 		moreBtn4.textContent = 'Скрыть';
+  // 	} else {
+  // 		moreText4.classList.remove('actReview');
+  // 		moreBtn4.textContent = 'Подробнее';
+  // 	}
+  // });
+  // ==========
+  // // Задержка загрузки yaMaps
+  // var YaMapsShown = false; 
+  // document.addEventListener('scroll', () => { 
+  // 	if (!YaMapsShown) {
+  // 	let scrollTop = document.documentElement.scrollTop;    
+  // 	if (scrollTop >= 2000) {
+  // 		showYaMaps();
+  // 		YaMapsShown = true;
+  // 	}
+  // 	}
+  // });
+  // function showYaMaps(){
+  // 	var script   = document.createElement("script");
+  // 	script.type  = "text/javascript";
+  // 	script.src   = "https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3A9b6066007d2a10adcbdac165fce87a97b3b6229e2ce4402bf66155f39a195930&amp;width=100%25&amp;height=588&amp;lang=ru_RU&amp;scroll=false";
+  // 	document.getElementById("YaMaps").appendChild(script);
+  // }
+  // ==========
+
 
   modals();
+  filter();
 });
