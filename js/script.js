@@ -4018,8 +4018,7 @@ window.addEventListener('DOMContentLoaded', function () {
     return k.noConflict = function (e) {
       return C.$ === k && (C.$ = Jt), e && C.jQuery === k && (C.jQuery = Qt), k;
     }, e || (C.jQuery = C.$ = k), k;
-  }); // Загрузка шрифтов
-
+  });
   var head = window.document.getElementsByTagName('head')[0];
 
   function includeCSS(aFile, aRel, as) {
@@ -4035,11 +4034,42 @@ window.addEventListener('DOMContentLoaded', function () {
   }
 
   includeCSS('https://fonts.gstatic.com');
-  includeCSS('https://fonts.googleapis.com/css2?family=Rubik:wght@500;700&display=swap');
+  includeCSS('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap');
   includeCSS('https://fonts.gstatic.com');
-  includeCSS('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,700;1,400&display=swap'); // ==========
-  // // Ленивая загрузка
-  // const images = document.querySelectorAll('img');
+  includeCSS('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,700;1,400&display=swap'); // // var lazyImages = document.querySelectorAll('img[data-src]');
+  // // const loadMapBlock = document.querySelector('_load-map');
+  // var winHeight = document.documentElement.clientHeight;
+  // let lazyImagesPositions = [];
+  // if (lazyImages.length > 0) {
+  // 	lazyImages.forEach(img => {
+  // 		if (img.dataset.src || img.dataset.srcset) {
+  // 			lazyImagesPositions.push(img.getBoundingClientRect().top + pageYOffset);
+  // 			lazyScrollCheck();
+  // 		}
+  // 	});
+  // }
+  // window.addEventListener('scroll', lazyScroll);
+  // function lazyScroll() {
+  // 	if (document.querySelectorAll('img[data-src]').length > 0) {
+  // 		lazyScrollCheck();
+  // 	}
+  // }
+  // function lazyScrollCheck() {
+  // 	let imgIndex = lazyImagesPositions.findIndex(item => pageYOffset > item - winHeight);
+  // 	if (imgIndex >= 0) {
+  // 		if (lazyImages[imgIndex].dataset.src) {
+  // 			lazyImages[imgIndex].src = lazyImages[imgIndex].dataset.src;
+  // 			lazyImages[imgIndex].removeAttribute('data-src');
+  // 		}
+  // 		// } else if (lazyImages[imgIndex.dataset.srcset]) {
+  // 		// 	lazyImages[imgIndex].srcset = lazyImages[imgIndex].dataset.srcset;
+  // 		// 	lazyImages[imgIndex].removeAttribute('data-srcset');
+  // 		// }
+  // 		delete lazyImagesPositions[imgIndex];
+  // 	}
+  // }
+  // const images = document.querySelectorAll('img[data-src]');
+  // // const images2x = document.querySelectorAll('source[data-srcset]');
   // const options = {
   // 	root : null,
   // 	rootMargin : '0px',
@@ -4047,7 +4077,7 @@ window.addEventListener('DOMContentLoaded', function () {
   // }
   // function handleImg(myImg, observer) {
   // 	myImg.forEach(myImgSingle => {
-  // 		// console.log(myImgSingle.intersectionRatio);
+  // 		console.log(myImgSingle.intersectionRatio);
   // 		if (myImgSingle.intersectionRatio > 0) {
   // 			loadImage(myImgSingle.target);
   // 		}
@@ -4055,13 +4085,83 @@ window.addEventListener('DOMContentLoaded', function () {
   // }
   // function loadImage(image) {
   // 	image.src = image.getAttribute('data-src');
+  // 	observer.unobserve(image);
   // }
+  // // function loadImage(image2) {
+  // // 	image2.srcset = image2.getAttribute('data-srcset');
+  // // }
   // const observer = new IntersectionObserver(handleImg, options);
   // images.forEach(img => {
   // 	observer.observe(img);
   // });
-  // ==========
+  // // images2x.forEach(imgRet => {
+  // // 	observer.observe(imgRet);
+  // // });
 
+  var mainForm = document.querySelector('#form');
+  var inputName = document.querySelector('#input-name');
+  var inputPhone = document.querySelector('#input-phone'); // const inputMail = document.querySelector('#input-mail');
+  // const inputPassword1 = document.querySelector('#input-password1');
+  // const inputPassword2 = document.querySelector('#input-password2');
+  // Проверка поля
+
+  function checkRequired(inputArr) {
+    inputArr.forEach(function (input) {
+      if (input.value.trim() === '') {
+        showError(input, 'Ошибка');
+      } else {
+        showSuccess(input);
+      }
+    });
+  } // Проверка длины
+
+
+  function checkLength(input, min, max) {
+    if (input.value.length < min) {
+      showError(input, 'Коротко');
+    } else if (input.value.length > max) {
+      showError(input, 'Много');
+    } else {
+      showSuccess(input);
+    }
+  } // Показать ошибку
+
+
+  function showError(input, message) {
+    var formControl = input.parentElement.parentElement;
+    formControl.className = 'input-container error';
+    var small = formControl.querySelector('small');
+    small.innerText = message;
+  } // Показать успех
+
+
+  function showSuccess(input, message) {
+    var formControl = input.parentElement.parentElement;
+    formControl.className = 'input-container success';
+  } // Проверка почты
+  // function checkEmail(input) {
+  // 	const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  // 	if (re.test(input.value)) {
+  // 		showSuccess(input);
+  // 	} else {
+  // 		showError(input, 'Недопустимо')
+  // 	}
+  // }
+  // Проверка пароля
+  // function checkPasswordsMatch(input1, input2) {
+  // 	if (input1.value !== input2.value) {
+  // 		showError(input2, 'Не совпадает')
+  // 	}
+  // }
+
+
+  mainForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    checkRequired([inputName, inputPhone]);
+    checkLength(inputName, 2, 20);
+    checkLength(inputPhone, 16, 20); // checkEmail(inputMail);
+    // checkPasswordsMatch(inputPassword1, inputPassword2);
+  });
   var animItems = Array.prototype.slice.call(document.querySelectorAll('._anim-items'));
 
   if (animItems.length > 0) {
@@ -4101,7 +4201,245 @@ window.addEventListener('DOMContentLoaded', function () {
     setTimeout(function () {
       animOnScroll();
     }, 300);
+  } // Задержка загрузки yaMaps
+
+
+  var YaMapsShown = false;
+  document.addEventListener('scroll', function () {
+    if (!YaMapsShown) {
+      var scrollTop = document.documentElement.scrollTop;
+
+      if (scrollTop >= 2000) {
+        showYaMaps();
+        YaMapsShown = true;
+      }
+    }
+  });
+
+  function showYaMaps() {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = "https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3A9b6066007d2a10adcbdac165fce87a97b3b6229e2ce4402bf66155f39a195930&amp;width=100%25&amp;height=588&amp;lang=ru_RU&amp;scroll=false";
+    document.getElementById("YaMaps").appendChild(script);
+  } // ==========
+  // модальные окна
+
+
+  var modals = function modals() {
+    function bindModal(triggerSelector, modalSelector, closeSelector) {
+      var triggers = Array.prototype.slice.call(document.querySelectorAll(triggerSelector));
+      var modal = document.querySelector(modalSelector);
+      var btnsclose = Array.prototype.slice.call(document.querySelectorAll(closeSelector));
+      btnsclose.forEach(function (item) {
+        item.addEventListener('click', closeModal);
+      });
+      triggers.forEach(function (item) {
+        item.addEventListener('click', openModal);
+      });
+      modal.addEventListener('click', function (e) {
+        if (e.target === modal) {
+          closeModal();
+        }
+      });
+      document.body.addEventListener('keyup', function (e) {
+        var key = e.keyCode;
+
+        if (key == 27) {
+          closeModal();
+        }
+
+        ;
+      }, false); // document.addEventListener('keydown', (e) => {
+      // 	if (e.code === 'Escape' && modal.classList.contains('show')) {
+      // 		closeModal()
+      // 	}
+      // } )
+
+      function openModal() {
+        modal.classList.add('modal--show');
+        document.body.classList.add('overflow-hidden'); // modal.classList.remove('animate__animated', 'animate__fadeOut');
+        // modal.classList.add('animate__animated', 'animate__fadeIn');
+        // clearInterval(openTimer);
+      }
+
+      function closeModal() {
+        modal.classList.remove('modal--show');
+        document.body.classList.remove('overflow-hidden'); // modal.classList.remove('animate__fadeIn');
+        // modal.classList.add('animate__fadeOut');
+      }
+
+      ; // Скрывает например меню, откуда вызывалсь
+      // форма заявки и открывает непосредственно форму заявки
+
+      var burgerCallBtn = document.querySelector('.burger__call-btn');
+      var politicsClose = document.querySelector('.politics-close');
+      var politicsModal = document.querySelector('.politics-modal');
+      burgerCallBtn.addEventListener('click', function () {
+        closeNav(); // closeNav лежит в файле burger-menu.js
+      });
+      politicsClose.addEventListener('click', function () {
+        politicsModal.classList.remove('modal--show'); // politicsModal.classList.remove('animate__animated', 'animate__fadeIn');
+      }); // var contentBtn = document.querySelector('.content-btn');
+      // contentBtn.addEventListener('click', function() {
+      // 	var contentM = document.querySelector('.content__modal');
+      // 	contentM.classList.remove('modal--show');
+      // 	document.body.style.overflow = '';
+      // 	// contentM.classList.remove('animate__animated', 'animate__fadeIn');
+      // });
+      // function showModalByScroll() {
+      // 	if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+      // 		if (modal.classList.contains('form__modal')) {
+      // 			openModal();
+      // 			window.removeEventListener('scroll', showModalByScroll);
+      // 		}
+      // 	}
+      // }
+      // window.addEventListener('scroll', showModalByScroll);
+      // function openTimer() {
+      // 	setTimeout(openModal, 2000);
+      // }
+      // if (modal.classList.contains('form__modal')) {
+      // 	openTimer();
+      // }
+    }
+
+    bindModal('.call-modal__btn', '.application-form', '.modal-close');
+    bindModal('.burger__call-btn', '.application-form', '.modal-close');
+    bindModal('.btn-signup', '.application-form', '.modal-close');
+    bindModal('.service__card--big', '.content-modal', '.modal-close');
+    bindModal('.service__card--small', '.content-modal', '.modal-close');
+    bindModal('.brands__box', '.content-modal', '.modal-close');
+    bindModal('.human__text-link', '.content-modal', '.modal-close');
+    bindModal('.btn-politics', '.politics-modal', '.politics-close');
+  }; // ==========
+  // Бургер меню
+
+
+  var body = document.querySelector('body');
+  var overlay = document.querySelector('.overlay');
+  var navIcon = document.querySelector('.menu-btn');
+  var burgerNav = document.querySelector('.burger__block');
+  var burgerItems = Array.prototype.slice.call(document.querySelectorAll('.burger-menu__items span'));
+  var closeBurger = document.querySelector('.close-burger');
+  navIcon.addEventListener('click', function () {
+    this.classList.add('open');
+    overlay.classList.add('show');
+    burgerNav.classList.add('show');
+    body.classList.add('overflow-hidden');
+  });
+
+  function closeNav() {
+    navIcon.classList.remove('open');
+    overlay.classList.remove('show');
+    burgerNav.classList.remove('show');
+    body.classList.remove('overflow-hidden');
   }
+
+  overlay.addEventListener('click', closeNav);
+  closeBurger.addEventListener('click', closeNav);
+  burgerItems.forEach(function (item) {
+    item.addEventListener('click', closeNav);
+  }); // ==========
+  // CUSTOM SELECT
+
+  var x, i, j, l, ll, selElmnt, a, b, c;
+  /* Look for any elements with the class "custom-select": */
+
+  x = document.getElementsByClassName("custom-select");
+  l = x.length;
+
+  for (i = 0; i < l; i++) {
+    selElmnt = x[i].getElementsByTagName("select")[0];
+    ll = selElmnt.length;
+    /* For each element, create a new DIV that will act as the selected item: */
+
+    a = document.createElement("DIV");
+    a.setAttribute("class", "select-selected");
+    a.innerHTML = selElmnt.options[selElmnt.selectedIndex].innerHTML;
+    x[i].appendChild(a);
+    /* For each element, create a new DIV that will contain the option list: */
+
+    b = document.createElement("DIV");
+    b.setAttribute("class", "select-items select-hide");
+
+    for (j = 1; j < ll; j++) {
+      /* For each option in the original select element,
+      create a new DIV that will act as an option item: */
+      c = document.createElement("DIV");
+      c.innerHTML = selElmnt.options[j].innerHTML;
+      c.addEventListener("click", function (e) {
+        /* When an item is clicked, update the original select box,
+        and the selected item: */
+        var y, i, k, s, h, sl, yl;
+        s = this.parentNode.parentNode.getElementsByTagName("select")[0];
+        sl = s.length;
+        h = this.parentNode.previousSibling;
+
+        for (i = 0; i < sl; i++) {
+          if (s.options[i].innerHTML == this.innerHTML) {
+            s.selectedIndex = i;
+            h.innerHTML = this.innerHTML;
+            y = this.parentNode.getElementsByClassName("same-as-selected");
+            yl = y.length;
+
+            for (k = 0; k < yl; k++) {
+              y[k].removeAttribute("class");
+            }
+
+            this.setAttribute("class", "same-as-selected");
+            break;
+          }
+        }
+
+        h.click();
+      });
+      b.appendChild(c);
+    }
+
+    x[i].appendChild(b);
+    a.addEventListener("click", function (e) {
+      /* When the select box is clicked, close any other select boxes,
+      and open/close the current select box: */
+      e.stopPropagation();
+      closeAllSelect(this);
+      this.nextSibling.classList.toggle("select-hide");
+      this.classList.toggle("select-arrow-active");
+    });
+  }
+
+  function closeAllSelect(elmnt) {
+    /* A function that will close all select boxes in the document,
+    except the current select box: */
+    var x,
+        y,
+        i,
+        xl,
+        yl,
+        arrNo = [];
+    x = document.getElementsByClassName("select-items");
+    y = document.getElementsByClassName("select-selected");
+    xl = x.length;
+    yl = y.length;
+
+    for (i = 0; i < yl; i++) {
+      if (elmnt == y[i]) {
+        arrNo.push(i);
+      } else {
+        y[i].classList.remove("select-arrow-active");
+      }
+    }
+
+    for (i = 0; i < xl; i++) {
+      if (arrNo.indexOf(i)) {
+        x[i].classList.add("select-hide");
+      }
+    }
+  }
+  /* If the user clicks anywhere outside the select box,
+  then close all select boxes: */
+
+
+  document.addEventListener("click", closeAllSelect); // ==========
 
   !function (t, e) {
     "object" == (typeof exports === "undefined" ? "undefined" : _typeof(exports)) && "undefined" != typeof module ? e(exports) : "function" == typeof define && define.amd ? define(["exports"], e) : e((t = "undefined" != typeof globalThis ? globalThis : t || self).IMask = {});
@@ -6987,671 +7325,824 @@ window.addEventListener('DOMContentLoaded', function () {
     t.HTMLContenteditableMaskElement = _e, t.HTMLMaskElement = me, t.InputMask = Ae, t.MaskElement = ye, t.Masked = se, t.MaskedDate = ge, t.MaskedDynamic = Fe, t.MaskedEnum = be, t.MaskedFunction = Ce, t.MaskedNumber = Ee, t.MaskedPattern = ve, t.MaskedRange = ke, t.MaskedRegExp = de, t.PIPE_TYPE = Se, t.createMask = le, t.createPipe = De, t["default"] = ae, t.pipe = Be, Object.defineProperty(t, "__esModule", {
       value: !0
     });
-  });
-  var mainForm1 = document.querySelector('.main-form1');
-  var inputName1 = document.querySelector('.inp-name1');
-  var inputPhone1 = document.querySelector('.inp-phone1');
-  var mainForm2 = document.querySelector('.main-form2');
-  var inputName2 = document.querySelector('.inp-name2');
-  var inputPhone2 = document.querySelector('.inp-phone2');
-  var mainForm3 = document.querySelector('.main-form3');
-  var inputName3 = document.querySelector('.inp-name3');
-  var inputPhone3 = document.querySelector('.inp-phone3'); // const inputMail = document.querySelector('#input-mail');
-  // const inputPassword1 = document.querySelector('#input-password1');
-  // const inputPassword2 = document.querySelector('#input-password2');
-  // Проверка поля
+  }); // Номер телефона (inputmask)
 
-  function checkRequired(inputArr) {
-    inputArr.forEach(function (input) {
-      if (input.value.trim() === '') {
-        showError(input, 'Ошибка');
-      } else {
-        showSuccess(input);
+  var phoneMask = IMask(document.getElementById('input-phone'), {
+    mask: '+{7}(000)000-00-00'
+  }); // ==========
+  // Исходник для SlickSlider
+
+  !function (i) {
+    "use strict";
+
+    "function" == typeof define && define.amd ? define(["jquery"], i) : "undefined" != typeof exports ? module.exports = i(require("jquery")) : i(jQuery);
+  }(function (i) {
+    "use strict";
+
+    var e = window.Slick || {};
+    (e = function () {
+      var e = 0;
+      return function (t, o) {
+        var s,
+            n = this;
+        n.defaults = {
+          accessibility: !0,
+          adaptiveHeight: !1,
+          appendArrows: i(t),
+          appendDots: i(t),
+          arrows: !0,
+          asNavFor: null,
+          prevArrow: '<button class="slick-prev" aria-label="Previous" type="button">Previous</button>',
+          nextArrow: '<button class="slick-next" aria-label="Next" type="button">Next</button>',
+          autoplay: !1,
+          autoplaySpeed: 3e3,
+          centerMode: !1,
+          centerPadding: "50px",
+          cssEase: "ease",
+          customPaging: function customPaging(e, t) {
+            return i('<button type="button" />').text(t + 1);
+          },
+          dots: !1,
+          dotsClass: "slick-dots",
+          draggable: !0,
+          easing: "linear",
+          edgeFriction: .35,
+          fade: !1,
+          focusOnSelect: !1,
+          focusOnChange: !1,
+          infinite: !0,
+          initialSlide: 0,
+          lazyLoad: "ondemand",
+          mobileFirst: !1,
+          pauseOnHover: !0,
+          pauseOnFocus: !0,
+          pauseOnDotsHover: !1,
+          respondTo: "window",
+          responsive: null,
+          rows: 1,
+          rtl: !1,
+          slide: "",
+          slidesPerRow: 1,
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          speed: 500,
+          swipe: !0,
+          swipeToSlide: !1,
+          touchMove: !0,
+          touchThreshold: 5,
+          useCSS: !0,
+          useTransform: !0,
+          variableWidth: !1,
+          vertical: !1,
+          verticalSwiping: !1,
+          waitForAnimate: !0,
+          zIndex: 1e3
+        }, n.initials = {
+          animating: !1,
+          dragging: !1,
+          autoPlayTimer: null,
+          currentDirection: 0,
+          currentLeft: null,
+          currentSlide: 0,
+          direction: 1,
+          $dots: null,
+          listWidth: null,
+          listHeight: null,
+          loadIndex: 0,
+          $nextArrow: null,
+          $prevArrow: null,
+          scrolling: !1,
+          slideCount: null,
+          slideWidth: null,
+          $slideTrack: null,
+          $slides: null,
+          sliding: !1,
+          slideOffset: 0,
+          swipeLeft: null,
+          swiping: !1,
+          $list: null,
+          touchObject: {},
+          transformsEnabled: !1,
+          unslicked: !1
+        }, i.extend(n, n.initials), n.activeBreakpoint = null, n.animType = null, n.animProp = null, n.breakpoints = [], n.breakpointSettings = [], n.cssTransitions = !1, n.focussed = !1, n.interrupted = !1, n.hidden = "hidden", n.paused = !0, n.positionProp = null, n.respondTo = null, n.rowCount = 1, n.shouldClick = !0, n.$slider = i(t), n.$slidesCache = null, n.transformType = null, n.transitionType = null, n.visibilityChange = "visibilitychange", n.windowWidth = 0, n.windowTimer = null, s = i(t).data("slick") || {}, n.options = i.extend({}, n.defaults, o, s), n.currentSlide = n.options.initialSlide, n.originalSettings = n.options, void 0 !== document.mozHidden ? (n.hidden = "mozHidden", n.visibilityChange = "mozvisibilitychange") : void 0 !== document.webkitHidden && (n.hidden = "webkitHidden", n.visibilityChange = "webkitvisibilitychange"), n.autoPlay = i.proxy(n.autoPlay, n), n.autoPlayClear = i.proxy(n.autoPlayClear, n), n.autoPlayIterator = i.proxy(n.autoPlayIterator, n), n.changeSlide = i.proxy(n.changeSlide, n), n.clickHandler = i.proxy(n.clickHandler, n), n.selectHandler = i.proxy(n.selectHandler, n), n.setPosition = i.proxy(n.setPosition, n), n.swipeHandler = i.proxy(n.swipeHandler, n), n.dragHandler = i.proxy(n.dragHandler, n), n.keyHandler = i.proxy(n.keyHandler, n), n.instanceUid = e++, n.htmlExpr = /^(?:\s*(<[\w\W]+>)[^>]*)$/, n.registerBreakpoints(), n.init(!0);
+      };
+    }()).prototype.activateADA = function () {
+      this.$slideTrack.find(".slick-active").attr({
+        "aria-hidden": "false"
+      }).find("a, input, button, select").attr({
+        tabindex: "0"
+      });
+    }, e.prototype.addSlide = e.prototype.slickAdd = function (e, t, o) {
+      var s = this;
+      if ("boolean" == typeof t) o = t, t = null;else if (t < 0 || t >= s.slideCount) return !1;
+      s.unload(), "number" == typeof t ? 0 === t && 0 === s.$slides.length ? i(e).appendTo(s.$slideTrack) : o ? i(e).insertBefore(s.$slides.eq(t)) : i(e).insertAfter(s.$slides.eq(t)) : !0 === o ? i(e).prependTo(s.$slideTrack) : i(e).appendTo(s.$slideTrack), s.$slides = s.$slideTrack.children(this.options.slide), s.$slideTrack.children(this.options.slide).detach(), s.$slideTrack.append(s.$slides), s.$slides.each(function (e, t) {
+        i(t).attr("data-slick-index", e);
+      }), s.$slidesCache = s.$slides, s.reinit();
+    }, e.prototype.animateHeight = function () {
+      var i = this;
+
+      if (1 === i.options.slidesToShow && !0 === i.options.adaptiveHeight && !1 === i.options.vertical) {
+        var e = i.$slides.eq(i.currentSlide).outerHeight(!0);
+        i.$list.animate({
+          height: e
+        }, i.options.speed);
       }
-    });
-  } // Проверка длины
+    }, e.prototype.animateSlide = function (e, t) {
+      var o = {},
+          s = this;
+      s.animateHeight(), !0 === s.options.rtl && !1 === s.options.vertical && (e = -e), !1 === s.transformsEnabled ? !1 === s.options.vertical ? s.$slideTrack.animate({
+        left: e
+      }, s.options.speed, s.options.easing, t) : s.$slideTrack.animate({
+        top: e
+      }, s.options.speed, s.options.easing, t) : !1 === s.cssTransitions ? (!0 === s.options.rtl && (s.currentLeft = -s.currentLeft), i({
+        animStart: s.currentLeft
+      }).animate({
+        animStart: e
+      }, {
+        duration: s.options.speed,
+        easing: s.options.easing,
+        step: function step(i) {
+          i = Math.ceil(i), !1 === s.options.vertical ? (o[s.animType] = "translate(" + i + "px, 0px)", s.$slideTrack.css(o)) : (o[s.animType] = "translate(0px," + i + "px)", s.$slideTrack.css(o));
+        },
+        complete: function complete() {
+          t && t.call();
+        }
+      })) : (s.applyTransition(), e = Math.ceil(e), !1 === s.options.vertical ? o[s.animType] = "translate3d(" + e + "px, 0px, 0px)" : o[s.animType] = "translate3d(0px," + e + "px, 0px)", s.$slideTrack.css(o), t && setTimeout(function () {
+        s.disableTransition(), t.call();
+      }, s.options.speed));
+    }, e.prototype.getNavTarget = function () {
+      var e = this,
+          t = e.options.asNavFor;
+      return t && null !== t && (t = i(t).not(e.$slider)), t;
+    }, e.prototype.asNavFor = function (e) {
+      var t = this.getNavTarget();
+      null !== t && "object" == _typeof(t) && t.each(function () {
+        var t = i(this).slick("getSlick");
+        t.unslicked || t.slideHandler(e, !0);
+      });
+    }, e.prototype.applyTransition = function (i) {
+      var e = this,
+          t = {};
+      !1 === e.options.fade ? t[e.transitionType] = e.transformType + " " + e.options.speed + "ms " + e.options.cssEase : t[e.transitionType] = "opacity " + e.options.speed + "ms " + e.options.cssEase, !1 === e.options.fade ? e.$slideTrack.css(t) : e.$slides.eq(i).css(t);
+    }, e.prototype.autoPlay = function () {
+      var i = this;
+      i.autoPlayClear(), i.slideCount > i.options.slidesToShow && (i.autoPlayTimer = setInterval(i.autoPlayIterator, i.options.autoplaySpeed));
+    }, e.prototype.autoPlayClear = function () {
+      var i = this;
+      i.autoPlayTimer && clearInterval(i.autoPlayTimer);
+    }, e.prototype.autoPlayIterator = function () {
+      var i = this,
+          e = i.currentSlide + i.options.slidesToScroll;
+      i.paused || i.interrupted || i.focussed || (!1 === i.options.infinite && (1 === i.direction && i.currentSlide + 1 === i.slideCount - 1 ? i.direction = 0 : 0 === i.direction && (e = i.currentSlide - i.options.slidesToScroll, i.currentSlide - 1 == 0 && (i.direction = 1))), i.slideHandler(e));
+    }, e.prototype.buildArrows = function () {
+      var e = this;
+      !0 === e.options.arrows && (e.$prevArrow = i(e.options.prevArrow).addClass("slick-arrow"), e.$nextArrow = i(e.options.nextArrow).addClass("slick-arrow"), e.slideCount > e.options.slidesToShow ? (e.$prevArrow.removeClass("slick-hidden").removeAttr("aria-hidden tabindex"), e.$nextArrow.removeClass("slick-hidden").removeAttr("aria-hidden tabindex"), e.htmlExpr.test(e.options.prevArrow) && e.$prevArrow.prependTo(e.options.appendArrows), e.htmlExpr.test(e.options.nextArrow) && e.$nextArrow.appendTo(e.options.appendArrows), !0 !== e.options.infinite && e.$prevArrow.addClass("slick-disabled").attr("aria-disabled", "true")) : e.$prevArrow.add(e.$nextArrow).addClass("slick-hidden").attr({
+        "aria-disabled": "true",
+        tabindex: "-1"
+      }));
+    }, e.prototype.buildDots = function () {
+      var e,
+          t,
+          o = this;
 
+      if (!0 === o.options.dots) {
+        for (o.$slider.addClass("slick-dotted"), t = i("<ul />").addClass(o.options.dotsClass), e = 0; e <= o.getDotCount(); e += 1) {
+          t.append(i("<li />").append(o.options.customPaging.call(this, o, e)));
+        }
 
-  function checkLength(input, min, max) {
-    if (input.value.length < min) {
-      showError(input, 'Коротко');
-    } else if (input.value.length > max) {
-      showError(input, 'Много');
-    } else {
-      showSuccess(input);
-    }
-  } // Показать ошибку
-
-
-  function showError(input, message) {
-    var formControl = input.parentElement.parentElement;
-    formControl.className = 'input-container error';
-    var small = formControl.querySelector('small');
-    small.innerText = message;
-  } // Показать успех
-
-
-  function showSuccess(input) {
-    var formControl = input.parentElement.parentElement;
-    formControl.className = 'input-container success';
-  } // Проверка почты
-  // function checkEmail(input) {
-  // 	const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  // 	if (re.test(input.value)) {
-  // 		showSuccess(input);
-  // 	} else {
-  // 		showError(input, 'Недопустимо')
-  // 	}
-  // }
-  // Проверка пароля
-  // function checkPasswordsMatch(input1, input2) {
-  // 	if (input1.value !== input2.value) {
-  // 		showError(input2, 'Не совпадает')
-  // 	}
-  // }
-
-
-  mainForm1.addEventListener('submit', function (e) {
-    e.preventDefault();
-    checkRequired([inputName1, inputPhone1]);
-    checkLength(inputName1, 2, 20);
-    checkLength(inputPhone1, 16, 20); // checkEmail(inputMail);
-    // checkPasswordsMatch(inputPassword1, inputPassword2);
-  });
-  mainForm2.addEventListener('submit', function (e) {
-    e.preventDefault();
-    checkRequired([inputName2, inputPhone2]);
-    checkLength(inputName2, 2, 20);
-    checkLength(inputPhone2, 16, 20);
-  });
-  mainForm3.addEventListener('submit', function (e) {
-    e.preventDefault();
-    checkRequired([inputName3, inputPhone3]);
-    checkLength(inputName3, 2, 20);
-    checkLength(inputPhone3, 16, 20);
-  });
-  !function (e, t) {
-    "object" == (typeof exports === "undefined" ? "undefined" : _typeof(exports)) && "object" == (typeof module === "undefined" ? "undefined" : _typeof(module)) ? module.exports = t() : "function" == typeof define && define.amd ? define("Siema", [], t) : "object" == (typeof exports === "undefined" ? "undefined" : _typeof(exports)) ? exports.Siema = t() : e.Siema = t();
-  }("undefined" != typeof self ? self : _this, function () {
-    return function (e) {
-      function t(r) {
-        if (i[r]) return i[r].exports;
-        var n = i[r] = {
-          i: r,
-          l: !1,
-          exports: {}
-        };
-        return e[r].call(n.exports, n, n.exports, t), n.l = !0, n.exports;
+        o.$dots = t.appendTo(o.options.appendDots), o.$dots.find("li").first().addClass("slick-active");
       }
+    }, e.prototype.buildOut = function () {
+      var e = this;
+      e.$slides = e.$slider.children(e.options.slide + ":not(.slick-cloned)").addClass("slick-slide"), e.slideCount = e.$slides.length, e.$slides.each(function (e, t) {
+        i(t).attr("data-slick-index", e).data("originalStyling", i(t).attr("style") || "");
+      }), e.$slider.addClass("slick-slider"), e.$slideTrack = 0 === e.slideCount ? i('<div class="slick-track"/>').appendTo(e.$slider) : e.$slides.wrapAll('<div class="slick-track"/>').parent(), e.$list = e.$slideTrack.wrap('<div class="slick-list"/>').parent(), e.$slideTrack.css("opacity", 0), !0 !== e.options.centerMode && !0 !== e.options.swipeToSlide || (e.options.slidesToScroll = 1), i("img[data-lazy]", e.$slider).not("[src]").addClass("slick-loading"), e.setupInfinite(), e.buildArrows(), e.buildDots(), e.updateDots(), e.setSlideClasses("number" == typeof e.currentSlide ? e.currentSlide : 0), !0 === e.options.draggable && e.$list.addClass("draggable");
+    }, e.prototype.buildRows = function () {
+      var i,
+          e,
+          t,
+          o,
+          s,
+          n,
+          r,
+          l = this;
 
-      var i = {};
-      return t.m = e, t.c = i, t.d = function (e, i, r) {
-        t.o(e, i) || Object.defineProperty(e, i, {
-          configurable: !1,
-          enumerable: !0,
-          get: r
+      if (o = document.createDocumentFragment(), n = l.$slider.children(), l.options.rows > 1) {
+        for (r = l.options.slidesPerRow * l.options.rows, s = Math.ceil(n.length / r), i = 0; i < s; i++) {
+          var d = document.createElement("div");
+
+          for (e = 0; e < l.options.rows; e++) {
+            var a = document.createElement("div");
+
+            for (t = 0; t < l.options.slidesPerRow; t++) {
+              var c = i * r + (e * l.options.slidesPerRow + t);
+              n.get(c) && a.appendChild(n.get(c));
+            }
+
+            d.appendChild(a);
+          }
+
+          o.appendChild(d);
+        }
+
+        l.$slider.empty().append(o), l.$slider.children().children().children().css({
+          width: 100 / l.options.slidesPerRow + "%",
+          display: "inline-block"
         });
-      }, t.n = function (e) {
-        var i = e && e.__esModule ? function () {
-          return e["default"];
-        } : function () {
-          return e;
-        };
-        return t.d(i, "a", i), i;
-      }, t.o = function (e, t) {
-        return Object.prototype.hasOwnProperty.call(e, t);
-      }, t.p = "", t(t.s = 0);
-    }([function (e, t, i) {
-      "use strict";
+      }
+    }, e.prototype.checkResponsive = function (e, t) {
+      var o,
+          s,
+          n,
+          r = this,
+          l = !1,
+          d = r.$slider.width(),
+          a = window.innerWidth || i(window).width();
 
-      function r(e, t) {
-        if (!(e instanceof t)) throw new TypeError("Cannot call a class as a function");
+      if ("window" === r.respondTo ? n = a : "slider" === r.respondTo ? n = d : "min" === r.respondTo && (n = Math.min(a, d)), r.options.responsive && r.options.responsive.length && null !== r.options.responsive) {
+        s = null;
+
+        for (o in r.breakpoints) {
+          r.breakpoints.hasOwnProperty(o) && (!1 === r.originalSettings.mobileFirst ? n < r.breakpoints[o] && (s = r.breakpoints[o]) : n > r.breakpoints[o] && (s = r.breakpoints[o]));
+        }
+
+        null !== s ? null !== r.activeBreakpoint ? (s !== r.activeBreakpoint || t) && (r.activeBreakpoint = s, "unslick" === r.breakpointSettings[s] ? r.unslick(s) : (r.options = i.extend({}, r.originalSettings, r.breakpointSettings[s]), !0 === e && (r.currentSlide = r.options.initialSlide), r.refresh(e)), l = s) : (r.activeBreakpoint = s, "unslick" === r.breakpointSettings[s] ? r.unslick(s) : (r.options = i.extend({}, r.originalSettings, r.breakpointSettings[s]), !0 === e && (r.currentSlide = r.options.initialSlide), r.refresh(e)), l = s) : null !== r.activeBreakpoint && (r.activeBreakpoint = null, r.options = r.originalSettings, !0 === e && (r.currentSlide = r.options.initialSlide), r.refresh(e), l = s), e || !1 === l || r.$slider.trigger("breakpoint", [r, l]);
+      }
+    }, e.prototype.changeSlide = function (e, t) {
+      var o,
+          s,
+          n,
+          r = this,
+          l = i(e.currentTarget);
+
+      switch (l.is("a") && e.preventDefault(), l.is("li") || (l = l.closest("li")), n = r.slideCount % r.options.slidesToScroll != 0, o = n ? 0 : (r.slideCount - r.currentSlide) % r.options.slidesToScroll, e.data.message) {
+        case "previous":
+          s = 0 === o ? r.options.slidesToScroll : r.options.slidesToShow - o, r.slideCount > r.options.slidesToShow && r.slideHandler(r.currentSlide - s, !1, t);
+          break;
+
+        case "next":
+          s = 0 === o ? r.options.slidesToScroll : o, r.slideCount > r.options.slidesToShow && r.slideHandler(r.currentSlide + s, !1, t);
+          break;
+
+        case "index":
+          var d = 0 === e.data.index ? 0 : e.data.index || l.index() * r.options.slidesToScroll;
+          r.slideHandler(r.checkNavigable(d), !1, t), l.children().trigger("focus");
+          break;
+
+        default:
+          return;
+      }
+    }, e.prototype.checkNavigable = function (i) {
+      var e, t;
+      if (e = this.getNavigableIndexes(), t = 0, i > e[e.length - 1]) i = e[e.length - 1];else for (var o in e) {
+        if (i < e[o]) {
+          i = t;
+          break;
+        }
+
+        t = e[o];
+      }
+      return i;
+    }, e.prototype.cleanUpEvents = function () {
+      var e = this;
+      e.options.dots && null !== e.$dots && (i("li", e.$dots).off("click.slick", e.changeSlide).off("mouseenter.slick", i.proxy(e.interrupt, e, !0)).off("mouseleave.slick", i.proxy(e.interrupt, e, !1)), !0 === e.options.accessibility && e.$dots.off("keydown.slick", e.keyHandler)), e.$slider.off("focus.slick blur.slick"), !0 === e.options.arrows && e.slideCount > e.options.slidesToShow && (e.$prevArrow && e.$prevArrow.off("click.slick", e.changeSlide), e.$nextArrow && e.$nextArrow.off("click.slick", e.changeSlide), !0 === e.options.accessibility && (e.$prevArrow && e.$prevArrow.off("keydown.slick", e.keyHandler), e.$nextArrow && e.$nextArrow.off("keydown.slick", e.keyHandler))), e.$list.off("touchstart.slick mousedown.slick", e.swipeHandler), e.$list.off("touchmove.slick mousemove.slick", e.swipeHandler), e.$list.off("touchend.slick mouseup.slick", e.swipeHandler), e.$list.off("touchcancel.slick mouseleave.slick", e.swipeHandler), e.$list.off("click.slick", e.clickHandler), i(document).off(e.visibilityChange, e.visibility), e.cleanUpSlideEvents(), !0 === e.options.accessibility && e.$list.off("keydown.slick", e.keyHandler), !0 === e.options.focusOnSelect && i(e.$slideTrack).children().off("click.slick", e.selectHandler), i(window).off("orientationchange.slick.slick-" + e.instanceUid, e.orientationChange), i(window).off("resize.slick.slick-" + e.instanceUid, e.resize), i("[draggable!=true]", e.$slideTrack).off("dragstart", e.preventDefault), i(window).off("load.slick.slick-" + e.instanceUid, e.setPosition);
+    }, e.prototype.cleanUpSlideEvents = function () {
+      var e = this;
+      e.$list.off("mouseenter.slick", i.proxy(e.interrupt, e, !0)), e.$list.off("mouseleave.slick", i.proxy(e.interrupt, e, !1));
+    }, e.prototype.cleanUpRows = function () {
+      var i,
+          e = this;
+      e.options.rows > 1 && ((i = e.$slides.children().children()).removeAttr("style"), e.$slider.empty().append(i));
+    }, e.prototype.clickHandler = function (i) {
+      !1 === this.shouldClick && (i.stopImmediatePropagation(), i.stopPropagation(), i.preventDefault());
+    }, e.prototype.destroy = function (e) {
+      var t = this;
+      t.autoPlayClear(), t.touchObject = {}, t.cleanUpEvents(), i(".slick-cloned", t.$slider).detach(), t.$dots && t.$dots.remove(), t.$prevArrow && t.$prevArrow.length && (t.$prevArrow.removeClass("slick-disabled slick-arrow slick-hidden").removeAttr("aria-hidden aria-disabled tabindex").css("display", ""), t.htmlExpr.test(t.options.prevArrow) && t.$prevArrow.remove()), t.$nextArrow && t.$nextArrow.length && (t.$nextArrow.removeClass("slick-disabled slick-arrow slick-hidden").removeAttr("aria-hidden aria-disabled tabindex").css("display", ""), t.htmlExpr.test(t.options.nextArrow) && t.$nextArrow.remove()), t.$slides && (t.$slides.removeClass("slick-slide slick-active slick-center slick-visible slick-current").removeAttr("aria-hidden").removeAttr("data-slick-index").each(function () {
+        i(this).attr("style", i(this).data("originalStyling"));
+      }), t.$slideTrack.children(this.options.slide).detach(), t.$slideTrack.detach(), t.$list.detach(), t.$slider.append(t.$slides)), t.cleanUpRows(), t.$slider.removeClass("slick-slider"), t.$slider.removeClass("slick-initialized"), t.$slider.removeClass("slick-dotted"), t.unslicked = !0, e || t.$slider.trigger("destroy", [t]);
+    }, e.prototype.disableTransition = function (i) {
+      var e = this,
+          t = {};
+      t[e.transitionType] = "", !1 === e.options.fade ? e.$slideTrack.css(t) : e.$slides.eq(i).css(t);
+    }, e.prototype.fadeSlide = function (i, e) {
+      var t = this;
+      !1 === t.cssTransitions ? (t.$slides.eq(i).css({
+        zIndex: t.options.zIndex
+      }), t.$slides.eq(i).animate({
+        opacity: 1
+      }, t.options.speed, t.options.easing, e)) : (t.applyTransition(i), t.$slides.eq(i).css({
+        opacity: 1,
+        zIndex: t.options.zIndex
+      }), e && setTimeout(function () {
+        t.disableTransition(i), e.call();
+      }, t.options.speed));
+    }, e.prototype.fadeSlideOut = function (i) {
+      var e = this;
+      !1 === e.cssTransitions ? e.$slides.eq(i).animate({
+        opacity: 0,
+        zIndex: e.options.zIndex - 2
+      }, e.options.speed, e.options.easing) : (e.applyTransition(i), e.$slides.eq(i).css({
+        opacity: 0,
+        zIndex: e.options.zIndex - 2
+      }));
+    }, e.prototype.filterSlides = e.prototype.slickFilter = function (i) {
+      var e = this;
+      null !== i && (e.$slidesCache = e.$slides, e.unload(), e.$slideTrack.children(this.options.slide).detach(), e.$slidesCache.filter(i).appendTo(e.$slideTrack), e.reinit());
+    }, e.prototype.focusHandler = function () {
+      var e = this;
+      e.$slider.off("focus.slick blur.slick").on("focus.slick blur.slick", "*", function (t) {
+        t.stopImmediatePropagation();
+        var o = i(this);
+        setTimeout(function () {
+          e.options.pauseOnFocus && (e.focussed = o.is(":focus"), e.autoPlay());
+        }, 0);
+      });
+    }, e.prototype.getCurrent = e.prototype.slickCurrentSlide = function () {
+      return this.currentSlide;
+    }, e.prototype.getDotCount = function () {
+      var i = this,
+          e = 0,
+          t = 0,
+          o = 0;
+      if (!0 === i.options.infinite) {
+        if (i.slideCount <= i.options.slidesToShow) ++o;else for (; e < i.slideCount;) {
+          ++o, e = t + i.options.slidesToScroll, t += i.options.slidesToScroll <= i.options.slidesToShow ? i.options.slidesToScroll : i.options.slidesToShow;
+        }
+      } else if (!0 === i.options.centerMode) o = i.slideCount;else if (i.options.asNavFor) for (; e < i.slideCount;) {
+        ++o, e = t + i.options.slidesToScroll, t += i.options.slidesToScroll <= i.options.slidesToShow ? i.options.slidesToScroll : i.options.slidesToShow;
+      } else o = 1 + Math.ceil((i.slideCount - i.options.slidesToShow) / i.options.slidesToScroll);
+      return o - 1;
+    }, e.prototype.getLeft = function (i) {
+      var e,
+          t,
+          o,
+          s,
+          n = this,
+          r = 0;
+      return n.slideOffset = 0, t = n.$slides.first().outerHeight(!0), !0 === n.options.infinite ? (n.slideCount > n.options.slidesToShow && (n.slideOffset = n.slideWidth * n.options.slidesToShow * -1, s = -1, !0 === n.options.vertical && !0 === n.options.centerMode && (2 === n.options.slidesToShow ? s = -1.5 : 1 === n.options.slidesToShow && (s = -2)), r = t * n.options.slidesToShow * s), n.slideCount % n.options.slidesToScroll != 0 && i + n.options.slidesToScroll > n.slideCount && n.slideCount > n.options.slidesToShow && (i > n.slideCount ? (n.slideOffset = (n.options.slidesToShow - (i - n.slideCount)) * n.slideWidth * -1, r = (n.options.slidesToShow - (i - n.slideCount)) * t * -1) : (n.slideOffset = n.slideCount % n.options.slidesToScroll * n.slideWidth * -1, r = n.slideCount % n.options.slidesToScroll * t * -1))) : i + n.options.slidesToShow > n.slideCount && (n.slideOffset = (i + n.options.slidesToShow - n.slideCount) * n.slideWidth, r = (i + n.options.slidesToShow - n.slideCount) * t), n.slideCount <= n.options.slidesToShow && (n.slideOffset = 0, r = 0), !0 === n.options.centerMode && n.slideCount <= n.options.slidesToShow ? n.slideOffset = n.slideWidth * Math.floor(n.options.slidesToShow) / 2 - n.slideWidth * n.slideCount / 2 : !0 === n.options.centerMode && !0 === n.options.infinite ? n.slideOffset += n.slideWidth * Math.floor(n.options.slidesToShow / 2) - n.slideWidth : !0 === n.options.centerMode && (n.slideOffset = 0, n.slideOffset += n.slideWidth * Math.floor(n.options.slidesToShow / 2)), e = !1 === n.options.vertical ? i * n.slideWidth * -1 + n.slideOffset : i * t * -1 + r, !0 === n.options.variableWidth && (o = n.slideCount <= n.options.slidesToShow || !1 === n.options.infinite ? n.$slideTrack.children(".slick-slide").eq(i) : n.$slideTrack.children(".slick-slide").eq(i + n.options.slidesToShow), e = !0 === n.options.rtl ? o[0] ? -1 * (n.$slideTrack.width() - o[0].offsetLeft - o.width()) : 0 : o[0] ? -1 * o[0].offsetLeft : 0, !0 === n.options.centerMode && (o = n.slideCount <= n.options.slidesToShow || !1 === n.options.infinite ? n.$slideTrack.children(".slick-slide").eq(i) : n.$slideTrack.children(".slick-slide").eq(i + n.options.slidesToShow + 1), e = !0 === n.options.rtl ? o[0] ? -1 * (n.$slideTrack.width() - o[0].offsetLeft - o.width()) : 0 : o[0] ? -1 * o[0].offsetLeft : 0, e += (n.$list.width() - o.outerWidth()) / 2)), e;
+    }, e.prototype.getOption = e.prototype.slickGetOption = function (i) {
+      return this.options[i];
+    }, e.prototype.getNavigableIndexes = function () {
+      var i,
+          e = this,
+          t = 0,
+          o = 0,
+          s = [];
+
+      for (!1 === e.options.infinite ? i = e.slideCount : (t = -1 * e.options.slidesToScroll, o = -1 * e.options.slidesToScroll, i = 2 * e.slideCount); t < i;) {
+        s.push(t), t = o + e.options.slidesToScroll, o += e.options.slidesToScroll <= e.options.slidesToShow ? e.options.slidesToScroll : e.options.slidesToShow;
       }
 
-      Object.defineProperty(t, "__esModule", {
-        value: !0
+      return s;
+    }, e.prototype.getSlick = function () {
+      return this;
+    }, e.prototype.getSlideCount = function () {
+      var e,
+          t,
+          o = this;
+      return t = !0 === o.options.centerMode ? o.slideWidth * Math.floor(o.options.slidesToShow / 2) : 0, !0 === o.options.swipeToSlide ? (o.$slideTrack.find(".slick-slide").each(function (s, n) {
+        if (n.offsetLeft - t + i(n).outerWidth() / 2 > -1 * o.swipeLeft) return e = n, !1;
+      }), Math.abs(i(e).attr("data-slick-index") - o.currentSlide) || 1) : o.options.slidesToScroll;
+    }, e.prototype.goTo = e.prototype.slickGoTo = function (i, e) {
+      this.changeSlide({
+        data: {
+          message: "index",
+          index: parseInt(i)
+        }
+      }, e);
+    }, e.prototype.init = function (e) {
+      var t = this;
+      i(t.$slider).hasClass("slick-initialized") || (i(t.$slider).addClass("slick-initialized"), t.buildRows(), t.buildOut(), t.setProps(), t.startLoad(), t.loadSlider(), t.initializeEvents(), t.updateArrows(), t.updateDots(), t.checkResponsive(!0), t.focusHandler()), e && t.$slider.trigger("init", [t]), !0 === t.options.accessibility && t.initADA(), t.options.autoplay && (t.paused = !1, t.autoPlay());
+    }, e.prototype.initADA = function () {
+      var e = this,
+          t = Math.ceil(e.slideCount / e.options.slidesToShow),
+          o = e.getNavigableIndexes().filter(function (i) {
+        return i >= 0 && i < e.slideCount;
       });
+      e.$slides.add(e.$slideTrack.find(".slick-cloned")).attr({
+        "aria-hidden": "true",
+        tabindex: "-1"
+      }).find("a, input, button, select").attr({
+        tabindex: "-1"
+      }), null !== e.$dots && (e.$slides.not(e.$slideTrack.find(".slick-cloned")).each(function (t) {
+        var s = o.indexOf(t);
+        i(this).attr({
+          role: "tabpanel",
+          id: "slick-slide" + e.instanceUid + t,
+          tabindex: -1
+        }), -1 !== s && i(this).attr({
+          "aria-describedby": "slick-slide-control" + e.instanceUid + s
+        });
+      }), e.$dots.attr("role", "tablist").find("li").each(function (s) {
+        var n = o[s];
+        i(this).attr({
+          role: "presentation"
+        }), i(this).find("button").first().attr({
+          role: "tab",
+          id: "slick-slide-control" + e.instanceUid + s,
+          "aria-controls": "slick-slide" + e.instanceUid + n,
+          "aria-label": s + 1 + " of " + t,
+          "aria-selected": null,
+          tabindex: "-1"
+        });
+      }).eq(e.currentSlide).find("button").attr({
+        "aria-selected": "true",
+        tabindex: "0"
+      }).end());
 
-      var n = "function" == typeof Symbol && "symbol" == _typeof(Symbol.iterator) ? function (e) {
-        return _typeof(e);
-      } : function (e) {
-        return e && "function" == typeof Symbol && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : _typeof(e);
-      },
-          s = function () {
-        function e(e, t) {
-          for (var i = 0; i < t.length; i++) {
-            var r = t[i];
-            r.enumerable = r.enumerable || !1, r.configurable = !0, "value" in r && (r.writable = !0), Object.defineProperty(e, r.key, r);
+      for (var s = e.currentSlide, n = s + e.options.slidesToShow; s < n; s++) {
+        e.$slides.eq(s).attr("tabindex", 0);
+      }
+
+      e.activateADA();
+    }, e.prototype.initArrowEvents = function () {
+      var i = this;
+      !0 === i.options.arrows && i.slideCount > i.options.slidesToShow && (i.$prevArrow.off("click.slick").on("click.slick", {
+        message: "previous"
+      }, i.changeSlide), i.$nextArrow.off("click.slick").on("click.slick", {
+        message: "next"
+      }, i.changeSlide), !0 === i.options.accessibility && (i.$prevArrow.on("keydown.slick", i.keyHandler), i.$nextArrow.on("keydown.slick", i.keyHandler)));
+    }, e.prototype.initDotEvents = function () {
+      var e = this;
+      !0 === e.options.dots && (i("li", e.$dots).on("click.slick", {
+        message: "index"
+      }, e.changeSlide), !0 === e.options.accessibility && e.$dots.on("keydown.slick", e.keyHandler)), !0 === e.options.dots && !0 === e.options.pauseOnDotsHover && i("li", e.$dots).on("mouseenter.slick", i.proxy(e.interrupt, e, !0)).on("mouseleave.slick", i.proxy(e.interrupt, e, !1));
+    }, e.prototype.initSlideEvents = function () {
+      var e = this;
+      e.options.pauseOnHover && (e.$list.on("mouseenter.slick", i.proxy(e.interrupt, e, !0)), e.$list.on("mouseleave.slick", i.proxy(e.interrupt, e, !1)));
+    }, e.prototype.initializeEvents = function () {
+      var e = this;
+      e.initArrowEvents(), e.initDotEvents(), e.initSlideEvents(), e.$list.on("touchstart.slick mousedown.slick", {
+        action: "start"
+      }, e.swipeHandler), e.$list.on("touchmove.slick mousemove.slick", {
+        action: "move"
+      }, e.swipeHandler), e.$list.on("touchend.slick mouseup.slick", {
+        action: "end"
+      }, e.swipeHandler), e.$list.on("touchcancel.slick mouseleave.slick", {
+        action: "end"
+      }, e.swipeHandler), e.$list.on("click.slick", e.clickHandler), i(document).on(e.visibilityChange, i.proxy(e.visibility, e)), !0 === e.options.accessibility && e.$list.on("keydown.slick", e.keyHandler), !0 === e.options.focusOnSelect && i(e.$slideTrack).children().on("click.slick", e.selectHandler), i(window).on("orientationchange.slick.slick-" + e.instanceUid, i.proxy(e.orientationChange, e)), i(window).on("resize.slick.slick-" + e.instanceUid, i.proxy(e.resize, e)), i("[draggable!=true]", e.$slideTrack).on("dragstart", e.preventDefault), i(window).on("load.slick.slick-" + e.instanceUid, e.setPosition), i(e.setPosition);
+    }, e.prototype.initUI = function () {
+      var i = this;
+      !0 === i.options.arrows && i.slideCount > i.options.slidesToShow && (i.$prevArrow.show(), i.$nextArrow.show()), !0 === i.options.dots && i.slideCount > i.options.slidesToShow && i.$dots.show();
+    }, e.prototype.keyHandler = function (i) {
+      var e = this;
+      i.target.tagName.match("TEXTAREA|INPUT|SELECT") || (37 === i.keyCode && !0 === e.options.accessibility ? e.changeSlide({
+        data: {
+          message: !0 === e.options.rtl ? "next" : "previous"
+        }
+      }) : 39 === i.keyCode && !0 === e.options.accessibility && e.changeSlide({
+        data: {
+          message: !0 === e.options.rtl ? "previous" : "next"
+        }
+      }));
+    }, e.prototype.lazyLoad = function () {
+      function e(e) {
+        i("img[data-lazy]", e).each(function () {
+          var e = i(this),
+              t = i(this).attr("data-lazy"),
+              o = i(this).attr("data-srcset"),
+              s = i(this).attr("data-sizes") || n.$slider.attr("data-sizes"),
+              r = document.createElement("img");
+          r.onload = function () {
+            e.animate({
+              opacity: 0
+            }, 100, function () {
+              o && (e.attr("srcset", o), s && e.attr("sizes", s)), e.attr("src", t).animate({
+                opacity: 1
+              }, 200, function () {
+                e.removeAttr("data-lazy data-srcset data-sizes").removeClass("slick-loading");
+              }), n.$slider.trigger("lazyLoaded", [n, e, t]);
+            });
+          }, r.onerror = function () {
+            e.removeAttr("data-lazy").removeClass("slick-loading").addClass("slick-lazyload-error"), n.$slider.trigger("lazyLoadError", [n, e, t]);
+          }, r.src = t;
+        });
+      }
+
+      var t,
+          o,
+          s,
+          n = this;
+      if (!0 === n.options.centerMode ? !0 === n.options.infinite ? s = (o = n.currentSlide + (n.options.slidesToShow / 2 + 1)) + n.options.slidesToShow + 2 : (o = Math.max(0, n.currentSlide - (n.options.slidesToShow / 2 + 1)), s = n.options.slidesToShow / 2 + 1 + 2 + n.currentSlide) : (o = n.options.infinite ? n.options.slidesToShow + n.currentSlide : n.currentSlide, s = Math.ceil(o + n.options.slidesToShow), !0 === n.options.fade && (o > 0 && o--, s <= n.slideCount && s++)), t = n.$slider.find(".slick-slide").slice(o, s), "anticipated" === n.options.lazyLoad) for (var r = o - 1, l = s, d = n.$slider.find(".slick-slide"), a = 0; a < n.options.slidesToScroll; a++) {
+        r < 0 && (r = n.slideCount - 1), t = (t = t.add(d.eq(r))).add(d.eq(l)), r--, l++;
+      }
+      e(t), n.slideCount <= n.options.slidesToShow ? e(n.$slider.find(".slick-slide")) : n.currentSlide >= n.slideCount - n.options.slidesToShow ? e(n.$slider.find(".slick-cloned").slice(0, n.options.slidesToShow)) : 0 === n.currentSlide && e(n.$slider.find(".slick-cloned").slice(-1 * n.options.slidesToShow));
+    }, e.prototype.loadSlider = function () {
+      var i = this;
+      i.setPosition(), i.$slideTrack.css({
+        opacity: 1
+      }), i.$slider.removeClass("slick-loading"), i.initUI(), "progressive" === i.options.lazyLoad && i.progressiveLazyLoad();
+    }, e.prototype.next = e.prototype.slickNext = function () {
+      this.changeSlide({
+        data: {
+          message: "next"
+        }
+      });
+    }, e.prototype.orientationChange = function () {
+      var i = this;
+      i.checkResponsive(), i.setPosition();
+    }, e.prototype.pause = e.prototype.slickPause = function () {
+      var i = this;
+      i.autoPlayClear(), i.paused = !0;
+    }, e.prototype.play = e.prototype.slickPlay = function () {
+      var i = this;
+      i.autoPlay(), i.options.autoplay = !0, i.paused = !1, i.focussed = !1, i.interrupted = !1;
+    }, e.prototype.postSlide = function (e) {
+      var t = this;
+      t.unslicked || (t.$slider.trigger("afterChange", [t, e]), t.animating = !1, t.slideCount > t.options.slidesToShow && t.setPosition(), t.swipeLeft = null, t.options.autoplay && t.autoPlay(), !0 === t.options.accessibility && (t.initADA(), t.options.focusOnChange && i(t.$slides.get(t.currentSlide)).attr("tabindex", 0).focus()));
+    }, e.prototype.prev = e.prototype.slickPrev = function () {
+      this.changeSlide({
+        data: {
+          message: "previous"
+        }
+      });
+    }, e.prototype.preventDefault = function (i) {
+      i.preventDefault();
+    }, e.prototype.progressiveLazyLoad = function (e) {
+      e = e || 1;
+      var t,
+          o,
+          s,
+          n,
+          r,
+          l = this,
+          d = i("img[data-lazy]", l.$slider);
+      d.length ? (t = d.first(), o = t.attr("data-lazy"), s = t.attr("data-srcset"), n = t.attr("data-sizes") || l.$slider.attr("data-sizes"), (r = document.createElement("img")).onload = function () {
+        s && (t.attr("srcset", s), n && t.attr("sizes", n)), t.attr("src", o).removeAttr("data-lazy data-srcset data-sizes").removeClass("slick-loading"), !0 === l.options.adaptiveHeight && l.setPosition(), l.$slider.trigger("lazyLoaded", [l, t, o]), l.progressiveLazyLoad();
+      }, r.onerror = function () {
+        e < 3 ? setTimeout(function () {
+          l.progressiveLazyLoad(e + 1);
+        }, 500) : (t.removeAttr("data-lazy").removeClass("slick-loading").addClass("slick-lazyload-error"), l.$slider.trigger("lazyLoadError", [l, t, o]), l.progressiveLazyLoad());
+      }, r.src = o) : l.$slider.trigger("allImagesLoaded", [l]);
+    }, e.prototype.refresh = function (e) {
+      var t,
+          o,
+          s = this;
+      o = s.slideCount - s.options.slidesToShow, !s.options.infinite && s.currentSlide > o && (s.currentSlide = o), s.slideCount <= s.options.slidesToShow && (s.currentSlide = 0), t = s.currentSlide, s.destroy(!0), i.extend(s, s.initials, {
+        currentSlide: t
+      }), s.init(), e || s.changeSlide({
+        data: {
+          message: "index",
+          index: t
+        }
+      }, !1);
+    }, e.prototype.registerBreakpoints = function () {
+      var e,
+          t,
+          o,
+          s = this,
+          n = s.options.responsive || null;
+
+      if ("array" === i.type(n) && n.length) {
+        s.respondTo = s.options.respondTo || "window";
+
+        for (e in n) {
+          if (o = s.breakpoints.length - 1, n.hasOwnProperty(e)) {
+            for (t = n[e].breakpoint; o >= 0;) {
+              s.breakpoints[o] && s.breakpoints[o] === t && s.breakpoints.splice(o, 1), o--;
+            }
+
+            s.breakpoints.push(t), s.breakpointSettings[t] = n[e].settings;
           }
         }
 
-        return function (t, i, r) {
-          return i && e(t.prototype, i), r && e(t, r), t;
-        };
-      }(),
-          l = function () {
-        function e(t) {
-          var i = this;
-          if (r(this, e), this.config = e.mergeSettings(t), this.selector = "string" == typeof this.config.selector ? document.querySelector(this.config.selector) : this.config.selector, null === this.selector) throw new Error("Something wrong with your selector 😭");
-          this.resolveSlidesNumber(), this.selectorWidth = this.selector.offsetWidth, this.innerElements = [].slice.call(this.selector.children), this.currentSlide = this.config.loop ? this.config.startIndex % this.innerElements.length : Math.max(0, Math.min(this.config.startIndex, this.innerElements.length - this.perPage)), this.transformProperty = e.webkitOrNot(), ["resizeHandler", "touchstartHandler", "touchendHandler", "touchmoveHandler", "mousedownHandler", "mouseupHandler", "mouseleaveHandler", "mousemoveHandler", "clickHandler"].forEach(function (e) {
-            i[e] = i[e].bind(i);
-          }), this.init();
+        s.breakpoints.sort(function (i, e) {
+          return s.options.mobileFirst ? i - e : e - i;
+        });
+      }
+    }, e.prototype.reinit = function () {
+      var e = this;
+      e.$slides = e.$slideTrack.children(e.options.slide).addClass("slick-slide"), e.slideCount = e.$slides.length, e.currentSlide >= e.slideCount && 0 !== e.currentSlide && (e.currentSlide = e.currentSlide - e.options.slidesToScroll), e.slideCount <= e.options.slidesToShow && (e.currentSlide = 0), e.registerBreakpoints(), e.setProps(), e.setupInfinite(), e.buildArrows(), e.updateArrows(), e.initArrowEvents(), e.buildDots(), e.updateDots(), e.initDotEvents(), e.cleanUpSlideEvents(), e.initSlideEvents(), e.checkResponsive(!1, !0), !0 === e.options.focusOnSelect && i(e.$slideTrack).children().on("click.slick", e.selectHandler), e.setSlideClasses("number" == typeof e.currentSlide ? e.currentSlide : 0), e.setPosition(), e.focusHandler(), e.paused = !e.options.autoplay, e.autoPlay(), e.$slider.trigger("reInit", [e]);
+    }, e.prototype.resize = function () {
+      var e = this;
+      i(window).width() !== e.windowWidth && (clearTimeout(e.windowDelay), e.windowDelay = window.setTimeout(function () {
+        e.windowWidth = i(window).width(), e.checkResponsive(), e.unslicked || e.setPosition();
+      }, 50));
+    }, e.prototype.removeSlide = e.prototype.slickRemove = function (i, e, t) {
+      var o = this;
+      if (i = "boolean" == typeof i ? !0 === (e = i) ? 0 : o.slideCount - 1 : !0 === e ? --i : i, o.slideCount < 1 || i < 0 || i > o.slideCount - 1) return !1;
+      o.unload(), !0 === t ? o.$slideTrack.children().remove() : o.$slideTrack.children(this.options.slide).eq(i).remove(), o.$slides = o.$slideTrack.children(this.options.slide), o.$slideTrack.children(this.options.slide).detach(), o.$slideTrack.append(o.$slides), o.$slidesCache = o.$slides, o.reinit();
+    }, e.prototype.setCSS = function (i) {
+      var e,
+          t,
+          o = this,
+          s = {};
+      !0 === o.options.rtl && (i = -i), e = "left" == o.positionProp ? Math.ceil(i) + "px" : "0px", t = "top" == o.positionProp ? Math.ceil(i) + "px" : "0px", s[o.positionProp] = i, !1 === o.transformsEnabled ? o.$slideTrack.css(s) : (s = {}, !1 === o.cssTransitions ? (s[o.animType] = "translate(" + e + ", " + t + ")", o.$slideTrack.css(s)) : (s[o.animType] = "translate3d(" + e + ", " + t + ", 0px)", o.$slideTrack.css(s)));
+    }, e.prototype.setDimensions = function () {
+      var i = this;
+      !1 === i.options.vertical ? !0 === i.options.centerMode && i.$list.css({
+        padding: "0px " + i.options.centerPadding
+      }) : (i.$list.height(i.$slides.first().outerHeight(!0) * i.options.slidesToShow), !0 === i.options.centerMode && i.$list.css({
+        padding: i.options.centerPadding + " 0px"
+      })), i.listWidth = i.$list.width(), i.listHeight = i.$list.height(), !1 === i.options.vertical && !1 === i.options.variableWidth ? (i.slideWidth = Math.ceil(i.listWidth / i.options.slidesToShow), i.$slideTrack.width(Math.ceil(i.slideWidth * i.$slideTrack.children(".slick-slide").length))) : !0 === i.options.variableWidth ? i.$slideTrack.width(5e3 * i.slideCount) : (i.slideWidth = Math.ceil(i.listWidth), i.$slideTrack.height(Math.ceil(i.$slides.first().outerHeight(!0) * i.$slideTrack.children(".slick-slide").length)));
+      var e = i.$slides.first().outerWidth(!0) - i.$slides.first().width();
+      !1 === i.options.variableWidth && i.$slideTrack.children(".slick-slide").width(i.slideWidth - e);
+    }, e.prototype.setFade = function () {
+      var e,
+          t = this;
+      t.$slides.each(function (o, s) {
+        e = t.slideWidth * o * -1, !0 === t.options.rtl ? i(s).css({
+          position: "relative",
+          right: e,
+          top: 0,
+          zIndex: t.options.zIndex - 2,
+          opacity: 0
+        }) : i(s).css({
+          position: "relative",
+          left: e,
+          top: 0,
+          zIndex: t.options.zIndex - 2,
+          opacity: 0
+        });
+      }), t.$slides.eq(t.currentSlide).css({
+        zIndex: t.options.zIndex - 1,
+        opacity: 1
+      });
+    }, e.prototype.setHeight = function () {
+      var i = this;
+
+      if (1 === i.options.slidesToShow && !0 === i.options.adaptiveHeight && !1 === i.options.vertical) {
+        var e = i.$slides.eq(i.currentSlide).outerHeight(!0);
+        i.$list.css("height", e);
+      }
+    }, e.prototype.setOption = e.prototype.slickSetOption = function () {
+      var e,
+          t,
+          o,
+          s,
+          n,
+          r = this,
+          l = !1;
+      if ("object" === i.type(arguments[0]) ? (o = arguments[0], l = arguments[1], n = "multiple") : "string" === i.type(arguments[0]) && (o = arguments[0], s = arguments[1], l = arguments[2], "responsive" === arguments[0] && "array" === i.type(arguments[1]) ? n = "responsive" : void 0 !== arguments[1] && (n = "single")), "single" === n) r.options[o] = s;else if ("multiple" === n) i.each(o, function (i, e) {
+        r.options[i] = e;
+      });else if ("responsive" === n) for (t in s) {
+        if ("array" !== i.type(r.options.responsive)) r.options.responsive = [s[t]];else {
+          for (e = r.options.responsive.length - 1; e >= 0;) {
+            r.options.responsive[e].breakpoint === s[t].breakpoint && r.options.responsive.splice(e, 1), e--;
+          }
+
+          r.options.responsive.push(s[t]);
+        }
+      }
+      l && (r.unload(), r.reinit());
+    }, e.prototype.setPosition = function () {
+      var i = this;
+      i.setDimensions(), i.setHeight(), !1 === i.options.fade ? i.setCSS(i.getLeft(i.currentSlide)) : i.setFade(), i.$slider.trigger("setPosition", [i]);
+    }, e.prototype.setProps = function () {
+      var i = this,
+          e = document.body.style;
+      i.positionProp = !0 === i.options.vertical ? "top" : "left", "top" === i.positionProp ? i.$slider.addClass("slick-vertical") : i.$slider.removeClass("slick-vertical"), void 0 === e.WebkitTransition && void 0 === e.MozTransition && void 0 === e.msTransition || !0 === i.options.useCSS && (i.cssTransitions = !0), i.options.fade && ("number" == typeof i.options.zIndex ? i.options.zIndex < 3 && (i.options.zIndex = 3) : i.options.zIndex = i.defaults.zIndex), void 0 !== e.OTransform && (i.animType = "OTransform", i.transformType = "-o-transform", i.transitionType = "OTransition", void 0 === e.perspectiveProperty && void 0 === e.webkitPerspective && (i.animType = !1)), void 0 !== e.MozTransform && (i.animType = "MozTransform", i.transformType = "-moz-transform", i.transitionType = "MozTransition", void 0 === e.perspectiveProperty && void 0 === e.MozPerspective && (i.animType = !1)), void 0 !== e.webkitTransform && (i.animType = "webkitTransform", i.transformType = "-webkit-transform", i.transitionType = "webkitTransition", void 0 === e.perspectiveProperty && void 0 === e.webkitPerspective && (i.animType = !1)), void 0 !== e.msTransform && (i.animType = "msTransform", i.transformType = "-ms-transform", i.transitionType = "msTransition", void 0 === e.msTransform && (i.animType = !1)), void 0 !== e.transform && !1 !== i.animType && (i.animType = "transform", i.transformType = "transform", i.transitionType = "transition"), i.transformsEnabled = i.options.useTransform && null !== i.animType && !1 !== i.animType;
+    }, e.prototype.setSlideClasses = function (i) {
+      var e,
+          t,
+          o,
+          s,
+          n = this;
+
+      if (t = n.$slider.find(".slick-slide").removeClass("slick-active slick-center slick-current").attr("aria-hidden", "true"), n.$slides.eq(i).addClass("slick-current"), !0 === n.options.centerMode) {
+        var r = n.options.slidesToShow % 2 == 0 ? 1 : 0;
+        e = Math.floor(n.options.slidesToShow / 2), !0 === n.options.infinite && (i >= e && i <= n.slideCount - 1 - e ? n.$slides.slice(i - e + r, i + e + 1).addClass("slick-active").attr("aria-hidden", "false") : (o = n.options.slidesToShow + i, t.slice(o - e + 1 + r, o + e + 2).addClass("slick-active").attr("aria-hidden", "false")), 0 === i ? t.eq(t.length - 1 - n.options.slidesToShow).addClass("slick-center") : i === n.slideCount - 1 && t.eq(n.options.slidesToShow).addClass("slick-center")), n.$slides.eq(i).addClass("slick-center");
+      } else i >= 0 && i <= n.slideCount - n.options.slidesToShow ? n.$slides.slice(i, i + n.options.slidesToShow).addClass("slick-active").attr("aria-hidden", "false") : t.length <= n.options.slidesToShow ? t.addClass("slick-active").attr("aria-hidden", "false") : (s = n.slideCount % n.options.slidesToShow, o = !0 === n.options.infinite ? n.options.slidesToShow + i : i, n.options.slidesToShow == n.options.slidesToScroll && n.slideCount - i < n.options.slidesToShow ? t.slice(o - (n.options.slidesToShow - s), o + s).addClass("slick-active").attr("aria-hidden", "false") : t.slice(o, o + n.options.slidesToShow).addClass("slick-active").attr("aria-hidden", "false"));
+
+      "ondemand" !== n.options.lazyLoad && "anticipated" !== n.options.lazyLoad || n.lazyLoad();
+    }, e.prototype.setupInfinite = function () {
+      var e,
+          t,
+          o,
+          s = this;
+
+      if (!0 === s.options.fade && (s.options.centerMode = !1), !0 === s.options.infinite && !1 === s.options.fade && (t = null, s.slideCount > s.options.slidesToShow)) {
+        for (o = !0 === s.options.centerMode ? s.options.slidesToShow + 1 : s.options.slidesToShow, e = s.slideCount; e > s.slideCount - o; e -= 1) {
+          t = e - 1, i(s.$slides[t]).clone(!0).attr("id", "").attr("data-slick-index", t - s.slideCount).prependTo(s.$slideTrack).addClass("slick-cloned");
         }
 
-        return s(e, [{
-          key: "attachEvents",
-          value: function value() {
-            window.addEventListener("resize", this.resizeHandler), this.config.draggable && (this.pointerDown = !1, this.drag = {
-              startX: 0,
-              endX: 0,
-              startY: 0,
-              letItGo: null,
-              preventClick: !1
-            }, this.selector.addEventListener("touchstart", this.touchstartHandler), this.selector.addEventListener("touchend", this.touchendHandler), this.selector.addEventListener("touchmove", this.touchmoveHandler), this.selector.addEventListener("mousedown", this.mousedownHandler), this.selector.addEventListener("mouseup", this.mouseupHandler), this.selector.addEventListener("mouseleave", this.mouseleaveHandler), this.selector.addEventListener("mousemove", this.mousemoveHandler), this.selector.addEventListener("click", this.clickHandler));
-          }
-        }, {
-          key: "detachEvents",
-          value: function value() {
-            window.removeEventListener("resize", this.resizeHandler), this.selector.removeEventListener("touchstart", this.touchstartHandler), this.selector.removeEventListener("touchend", this.touchendHandler), this.selector.removeEventListener("touchmove", this.touchmoveHandler), this.selector.removeEventListener("mousedown", this.mousedownHandler), this.selector.removeEventListener("mouseup", this.mouseupHandler), this.selector.removeEventListener("mouseleave", this.mouseleaveHandler), this.selector.removeEventListener("mousemove", this.mousemoveHandler), this.selector.removeEventListener("click", this.clickHandler);
-          }
-        }, {
-          key: "init",
-          value: function value() {
-            this.attachEvents(), this.selector.style.overflow = "hidden", this.selector.style.direction = this.config.rtl ? "rtl" : "ltr", this.buildSliderFrame(), this.config.onInit.call(this);
-          }
-        }, {
-          key: "buildSliderFrame",
-          value: function value() {
-            var e = this.selectorWidth / this.perPage,
-                t = this.config.loop ? this.innerElements.length + 2 * this.perPage : this.innerElements.length;
-            this.sliderFrame = document.createElement("div"), this.sliderFrame.style.width = e * t + "px", this.enableTransition(), this.config.draggable && (this.selector.style.cursor = "-webkit-grab");
-            var i = document.createDocumentFragment();
-            if (this.config.loop) for (var r = this.innerElements.length - this.perPage; r < this.innerElements.length; r++) {
-              var n = this.buildSliderFrameItem(this.innerElements[r].cloneNode(!0));
-              i.appendChild(n);
-            }
+        for (e = 0; e < o + s.slideCount; e += 1) {
+          t = e, i(s.$slides[t]).clone(!0).attr("id", "").attr("data-slick-index", t + s.slideCount).appendTo(s.$slideTrack).addClass("slick-cloned");
+        }
 
-            for (var s = 0; s < this.innerElements.length; s++) {
-              var l = this.buildSliderFrameItem(this.innerElements[s]);
-              i.appendChild(l);
-            }
+        s.$slideTrack.find(".slick-cloned").find("[id]").each(function () {
+          i(this).attr("id", "");
+        });
+      }
+    }, e.prototype.interrupt = function (i) {
+      var e = this;
+      i || e.autoPlay(), e.interrupted = i;
+    }, e.prototype.selectHandler = function (e) {
+      var t = this,
+          o = i(e.target).is(".slick-slide") ? i(e.target) : i(e.target).parents(".slick-slide"),
+          s = parseInt(o.attr("data-slick-index"));
+      s || (s = 0), t.slideCount <= t.options.slidesToShow ? t.slideHandler(s, !1, !0) : t.slideHandler(s);
+    }, e.prototype.slideHandler = function (i, e, t) {
+      var o,
+          s,
+          n,
+          r,
+          l,
+          d = null,
+          a = this;
+      if (e = e || !1, !(!0 === a.animating && !0 === a.options.waitForAnimate || !0 === a.options.fade && a.currentSlide === i)) if (!1 === e && a.asNavFor(i), o = i, d = a.getLeft(o), r = a.getLeft(a.currentSlide), a.currentLeft = null === a.swipeLeft ? r : a.swipeLeft, !1 === a.options.infinite && !1 === a.options.centerMode && (i < 0 || i > a.getDotCount() * a.options.slidesToScroll)) !1 === a.options.fade && (o = a.currentSlide, !0 !== t ? a.animateSlide(r, function () {
+        a.postSlide(o);
+      }) : a.postSlide(o));else if (!1 === a.options.infinite && !0 === a.options.centerMode && (i < 0 || i > a.slideCount - a.options.slidesToScroll)) !1 === a.options.fade && (o = a.currentSlide, !0 !== t ? a.animateSlide(r, function () {
+        a.postSlide(o);
+      }) : a.postSlide(o));else {
+        if (a.options.autoplay && clearInterval(a.autoPlayTimer), s = o < 0 ? a.slideCount % a.options.slidesToScroll != 0 ? a.slideCount - a.slideCount % a.options.slidesToScroll : a.slideCount + o : o >= a.slideCount ? a.slideCount % a.options.slidesToScroll != 0 ? 0 : o - a.slideCount : o, a.animating = !0, a.$slider.trigger("beforeChange", [a, a.currentSlide, s]), n = a.currentSlide, a.currentSlide = s, a.setSlideClasses(a.currentSlide), a.options.asNavFor && (l = (l = a.getNavTarget()).slick("getSlick")).slideCount <= l.options.slidesToShow && l.setSlideClasses(a.currentSlide), a.updateDots(), a.updateArrows(), !0 === a.options.fade) return !0 !== t ? (a.fadeSlideOut(n), a.fadeSlide(s, function () {
+          a.postSlide(s);
+        })) : a.postSlide(s), void a.animateHeight();
+        !0 !== t ? a.animateSlide(d, function () {
+          a.postSlide(s);
+        }) : a.postSlide(s);
+      }
+    }, e.prototype.startLoad = function () {
+      var i = this;
+      !0 === i.options.arrows && i.slideCount > i.options.slidesToShow && (i.$prevArrow.hide(), i.$nextArrow.hide()), !0 === i.options.dots && i.slideCount > i.options.slidesToShow && i.$dots.hide(), i.$slider.addClass("slick-loading");
+    }, e.prototype.swipeDirection = function () {
+      var i,
+          e,
+          t,
+          o,
+          s = this;
+      return i = s.touchObject.startX - s.touchObject.curX, e = s.touchObject.startY - s.touchObject.curY, t = Math.atan2(e, i), (o = Math.round(180 * t / Math.PI)) < 0 && (o = 360 - Math.abs(o)), o <= 45 && o >= 0 ? !1 === s.options.rtl ? "left" : "right" : o <= 360 && o >= 315 ? !1 === s.options.rtl ? "left" : "right" : o >= 135 && o <= 225 ? !1 === s.options.rtl ? "right" : "left" : !0 === s.options.verticalSwiping ? o >= 35 && o <= 135 ? "down" : "up" : "vertical";
+    }, e.prototype.swipeEnd = function (i) {
+      var e,
+          t,
+          o = this;
+      if (o.dragging = !1, o.swiping = !1, o.scrolling) return o.scrolling = !1, !1;
+      if (o.interrupted = !1, o.shouldClick = !(o.touchObject.swipeLength > 10), void 0 === o.touchObject.curX) return !1;
 
-            if (this.config.loop) for (var o = 0; o < this.perPage; o++) {
-              var a = this.buildSliderFrameItem(this.innerElements[o].cloneNode(!0));
-              i.appendChild(a);
-            }
-            this.sliderFrame.appendChild(i), this.selector.innerHTML = "", this.selector.appendChild(this.sliderFrame), this.slideToCurrent();
-          }
-        }, {
-          key: "buildSliderFrameItem",
-          value: function value(e) {
-            var t = document.createElement("div");
-            return t.style.cssFloat = this.config.rtl ? "right" : "left", t.style["float"] = this.config.rtl ? "right" : "left", t.style.width = (this.config.loop ? 100 / (this.innerElements.length + 2 * this.perPage) : 100 / this.innerElements.length) + "%", t.appendChild(e), t;
-          }
-        }, {
-          key: "resolveSlidesNumber",
-          value: function value() {
-            if ("number" == typeof this.config.perPage) this.perPage = this.config.perPage;else if ("object" === n(this.config.perPage)) {
-              this.perPage = 1;
-
-              for (var e in this.config.perPage) {
-                window.innerWidth >= e && (this.perPage = this.config.perPage[e]);
-              }
-            }
-          }
-        }, {
-          key: "prev",
-          value: function value() {
-            var e = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : 1,
-                t = arguments[1];
-
-            if (!(this.innerElements.length <= this.perPage)) {
-              var i = this.currentSlide;
-
-              if (this.config.loop) {
-                if (this.currentSlide - e < 0) {
-                  this.disableTransition();
-                  var r = this.currentSlide + this.innerElements.length,
-                      n = this.perPage,
-                      s = r + n,
-                      l = (this.config.rtl ? 1 : -1) * s * (this.selectorWidth / this.perPage),
-                      o = this.config.draggable ? this.drag.endX - this.drag.startX : 0;
-                  this.sliderFrame.style[this.transformProperty] = "translate3d(" + (l + o) + "px, 0, 0)", this.currentSlide = r - e;
-                } else this.currentSlide = this.currentSlide - e;
-              } else this.currentSlide = Math.max(this.currentSlide - e, 0);
-
-              i !== this.currentSlide && (this.slideToCurrent(this.config.loop), this.config.onChange.call(this), t && t.call(this));
-            }
-          }
-        }, {
-          key: "next",
-          value: function value() {
-            var e = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : 1,
-                t = arguments[1];
-
-            if (!(this.innerElements.length <= this.perPage)) {
-              var i = this.currentSlide;
-
-              if (this.config.loop) {
-                if (this.currentSlide + e > this.innerElements.length - this.perPage) {
-                  this.disableTransition();
-                  var r = this.currentSlide - this.innerElements.length,
-                      n = this.perPage,
-                      s = r + n,
-                      l = (this.config.rtl ? 1 : -1) * s * (this.selectorWidth / this.perPage),
-                      o = this.config.draggable ? this.drag.endX - this.drag.startX : 0;
-                  this.sliderFrame.style[this.transformProperty] = "translate3d(" + (l + o) + "px, 0, 0)", this.currentSlide = r + e;
-                } else this.currentSlide = this.currentSlide + e;
-              } else this.currentSlide = Math.min(this.currentSlide + e, this.innerElements.length - this.perPage);
-
-              i !== this.currentSlide && (this.slideToCurrent(this.config.loop), this.config.onChange.call(this), t && t.call(this));
-            }
-          }
-        }, {
-          key: "disableTransition",
-          value: function value() {
-            this.sliderFrame.style.webkitTransition = "all 0ms " + this.config.easing, this.sliderFrame.style.transition = "all 0ms " + this.config.easing;
-          }
-        }, {
-          key: "enableTransition",
-          value: function value() {
-            this.sliderFrame.style.webkitTransition = "all " + this.config.duration + "ms " + this.config.easing, this.sliderFrame.style.transition = "all " + this.config.duration + "ms " + this.config.easing;
-          }
-        }, {
-          key: "goTo",
-          value: function value(e, t) {
-            if (!(this.innerElements.length <= this.perPage)) {
-              var i = this.currentSlide;
-              this.currentSlide = this.config.loop ? e % this.innerElements.length : Math.min(Math.max(e, 0), this.innerElements.length - this.perPage), i !== this.currentSlide && (this.slideToCurrent(), this.config.onChange.call(this), t && t.call(this));
-            }
-          }
-        }, {
-          key: "slideToCurrent",
-          value: function value(e) {
-            var t = this,
-                i = this.config.loop ? this.currentSlide + this.perPage : this.currentSlide,
-                r = (this.config.rtl ? 1 : -1) * i * (this.selectorWidth / this.perPage);
-            e ? requestAnimationFrame(function () {
-              requestAnimationFrame(function () {
-                t.enableTransition(), t.sliderFrame.style[t.transformProperty] = "translate3d(" + r + "px, 0, 0)";
-              });
-            }) : this.sliderFrame.style[this.transformProperty] = "translate3d(" + r + "px, 0, 0)";
-          }
-        }, {
-          key: "updateAfterDrag",
-          value: function value() {
-            var e = (this.config.rtl ? -1 : 1) * (this.drag.endX - this.drag.startX),
-                t = Math.abs(e),
-                i = this.config.multipleDrag ? Math.ceil(t / (this.selectorWidth / this.perPage)) : 1,
-                r = e > 0 && this.currentSlide - i < 0,
-                n = e < 0 && this.currentSlide + i > this.innerElements.length - this.perPage;
-            e > 0 && t > this.config.threshold && this.innerElements.length > this.perPage ? this.prev(i) : e < 0 && t > this.config.threshold && this.innerElements.length > this.perPage && this.next(i), this.slideToCurrent(r || n);
-          }
-        }, {
-          key: "resizeHandler",
-          value: function value() {
-            this.resolveSlidesNumber(), this.currentSlide + this.perPage > this.innerElements.length && (this.currentSlide = this.innerElements.length <= this.perPage ? 0 : this.innerElements.length - this.perPage), this.selectorWidth = this.selector.offsetWidth, this.buildSliderFrame();
-          }
-        }, {
-          key: "clearDrag",
-          value: function value() {
-            this.drag = {
-              startX: 0,
-              endX: 0,
-              startY: 0,
-              letItGo: null,
-              preventClick: this.drag.preventClick
-            };
-          }
-        }, {
-          key: "touchstartHandler",
-          value: function value(e) {
-            -1 !== ["TEXTAREA", "OPTION", "INPUT", "SELECT"].indexOf(e.target.nodeName) || (e.stopPropagation(), this.pointerDown = !0, this.drag.startX = e.touches[0].pageX, this.drag.startY = e.touches[0].pageY);
-          }
-        }, {
-          key: "touchendHandler",
-          value: function value(e) {
-            e.stopPropagation(), this.pointerDown = !1, this.enableTransition(), this.drag.endX && this.updateAfterDrag(), this.clearDrag();
-          }
-        }, {
-          key: "touchmoveHandler",
-          value: function value(e) {
-            if (e.stopPropagation(), null === this.drag.letItGo && (this.drag.letItGo = Math.abs(this.drag.startY - e.touches[0].pageY) < Math.abs(this.drag.startX - e.touches[0].pageX)), this.pointerDown && this.drag.letItGo) {
-              e.preventDefault(), this.drag.endX = e.touches[0].pageX, this.sliderFrame.style.webkitTransition = "all 0ms " + this.config.easing, this.sliderFrame.style.transition = "all 0ms " + this.config.easing;
-              var t = this.config.loop ? this.currentSlide + this.perPage : this.currentSlide,
-                  i = t * (this.selectorWidth / this.perPage),
-                  r = this.drag.endX - this.drag.startX,
-                  n = this.config.rtl ? i + r : i - r;
-              this.sliderFrame.style[this.transformProperty] = "translate3d(" + (this.config.rtl ? 1 : -1) * n + "px, 0, 0)";
-            }
-          }
-        }, {
-          key: "mousedownHandler",
-          value: function value(e) {
-            -1 !== ["TEXTAREA", "OPTION", "INPUT", "SELECT"].indexOf(e.target.nodeName) || (e.preventDefault(), e.stopPropagation(), this.pointerDown = !0, this.drag.startX = e.pageX);
-          }
-        }, {
-          key: "mouseupHandler",
-          value: function value(e) {
-            e.stopPropagation(), this.pointerDown = !1, this.selector.style.cursor = "-webkit-grab", this.enableTransition(), this.drag.endX && this.updateAfterDrag(), this.clearDrag();
-          }
-        }, {
-          key: "mousemoveHandler",
-          value: function value(e) {
-            if (e.preventDefault(), this.pointerDown) {
-              "A" === e.target.nodeName && (this.drag.preventClick = !0), this.drag.endX = e.pageX, this.selector.style.cursor = "-webkit-grabbing", this.sliderFrame.style.webkitTransition = "all 0ms " + this.config.easing, this.sliderFrame.style.transition = "all 0ms " + this.config.easing;
-              var t = this.config.loop ? this.currentSlide + this.perPage : this.currentSlide,
-                  i = t * (this.selectorWidth / this.perPage),
-                  r = this.drag.endX - this.drag.startX,
-                  n = this.config.rtl ? i + r : i - r;
-              this.sliderFrame.style[this.transformProperty] = "translate3d(" + (this.config.rtl ? 1 : -1) * n + "px, 0, 0)";
-            }
-          }
-        }, {
-          key: "mouseleaveHandler",
-          value: function value(e) {
-            this.pointerDown && (this.pointerDown = !1, this.selector.style.cursor = "-webkit-grab", this.drag.endX = e.pageX, this.drag.preventClick = !1, this.enableTransition(), this.updateAfterDrag(), this.clearDrag());
-          }
-        }, {
-          key: "clickHandler",
-          value: function value(e) {
-            this.drag.preventClick && e.preventDefault(), this.drag.preventClick = !1;
-          }
-        }, {
-          key: "remove",
-          value: function value(e, t) {
-            if (e < 0 || e >= this.innerElements.length) throw new Error("Item to remove doesn't exist 😭");
-            var i = e < this.currentSlide,
-                r = this.currentSlide + this.perPage - 1 === e;
-            (i || r) && this.currentSlide--, this.innerElements.splice(e, 1), this.buildSliderFrame(), t && t.call(this);
-          }
-        }, {
-          key: "insert",
-          value: function value(e, t, i) {
-            if (t < 0 || t > this.innerElements.length + 1) throw new Error("Unable to inset it at this index 😭");
-            if (-1 !== this.innerElements.indexOf(e)) throw new Error("The same item in a carousel? Really? Nope 😭");
-            var r = t <= this.currentSlide > 0 && this.innerElements.length;
-            this.currentSlide = r ? this.currentSlide + 1 : this.currentSlide, this.innerElements.splice(t, 0, e), this.buildSliderFrame(), i && i.call(this);
-          }
-        }, {
-          key: "prepend",
-          value: function value(e, t) {
-            this.insert(e, 0), t && t.call(this);
-          }
-        }, {
-          key: "append",
-          value: function value(e, t) {
-            this.insert(e, this.innerElements.length + 1), t && t.call(this);
-          }
-        }, {
-          key: "destroy",
-          value: function value() {
-            var e = arguments.length > 0 && void 0 !== arguments[0] && arguments[0],
-                t = arguments[1];
-
-            if (this.detachEvents(), this.selector.style.cursor = "auto", e) {
-              for (var i = document.createDocumentFragment(), r = 0; r < this.innerElements.length; r++) {
-                i.appendChild(this.innerElements[r]);
-              }
-
-              this.selector.innerHTML = "", this.selector.appendChild(i), this.selector.removeAttribute("style");
-            }
-
-            t && t.call(this);
-          }
-        }], [{
-          key: "mergeSettings",
-          value: function value(e) {
-            var t = {
-              selector: ".siema",
-              duration: 200,
-              easing: "ease-out",
-              perPage: 1,
-              startIndex: 0,
-              draggable: !0,
-              multipleDrag: !0,
-              threshold: 20,
-              loop: !1,
-              rtl: !1,
-              onInit: function onInit() {},
-              onChange: function onChange() {}
-            },
-                i = e;
-
-            for (var r in i) {
-              t[r] = i[r];
-            }
-
-            return t;
-          }
-        }, {
-          key: "webkitOrNot",
-          value: function value() {
-            return "string" == typeof document.documentElement.style.transform ? "transform" : "WebkitTransform";
-          }
-        }]), e;
-      }();
-
-      t["default"] = l, e.exports = t["default"];
-    }]);
-  }); // let inputsPhone = Array.prototype.slice.call(document.querySelectorAll('.inp-phone'));
-  // inputsPhone.forEach((e) => {
-  // 	const phoneMask = IMask( e, { mask: '+{7}(000)000-00-00' })
-  // })
-
-  var phoneMask = IMask(document.querySelector('.inp-phone1'), {
-    mask: '+{7}(000)000-00-00'
-  });
-  var phoneMask2 = IMask(document.querySelector('.inp-phone2'), {
-    mask: '+{7}(000)000-00-00'
-  });
-  var phoneMask3 = IMask(document.querySelector('.inp-phone3'), {
-    mask: '+{7}(000)000-00-00'
-  }); // CUSTOM SELECT
-
-  var x, i, j, l, ll, selElmnt, a, b, c;
-  /* Look for any elements with the class "custom-select": */
-
-  x = document.getElementsByClassName("custom-select");
-  l = x.length;
-
-  for (i = 0; i < l; i++) {
-    selElmnt = x[i].getElementsByTagName("select")[0];
-    ll = selElmnt.length;
-    /* For each element, create a new DIV that will act as the selected item: */
-
-    a = document.createElement("DIV");
-    a.setAttribute("class", "select-selected");
-    a.innerHTML = selElmnt.options[selElmnt.selectedIndex].innerHTML;
-    x[i].appendChild(a);
-    /* For each element, create a new DIV that will contain the option list: */
-
-    b = document.createElement("DIV");
-    b.setAttribute("class", "select-items select-hide");
-
-    for (j = 1; j < ll; j++) {
-      /* For each option in the original select element,
-      create a new DIV that will act as an option item: */
-      c = document.createElement("DIV");
-      c.innerHTML = selElmnt.options[j].innerHTML;
-      c.addEventListener("click", function (e) {
-        /* When an item is clicked, update the original select box,
-        and the selected item: */
-        var y, i, k, s, h, sl, yl;
-        s = this.parentNode.parentNode.getElementsByTagName("select")[0];
-        sl = s.length;
-        h = this.parentNode.previousSibling;
-
-        for (i = 0; i < sl; i++) {
-          if (s.options[i].innerHTML == this.innerHTML) {
-            s.selectedIndex = i;
-            h.innerHTML = this.innerHTML;
-            y = this.parentNode.getElementsByClassName("same-as-selected");
-            yl = y.length;
-
-            for (k = 0; k < yl; k++) {
-              y[k].removeAttribute("class");
-            }
-
-            this.setAttribute("class", "same-as-selected");
+      if (!0 === o.touchObject.edgeHit && o.$slider.trigger("edge", [o, o.swipeDirection()]), o.touchObject.swipeLength >= o.touchObject.minSwipe) {
+        switch (t = o.swipeDirection()) {
+          case "left":
+          case "down":
+            e = o.options.swipeToSlide ? o.checkNavigable(o.currentSlide + o.getSlideCount()) : o.currentSlide + o.getSlideCount(), o.currentDirection = 0;
             break;
-          }
+
+          case "right":
+          case "up":
+            e = o.options.swipeToSlide ? o.checkNavigable(o.currentSlide - o.getSlideCount()) : o.currentSlide - o.getSlideCount(), o.currentDirection = 1;
         }
 
-        h.click();
-      });
-      b.appendChild(c);
-    }
+        "vertical" != t && (o.slideHandler(e), o.touchObject = {}, o.$slider.trigger("swipe", [o, t]));
+      } else o.touchObject.startX !== o.touchObject.curX && (o.slideHandler(o.currentSlide), o.touchObject = {});
+    }, e.prototype.swipeHandler = function (i) {
+      var e = this;
+      if (!(!1 === e.options.swipe || "ontouchend" in document && !1 === e.options.swipe || !1 === e.options.draggable && -1 !== i.type.indexOf("mouse"))) switch (e.touchObject.fingerCount = i.originalEvent && void 0 !== i.originalEvent.touches ? i.originalEvent.touches.length : 1, e.touchObject.minSwipe = e.listWidth / e.options.touchThreshold, !0 === e.options.verticalSwiping && (e.touchObject.minSwipe = e.listHeight / e.options.touchThreshold), i.data.action) {
+        case "start":
+          e.swipeStart(i);
+          break;
 
-    x[i].appendChild(b);
-    a.addEventListener("click", function (e) {
-      /* When the select box is clicked, close any other select boxes,
-      and open/close the current select box: */
-      e.stopPropagation();
-      closeAllSelect(this);
-      this.nextSibling.classList.toggle("select-hide");
-      this.classList.toggle("select-arrow-active");
-    });
-  }
+        case "move":
+          e.swipeMove(i);
+          break;
 
-  function closeAllSelect(elmnt) {
-    /* A function that will close all select boxes in the document,
-    except the current select box: */
-    var x,
-        y,
-        i,
-        xl,
-        yl,
-        arrNo = [];
-    x = document.getElementsByClassName("select-items");
-    y = document.getElementsByClassName("select-selected");
-    xl = x.length;
-    yl = y.length;
-
-    for (i = 0; i < yl; i++) {
-      if (elmnt == y[i]) {
-        arrNo.push(i);
-      } else {
-        y[i].classList.remove("select-arrow-active");
+        case "end":
+          e.swipeEnd(i);
       }
-    }
+    }, e.prototype.swipeMove = function (i) {
+      var e,
+          t,
+          o,
+          s,
+          n,
+          r,
+          l = this;
+      return n = void 0 !== i.originalEvent ? i.originalEvent.touches : null, !(!l.dragging || l.scrolling || n && 1 !== n.length) && (e = l.getLeft(l.currentSlide), l.touchObject.curX = void 0 !== n ? n[0].pageX : i.clientX, l.touchObject.curY = void 0 !== n ? n[0].pageY : i.clientY, l.touchObject.swipeLength = Math.round(Math.sqrt(Math.pow(l.touchObject.curX - l.touchObject.startX, 2))), r = Math.round(Math.sqrt(Math.pow(l.touchObject.curY - l.touchObject.startY, 2))), !l.options.verticalSwiping && !l.swiping && r > 4 ? (l.scrolling = !0, !1) : (!0 === l.options.verticalSwiping && (l.touchObject.swipeLength = r), t = l.swipeDirection(), void 0 !== i.originalEvent && l.touchObject.swipeLength > 4 && (l.swiping = !0, i.preventDefault()), s = (!1 === l.options.rtl ? 1 : -1) * (l.touchObject.curX > l.touchObject.startX ? 1 : -1), !0 === l.options.verticalSwiping && (s = l.touchObject.curY > l.touchObject.startY ? 1 : -1), o = l.touchObject.swipeLength, l.touchObject.edgeHit = !1, !1 === l.options.infinite && (0 === l.currentSlide && "right" === t || l.currentSlide >= l.getDotCount() && "left" === t) && (o = l.touchObject.swipeLength * l.options.edgeFriction, l.touchObject.edgeHit = !0), !1 === l.options.vertical ? l.swipeLeft = e + o * s : l.swipeLeft = e + o * (l.$list.height() / l.listWidth) * s, !0 === l.options.verticalSwiping && (l.swipeLeft = e + o * s), !0 !== l.options.fade && !1 !== l.options.touchMove && (!0 === l.animating ? (l.swipeLeft = null, !1) : void l.setCSS(l.swipeLeft))));
+    }, e.prototype.swipeStart = function (i) {
+      var e,
+          t = this;
+      if (t.interrupted = !0, 1 !== t.touchObject.fingerCount || t.slideCount <= t.options.slidesToShow) return t.touchObject = {}, !1;
+      void 0 !== i.originalEvent && void 0 !== i.originalEvent.touches && (e = i.originalEvent.touches[0]), t.touchObject.startX = t.touchObject.curX = void 0 !== e ? e.pageX : i.clientX, t.touchObject.startY = t.touchObject.curY = void 0 !== e ? e.pageY : i.clientY, t.dragging = !0;
+    }, e.prototype.unfilterSlides = e.prototype.slickUnfilter = function () {
+      var i = this;
+      null !== i.$slidesCache && (i.unload(), i.$slideTrack.children(this.options.slide).detach(), i.$slidesCache.appendTo(i.$slideTrack), i.reinit());
+    }, e.prototype.unload = function () {
+      var e = this;
+      i(".slick-cloned", e.$slider).remove(), e.$dots && e.$dots.remove(), e.$prevArrow && e.htmlExpr.test(e.options.prevArrow) && e.$prevArrow.remove(), e.$nextArrow && e.htmlExpr.test(e.options.nextArrow) && e.$nextArrow.remove(), e.$slides.removeClass("slick-slide slick-active slick-visible slick-current").attr("aria-hidden", "true").css("width", "");
+    }, e.prototype.unslick = function (i) {
+      var e = this;
+      e.$slider.trigger("unslick", [e, i]), e.destroy();
+    }, e.prototype.updateArrows = function () {
+      var i = this;
+      Math.floor(i.options.slidesToShow / 2), !0 === i.options.arrows && i.slideCount > i.options.slidesToShow && !i.options.infinite && (i.$prevArrow.removeClass("slick-disabled").attr("aria-disabled", "false"), i.$nextArrow.removeClass("slick-disabled").attr("aria-disabled", "false"), 0 === i.currentSlide ? (i.$prevArrow.addClass("slick-disabled").attr("aria-disabled", "true"), i.$nextArrow.removeClass("slick-disabled").attr("aria-disabled", "false")) : i.currentSlide >= i.slideCount - i.options.slidesToShow && !1 === i.options.centerMode ? (i.$nextArrow.addClass("slick-disabled").attr("aria-disabled", "true"), i.$prevArrow.removeClass("slick-disabled").attr("aria-disabled", "false")) : i.currentSlide >= i.slideCount - 1 && !0 === i.options.centerMode && (i.$nextArrow.addClass("slick-disabled").attr("aria-disabled", "true"), i.$prevArrow.removeClass("slick-disabled").attr("aria-disabled", "false")));
+    }, e.prototype.updateDots = function () {
+      var i = this;
+      null !== i.$dots && (i.$dots.find("li").removeClass("slick-active").end(), i.$dots.find("li").eq(Math.floor(i.currentSlide / i.options.slidesToScroll)).addClass("slick-active"));
+    }, e.prototype.visibility = function () {
+      var i = this;
+      i.options.autoplay && (document[i.hidden] ? i.interrupted = !0 : i.interrupted = !1);
+    }, i.fn.slick = function () {
+      var i,
+          t,
+          o = this,
+          s = arguments[0],
+          n = Array.prototype.slice.call(arguments, 1),
+          r = o.length;
 
-    for (i = 0; i < xl; i++) {
-      if (arrNo.indexOf(i)) {
-        x[i].classList.add("select-hide");
-      }
-    }
-  }
-  /* If the user clicks anywhere outside the select box,
-  then close all select boxes: */
-
-
-  document.addEventListener("click", closeAllSelect); // ==========
-  // модальные окна
-
-  var modals = function modals() {
-    function bindModal(triggerSelector, modalSelector, closeSelector) {
-      var triggers = Array.prototype.slice.call(document.querySelectorAll(triggerSelector));
-      var modal = document.querySelector(modalSelector);
-      var btnsclose = Array.prototype.slice.call(document.querySelectorAll(closeSelector));
-      btnsclose.forEach(function (item) {
-        item.addEventListener('click', closeModal);
-      });
-      triggers.forEach(function (item) {
-        item.addEventListener('click', openModal);
-      });
-      modal.addEventListener('click', function (e) {
-        if (e.target === modal) {
-          closeModal();
-        }
-      });
-      document.body.addEventListener('keyup', function (e) {
-        var key = e.keyCode;
-
-        if (key == 27) {
-          closeModal();
-        }
-
-        ;
-      }, false);
-
-      function openModal() {
-        modal.classList.add('modal--show');
-        document.body.style.overflow = 'hidden'; // clearInterval(openTimer);
+      for (i = 0; i < r; i++) {
+        if ("object" == _typeof(s) || void 0 === s ? o[i].slick = new e(o[i], s) : t = o[i].slick[s].apply(o[i].slick, n), void 0 !== t) return t;
       }
 
-      function closeModal() {
-        modal.classList.remove('modal--show');
-        document.body.style.overflow = '';
-      }
-
-      ;
-      var burgerCallBtn = document.querySelector('.burger__call-btn');
-      var politicsClose = document.querySelector('.politics-close');
-      var politicsModal = document.querySelector('.politics-modal');
-      burgerCallBtn.addEventListener('click', function () {
-        closeNav(); // closeNav лежит в файле burger-menu.js
-      });
-      politicsClose.addEventListener('click', function () {
-        politicsModal.classList.remove('modal--show'); // politicsModal.classList.remove('animate__animated', 'animate__fadeIn');
-      }); // var contentBtn = document.querySelector('.content-btn');
-      // contentBtn.addEventListener('click', function() {
-      // 	var contentM = document.querySelector('.content__modal');
-      // 	contentM.classList.remove('modal--show');
-      // 	document.body.style.overflow = '';
-      // 	// contentM.classList.remove('animate__animated', 'animate__fadeIn');
-      // });
-      // function showModalByScroll() {
-      // 	if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
-      // 		if (modal.classList.contains('form__modal')) {
-      // 			openModal();
-      // 			window.removeEventListener('scroll', showModalByScroll);
-      // 		}
-      // 	}
-      // }
-      // window.addEventListener('scroll', showModalByScroll);
-      // function openTimer() {
-      // 	setTimeout(openModal, 2000);
-      // }
-      // if (modal.classList.contains('form__modal')) {
-      // 	openTimer();
-      // }
-    }
-
-    bindModal('.phone__link', '.application-form', '.modal-close');
-    bindModal('.burger__call-btn', '.application-form', '.modal-close');
-    bindModal('.btn-signup', '.application-form', '.modal-close');
-    bindModal('.consultation-btn', '.application-form', '.modal-close');
-    bindModal('.card', '.content-modal', '.modal-close');
-    bindModal('.btn-politics', '.politics-modal', '.politics-close');
-  }; // ==========
-  // Бургер меню
-
-
-  var body = document.querySelector('body');
-  var overlay = document.querySelector('.overlay');
-  var navIcon = document.querySelector('.menu-btn');
-  var burgerNav = document.querySelector('.burger-menu__block');
-  var burgerItems = Array.prototype.slice.call(document.querySelectorAll('.burger-menu__items span'));
-  var closeBurger = document.querySelector('.close-burger');
-  navIcon.addEventListener('click', function () {
-    this.classList.add('open');
-    overlay.classList.add('show');
-    burgerNav.classList.add('show');
-    body.classList.add('overflow-hidden');
-  });
-
-  function closeNav() {
-    navIcon.classList.remove('open');
-    overlay.classList.remove('show');
-    burgerNav.classList.remove('show');
-    body.classList.remove('overflow-hidden');
-  }
-
-  overlay.addEventListener('click', closeNav);
-  closeBurger.addEventListener('click', closeNav);
-  burgerItems.forEach(function (item) {
-    item.addEventListener('click', closeNav);
+      return o;
+    };
   }); // ==========
   // Шапка при скроле
 
@@ -7659,7 +8150,7 @@ window.addEventListener('DOMContentLoaded', function () {
     myFunction();
   };
 
-  var header = document.querySelector(".header");
+  var header = document.querySelector(".main-header");
   var headerWrap = document.querySelector('.header-wrap');
   var sticky = header.offsetTop;
   var section = document.querySelector('.first-screen');
@@ -7669,11 +8160,11 @@ window.addEventListener('DOMContentLoaded', function () {
     if (window.pageYOffset > sticky) {
       header.classList.add("header--fixed");
       header.classList.add('animate__animated', 'animate__fadeIn');
-      content.style.paddingTop = "77px";
+      content.style.paddingTop = "75px";
     } else {
       header.classList.remove("header--fixed");
-      content.style.paddingTop = "";
       header.classList.remove('animate__animated', 'animate__fadeIn');
+      content.style.paddingTop = "";
     }
   }
 
@@ -7729,311 +8220,112 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
   var mainAnchor = document.querySelector('.main-anchor');
-  var block2Anchor = Array.prototype.slice.call(document.querySelectorAll('.aboutus-anchor'));
-  var block3Anchor = Array.prototype.slice.call(document.querySelectorAll('.projects-anchor'));
-  var block4Anchor = Array.prototype.slice.call(document.querySelectorAll('.skill-anchor'));
-  var block5Anchor = Array.prototype.slice.call(document.querySelectorAll('.review-anchor'));
-  var block6Anchor = Array.prototype.slice.call(document.querySelectorAll('.steps-anchor'));
-  var block7Anchor = Array.prototype.slice.call(document.querySelectorAll('.final-anchor'));
+  var block2Anchor = document.querySelector('.services-anchor');
+  var block3Anchor = document.querySelector('.aboutus-anchor');
+  var block4Anchor = document.querySelector('.team-anchor');
+  var block5Anchor = document.querySelector('.review-anchor');
+  var block6Anchor = document.querySelector('.contacts-anchor');
   mainAnchor.addEventListener('click', function () {
     // Тут вставляешь название блока куда скролить
-    smoothScroll('#first-screen', 1000);
+    smoothScroll('.main-target', 1000);
   });
-  block2Anchor.forEach(function (i) {
-    i.addEventListener('click', function () {
-      // Тут вставляешь название блока куда скролить
-      smoothScroll('#aboutus', 1000);
-    });
+  block2Anchor.addEventListener('click', function () {
+    // Тут вставляешь название блока куда скролить
+    smoothScroll('.services-target', 1000);
   });
-  block3Anchor.forEach(function (i) {
-    i.addEventListener('click', function () {
-      // Тут вставляешь название блока куда скролить
-      smoothScroll('#projects', 1000);
-    });
+  block3Anchor.addEventListener('click', function () {
+    // Тут вставляешь название блока куда скролить
+    smoothScroll('.aboutus-target', 1000);
   });
-  block4Anchor.forEach(function (i) {
-    i.addEventListener('click', function () {
-      // Тут вставляешь название блока куда скролить
-      smoothScroll('#skill', 1000);
-    });
+  block4Anchor.addEventListener('click', function () {
+    // Тут вставляешь название блока куда скролить
+    smoothScroll('.team-target', 1000);
   });
-  block5Anchor.forEach(function (i) {
-    i.addEventListener('click', function () {
-      // Тут вставляешь название блока куда скролить
-      smoothScroll('#review', 1000);
-    });
+  block5Anchor.addEventListener('click', function () {
+    // Тут вставляешь название блока куда скролить
+    smoothScroll('.review-target', 1000);
   });
-  block6Anchor.forEach(function (i) {
-    i.addEventListener('click', function () {
-      // Тут вставляешь название блока куда скролить
-      smoothScroll('#steps', 1000);
-    });
-  });
-  block7Anchor.forEach(function (i) {
-    i.addEventListener('click', function () {
-      // Тут вставляешь название блока куда скролить
-      smoothScroll('#final', 1000);
-    });
+  block6Anchor.addEventListener('click', function () {
+    // Тут вставляешь название блока куда скролить
+    smoothScroll('.contacts-target', 1000);
   }); // // ==========
-  // Слайдер отзывов
+  // SLICK SLIDER
 
-  var mySiema = new Siema({
-    perPage: {
-      768: 1,
-      1024: 2
-    },
-    duration: 200,
-    easing: 'ease-out',
-    loop: true
+  $(document).ready(function () {
+    $('.services__carousel').slick({
+      infinite: true,
+      slidesToShow: 3,
+      slidesToScroll: 3,
+      responsive: [{
+        breakpoint: 1200,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 3,
+          centerMode: false,
+          variableWidth: false,
+          focusOnSelect: false
+        }
+      }, {
+        breakpoint: 992,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2
+        }
+      }, {
+        breakpoint: 640,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1
+        }
+      }]
+    });
   });
-  var prev = document.querySelector('.prev');
-  var next = document.querySelector('.next');
-  prev.addEventListener('click', function () {
-    return mySiema.prev();
+  $(document).ready(function () {
+    $('.team__carousel').slick({
+      infinite: true,
+      slidesToShow: 3,
+      slidesToScroll: 1,
+      responsive: [{
+        breakpoint: 1200,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 1
+        }
+      }, {
+        breakpoint: 700,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1
+        }
+      }, {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1
+        }
+      }]
+    });
   });
-  next.addEventListener('click', function () {
-    return mySiema.next();
+  $(document).ready(function () {
+    $('.review__carousel').slick({
+      infinite: true,
+      slidesToShow: 1,
+      slidesToScroll: 1
+    });
+  }); // MORE CARDS SERVICES
+
+  var moreCards = document.querySelector('.more__cards');
+  var btnServices = document.querySelector('.btn__more-services');
+  var btnNameServices = document.querySelector('.btn-services__name');
+  btnServices.addEventListener('click', function () {
+    if (!moreCards.classList.contains('display')) {
+      moreCards.classList.add('display');
+      btnNameServices.innerText = "Скрыть все услуги";
+    } else {
+      moreCards.classList.remove('display');
+      btnNameServices.innerText = "Показать все услуги";
+    }
   }); // ==========
-  // Слайдер карточка домов
-
-  var imgs = Array.prototype.slice.call(document.querySelectorAll('.min-img')); // const imgBtns = [ ... imgs];
-
-  var imgId = 1;
-  imgs.forEach(function (imgItem) {
-    imgItem.addEventListener('click', function (event) {
-      event.preventDefault();
-      imgId = imgItem.dataset.id;
-      slideImage();
-    });
-  });
-
-  function slideImage() {
-    var displayWidth = document.querySelector('.main-img img:first-child').clientWidth;
-    document.querySelector('.main-img').style.transform = "translateX(".concat(-(imgId - 1) * displayWidth, "px)");
-  }
-
-  window.addEventListener('resize', slideImage); // ==========
-  // Табы проектов
-
-  var filter = function filter() {
-    var projectsMenu = document.querySelector('.projects-menu');
-    var projectType = Array.prototype.slice.call(projectsMenu.querySelectorAll('.tab-btn'));
-    var typeAll = projectsMenu.querySelector('.all');
-    var typeWild = projectsMenu.querySelector('.wild');
-    var typeCarcass = projectsMenu.querySelector('.carcass');
-    var typeGlue = projectsMenu.querySelector('.glue');
-    var projectsCards = document.querySelector('.projects__cards');
-    var cardAll = Array.prototype.slice.call(projectsCards.querySelectorAll('.all'));
-    var cardWild = Array.prototype.slice.call(projectsCards.querySelectorAll('.wild'));
-    var cardCarcass = Array.prototype.slice.call(projectsCards.querySelectorAll('.carcass'));
-    var cardGlue = Array.prototype.slice.call(projectsCards.querySelectorAll('.glue'));
-
-    var typeFilter = function typeFilter(markType) {
-      cardAll.forEach(function (mark) {
-        mark.style.display = 'none';
-      });
-
-      if (markType) {
-        markType.forEach(function (mark) {
-          mark.style.display = 'flex';
-          mark.classList.add('animate__animated', 'animate__fadeIn');
-        });
-      }
-    };
-
-    typeAll.addEventListener('click', function () {
-      typeFilter(cardAll);
-    });
-    typeWild.addEventListener('click', function () {
-      typeFilter(cardWild);
-    });
-    typeCarcass.addEventListener('click', function () {
-      typeFilter(cardCarcass);
-    });
-    typeGlue.addEventListener('click', function () {
-      typeFilter(cardGlue);
-    });
-    projectsMenu.addEventListener('click', function (e) {
-      var target = e.target;
-
-      if (target && target.className === 'tab-btn') {
-        projectType.forEach(function (btn) {
-          return btn.classList.remove('active');
-        });
-        target.classList.add('active');
-      }
-    });
-  }; // ==========
-
-
-  var homeBtn = document.querySelector('.home');
-  var summerBtn = document.querySelector('.summer');
-  var saunaBtn = document.querySelector('.sauna');
-  var pergolaBtn = document.querySelector('.pergola');
-  var kidsBtn = document.querySelector('.kids');
-  var homeBlock = document.querySelector('.home-container');
-  var summerBlock = document.querySelector('.summer-container');
-  var saunaBlock = document.querySelector('.sauna-container');
-  var pergolaBlock = document.querySelector('.pergola-container');
-  var kidsBlock = document.querySelector('.kids-container'); // var text = document.querySelector('.skill-title h3');
-  // var info = document.querySelector('.skill-text p');
-  // var pic = document.querySelector('.skill-img img');
-
-  homeBtn.addEventListener('click', function () {
-    if (!homeBlock.classList.contains('show-block')) {
-      homeBlock.classList.add('show-block');
-      summerBlock.classList.remove('show-block');
-      saunaBlock.classList.remove('show-block');
-      pergolaBlock.classList.remove('show-block');
-      kidsBlock.classList.remove('show-block');
-    }
-  });
-  summerBtn.addEventListener('click', function () {
-    if (!summerBlock.classList.contains('show-block')) {
-      summerBlock.classList.add('show-block');
-      homeBlock.classList.remove('show-block');
-      saunaBlock.classList.remove('show-block');
-      pergolaBlock.classList.remove('show-block');
-      kidsBlock.classList.remove('show-block');
-    }
-  });
-  saunaBtn.addEventListener('click', function () {
-    if (!saunaBlock.classList.contains('show-block')) {
-      saunaBlock.classList.add('show-block');
-      summerBlock.classList.remove('show-block');
-      homeBlock.classList.remove('show-block');
-      pergolaBlock.classList.remove('show-block');
-      kidsBlock.classList.remove('show-block');
-    }
-  });
-  pergolaBtn.addEventListener('click', function () {
-    if (!pergolaBlock.classList.contains('show-block')) {
-      pergolaBlock.classList.add('show-block');
-      homeBlock.classList.remove('show-block');
-      summerBlock.classList.remove('show-block');
-      saunaBlock.classList.remove('show-block');
-      kidsBlock.classList.remove('show-block');
-    }
-  });
-  kidsBtn.addEventListener('click', function () {
-    if (!kidsBlock.classList.contains('show-block')) {
-      kidsBlock.classList.add('show-block');
-      homeBlock.classList.remove('show-block');
-      summerBlock.classList.remove('show-block');
-      saunaBlock.classList.remove('show-block');
-      pergolaBlock.classList.remove('show-block');
-    }
-  }); // home.addEventListener('click', function() {
-  // 	text.innerHTML="Дома для жилья";
-  // 	info.innerHTML="Какой уютный современный дом сможет обойтись без тепла камина? HomeSrub предлагает установить профессиональные чугунные камины-топки на дровах с отделкой в ​​выбранном Вами стиле.";
-  // 	pic.src="./img/building-info/home-1x.jpg";
-  // 	pic.srcset="./img/building-info/home-2x.jpg 2x";
-  // 	pic.alt="Домик";
-  // });
-  // summer.addEventListener('click', function() {
-  // 	text.innerHTML="Летний домик";
-  // 	info.innerHTML="Кинетический момент влияет на составляющие гироскопического момента больше, чем гироскопический стабилизатоор, сводя задачу к квадратурам. Гироскопический маятник, в соответствии с модифицированным.";
-  // 	pic.src="./img/building-info/summer-1x.jpg";
-  // 	pic.srcset="./img/building-info/summer-2x.jpg 2x";
-  // 	pic.alt="Летний";
-  // });
-  // pergola.addEventListener('click', function() {
-  // 	text.innerHTML="Пергола";
-  // 	info.innerHTML="Традиционный канал конкурентоспособен. А вот по мнению аналитиков стимулирование коммьюнити отражает поведенческий таргетинг, учитывая современные тенденции.";
-  // 	pic.src="./img/building-info/pergola-1x.jpg";
-  // 	pic.srcset="./img/building-info/pergola-2x.jpg 2x";
-  // 	pic.alt="Пергола";
-  // });
-  // sauna.addEventListener('click', function() {
-  // 	text.innerHTML="Сауна";
-  // 	info.innerHTML="Легко проверить, что поле направлений определяет расходящийся ряд. Открытое множество естественно раскручивает экспериментальный лист Мёбиуса, что несомненно приведет нас к истине.";
-  // 	pic.src="./img/building-info/sauna-1x.jpg";
-  // 	pic.srcset="./img/building-info/sauna-2x.jpg 2x";
-  // 	pic.alt="Сауна";
-  // });
-  // kids.addEventListener('click', function() {
-  // 	text.innerHTML="Детская площадка";
-  // 	info.innerHTML="По сути, лемма реально порождает минимум. Длина вектора ускоряет положительный критерий интегрируемости, явно демонстрируя всю чушь вышесказанного. Полином обоснован необходимостью.";
-  // 	pic.src="./img/building-info/kids-1x.jpg";
-  // 	pic.srcset="./img/building-info/kids-2x.jpg 2x";
-  // 	pic.alt="Детская площадка";
-  // });
-
-  var skillContainer = document.querySelectorAll('.skill__type');
-  var skillBtns = document.getElementsByClassName('skill-item');
-
-  for (var i = 0; i < skillBtns.length; i++) {
-    skillBtns[i].addEventListener("click", function () {
-      var active = document.getElementsByClassName("skill--active");
-      active[0].className = active[0].className.replace(" skill--active", "");
-      this.className += " skill--active";
-    });
-  } // // Кнопки Подробнее
-  // let moreText1 = document.querySelector('.more-text1');
-  // let moreBtn1 = document.querySelector('.more-btn1');
-  // let moreText2 = document.querySelector('.more-text2');
-  // let moreBtn2 = document.querySelector('.more-btn2');
-  // let moreText3 = document.querySelector('.more-text3');
-  // let moreBtn3 = document.querySelector('.more-btn3');
-  // let moreText4 = document.querySelector('.more-text4');
-  // let moreBtn4 = document.querySelector('.more-btn4');
-  // moreBtn1.addEventListener('click', function() {
-  // 	if (!moreText1.classList.contains('actReview')) {
-  // 		moreText1.classList.add('actReview');
-  // 		moreBtn1.textContent = 'Скрыть';
-  // 	} else {
-  // 		moreText1.classList.remove('actReview');
-  // 		moreBtn1.textContent = 'Подробнее';
-  // 	}
-  // });
-  // moreBtn2.addEventListener('click', function() {
-  // 	if (!moreText2.classList.contains('actReview')) {
-  // 		moreText2.classList.add('actReview');
-  // 		moreBtn2.textContent = 'Скрыть';
-  // 	} else {
-  // 		moreText2.classList.remove('actReview');
-  // 		moreBtn2.textContent = 'Подробнее';
-  // 	}
-  // });
-  // moreBtn3.addEventListener('click', function() {
-  // 	if (!moreText3.classList.contains('actReview')) {
-  // 		moreText3.classList.add('actReview');
-  // 		moreBtn3.textContent = 'Скрыть';
-  // 	} else {
-  // 		moreText3.classList.remove('actReview');
-  // 		moreBtn3.textContent = 'Подробнее';
-  // 	}
-  // });
-  // moreBtn4.addEventListener('click', function() {
-  // 	if (!moreText4.classList.contains('actReview')) {
-  // 		moreText4.classList.add('actReview');
-  // 		moreBtn4.textContent = 'Скрыть';
-  // 	} else {
-  // 		moreText4.classList.remove('actReview');
-  // 		moreBtn4.textContent = 'Подробнее';
-  // 	}
-  // });
-  // ==========
-  // // Задержка загрузки yaMaps
-  // var YaMapsShown = false; 
-  // document.addEventListener('scroll', () => { 
-  // 	if (!YaMapsShown) {
-  // 	let scrollTop = document.documentElement.scrollTop;    
-  // 	if (scrollTop >= 2000) {
-  // 		showYaMaps();
-  // 		YaMapsShown = true;
-  // 	}
-  // 	}
-  // });
-  // function showYaMaps(){
-  // 	var script   = document.createElement("script");
-  // 	script.type  = "text/javascript";
-  // 	script.src   = "https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3A9b6066007d2a10adcbdac165fce87a97b3b6229e2ce4402bf66155f39a195930&amp;width=100%25&amp;height=588&amp;lang=ru_RU&amp;scroll=false";
-  // 	document.getElementById("YaMaps").appendChild(script);
-  // }
-  // ==========
-
 
   modals();
-  filter();
 });
