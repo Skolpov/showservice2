@@ -3975,6 +3975,18 @@ button:active {
   }
 }
 
+@media only screen and (max-width: 480px) {
+  .contacts__btn-social {
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .contacts__btns {
+    width: 100%;
+  }
+}
+
 .footer__btn1 {
   border-color: #F5D1BC;
   -webkit-box-shadow: none !important;
@@ -3985,6 +3997,12 @@ button:active {
   .footer__btn1 {
     margin-right: 0;
     margin-bottom: 15px;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .footer__btn1:before {
+    top: 20px;
   }
 }
 
